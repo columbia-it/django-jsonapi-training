@@ -1,0 +1,8 @@
+env/
+*.pyc
+db.sqlite3
+.idea/
+.tox/
+.coverage
+htmlcov/
+*~
