@@ -6,6 +6,32 @@ from rest_framework_json_api.serializers import HyperlinkedModelSerializer
 from myapp.models import Course, CourseTerm
 
 
+class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
+    """
+    .models.CommonModel.last_mod_user_name/date should come from auth.user on a POST/PATCH, not from the client app.
+    """
+    def _last_mod(self, validated_data):
+        """
+        override any last_mod_user_name or date with current auth user and current date.
+        """
+        validated_data['last_mod_user_name'] = str(self.context['request'].user)
+        validated_data['last_mod_date'] = datetime.now().date()
+
+    def create(self, validated_data):
+        """
+        extended ModelSerializer to set last_mod_user/date
+        """
+        self._last_mod(validated_data)
+        return super(HyperlinkedModelSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        extended ModelSerializer to set last_mod_user/date
+        """
+        self._last_mod(validated_data)
+        return super(HyperlinkedModelSerializer, self).update(instance, validated_data)
+
+
 class CourseSerializer(HyperlinkedModelSerializer):
     """
     (de-)serialize the Course.
