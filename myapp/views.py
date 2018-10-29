@@ -79,6 +79,21 @@ class CourseViewSet(CourseBaseViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte', 'in',)
+    text_rels = ('icontains', 'iexact', 'contains')
+    # See https://docs.djangoproject.com/en/2.0/ref/models/querysets/#field-lookups for all the possible filters.
+    filterset_fields = {
+        'id': usual_rels,
+        'subject_area_code': usual_rels,
+        'course_name': ('exact', ) + text_rels,
+        'course_description': text_rels + usual_rels,
+        'course_identifier': text_rels + usual_rels,
+        'course_number': ('exact', ),
+        'course_terms__term_identifier': usual_rels,
+        'school_bulletin_prefix_code': ('exact', 'regex'),
+    }
+    search_fields = ('course_name', 'course_description', 'course_identifier',
+                     'course_number')
 
 
 class CourseTermViewSet(CourseBaseViewSet):
@@ -87,6 +102,14 @@ class CourseTermViewSet(CourseBaseViewSet):
     """
     queryset = CourseTerm.objects.all()
     serializer_class = CourseTermSerializer
+    usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte')
+    filterset_fields = {
+        'id': usual_rels,
+        'term_identifier': usual_rels,
+        'audit_permitted_code': ['exact'],
+        'exam_credit_flag': ['exact'],
+    }
+    search_fields = ('term_identifier', )
 
 
 class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
