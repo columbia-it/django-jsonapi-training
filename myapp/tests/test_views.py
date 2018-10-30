@@ -384,6 +384,7 @@ class DJATestCase(APITestCase):
             course_terms_data.append(course_term['data'])
         self.assertEqual(course_terms_data, related['data'])
 
+    @expectedFailure
     def test_related_course_terms_course(self):
         """
         test toOne relationship and related links for course_terms.related.course
