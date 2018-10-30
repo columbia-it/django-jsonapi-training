@@ -103,13 +103,14 @@ class CourseTestCase(TestCase):
         self.assertEquals(2, cs.count())
 
     def test_dup_fail(self):
-        c1 = Course.objects.create(
-            school_bulletin_prefix_code='123',
-            suffix_two='11',
-            subject_area_code='A101',
-            course_number='123',
-            course_identifier='ABC123',
-            course_name='Corp. Finance',
-            course_description='bla bla bla 123',
-            last_mod_user_name='Fred Gary')
-        c1.save()
+        with self.assertRaises(IntegrityError):
+            c1 = Course.objects.create(
+                school_bulletin_prefix_code='123',
+                suffix_two='11',
+                subject_area_code='A101',
+                course_number='123',
+                course_identifier='ABC123',
+                course_name='Corp. Finance',
+                course_description='bla bla bla 123',
+                last_mod_user_name='Fred Gary')
+            c1.save()
