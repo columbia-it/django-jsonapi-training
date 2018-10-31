@@ -1,26 +1,18 @@
-certifi==2018.10.15
-chardet==3.0.4
-Django==2.1.2
-django-cors-middleware==1.3.1
-django-debug-toolbar==1.10.1
+Django>=2.1.0,<2.2
 django-filter==2.0.0
-django-oauth-toolkit==1.2.0
-djangorestframework==3.9.0
-djangorestframework-jsonapi==2.6.0
-filelock==3.0.9
-idna==2.7
-inflection==0.3.1
-oauthlib==2.1.0
-pluggy==0.8.0
-py==1.7.0
-pytz==2018.6
-PyYAML==3.13
-requests==2.20.0
-rest-condition==1.0.3
-six==1.11.0
-sqlparse==0.2.4
-toml==0.10.0
-tox==3.5.2
-tox-pip-extensions==1.4.1
-urllib3==1.24
-virtualenv==16.0.0
+django-cors-middleware
+django-debug-toolbar
+# django-oauth-toolkit==1.2.0
+# master has my fix:
+git+https://github.com/jazzband/django-oauth-toolkit.git@07f6430b
+django-pyodbc-azure
+djangorestframework>=3.8,<3.9
+# djangorestframework-jsonapi==2.6.0
+# see https://github.com/django-json-api/django-rest-framework-json-api/pull/492
+git+https://github.com/n2ygk/django-rest-framework-json-api.git@related_disable_pk_only
+requests
+rest-condition
+# tox-pip-extensions breaks with tox 3.3+
+tox>=3.3.0,<3.4
+tox-pip-extensions==1.4.0
+PyYAML
