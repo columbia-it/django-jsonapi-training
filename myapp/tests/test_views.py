@@ -384,7 +384,6 @@ class DJATestCase(APITestCase):
             course_terms_data.append(course_term['data'])
         self.assertEqual(course_terms_data, related['data'])
 
-    @expectedFailure
     def test_related_course_terms_course(self):
         """
         test toOne relationship and related links for course_terms.related.course
@@ -426,3 +425,44 @@ class DJATestCase(APITestCase):
         self.assertEqual(course_response.status_code, 200, msg=course_response.content)
         course = course_response.json()
         self.assertEqual(course['data'], related['data'])
+
+    @expectedFailure
+    def test_permission_course_course_terms(self):
+        """
+        See if permissions are correctly implemented.
+        """
+        # authenticate as user with no permissions:
+        self.client.force_authenticate(user=self.noneuser)
+        course_response = self.client.get("{}{}/".format(self.courses_url, self.courses[5].id),
+                                          **HEADERS)
+        self.assertEqual(course_response.status_code, 403, msg=course_response.content)
+        self.assertIn("You do not have permission", course_response.json()['errors'][0]['detail'])
+
+        # authenticate as user with model permission to view course but not course_term
+        self.client.force_authenticate(user=self.someuser)
+        # Look up a random course. In theory the course_terms should be suppressed. In practice, not so.
+        course_response = self.client.get("{}{}/".format(self.courses_url, self.courses[5].id),
+                                          data={"include": "course_terms"},
+                                          **HEADERS)
+        self.assertEqual(course_response.status_code, 200, msg=course_response.content)
+        course = course_response.json()
+        # this should return zero (I think) but instead course_terms inherits permissions from course.
+        self.assertEqual(len(course['data']['relationships']['course_terms']['data']), 0)
+
+        # put back the default user
+        self.client.force_authenticate(user=self.superuser)
+
+    def test_permission_course_terms(self):
+        """
+        confirm that `somebody` lacks course_terms view permission
+        """
+        self.client.force_authenticate(user=self.someuser)
+        # Look up a random course. In theory the course_terms should be suppressed. In practice, not so.
+        term_response = self.client.get("{}{}/".format(self.course_terms_url, self.course_terms[5].id),
+                                        **HEADERS)
+        self.assertEqual(term_response.status_code, 403, msg=term_response.content)
+        term = term_response.json()
+        self.assertIn("You do not have permission", term['errors'][0]['detail'])
+
+        # put back the default user
+        self.client.force_authenticate(user=self.superuser)
