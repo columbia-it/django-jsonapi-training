@@ -10,10 +10,14 @@ class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
     """
     .models.CommonModel.last_mod_user_name/date should come from auth.user on a POST/PATCH, not from the client app.
     """
+    read_only_fields = ('last_mod_user_name', 'last_mod_date')
+
     def _last_mod(self, validated_data):
         """
         override any last_mod_user_name or date with current auth user and current date.
         """
+        # N.B. if OAuth2 Client Credentials is used, there is no user *and* the `client_id` is not
+        # currently properly tracked for an external AS: https://github.com/jazzband/django-oauth-toolkit/issues/664
         validated_data['last_mod_user_name'] = str(self.context['request'].user)
         validated_data['last_mod_date'] = datetime.now().date()
 
