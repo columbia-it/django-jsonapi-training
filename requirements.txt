@@ -10,7 +10,7 @@ djangorestframework==3.9.0
 # djangorestframework-jsonapi==2.6.0
 # see https://github.com/django-json-api/django-rest-framework-json-api/pull/492
 git+https://github.com/n2ygk/django-rest-framework-json-api.git@related_disable_pk_only
-requests==2.19.1
+requests==2.20.0
 rest-condition==1.0.3
 # tox-pip-extensions breaks with tox 3.3+
 tox>=3.3.0,<3.4
