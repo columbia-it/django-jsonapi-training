@@ -532,7 +532,7 @@ the need for subsequent HTTP requests to get that information.
 
 ![alt-text](./media/postman.png "postman screenshot response is included following")
 
-GET `http://127.0.0.1:8000/v1/courses/?include=course_terms&page[size]=2`
+GET http://127.0.0.1:8000/v1/courses/?include=course_terms&page[size]=2
 
 ```json
 {
@@ -974,8 +974,9 @@ class CourseSerializer(HyperlinkedModelSerializer):
 
 In the above code, 'url' is supplied by the `HyperlinkedModelSerializer`,
 'course_number' ... 'course_description' are from the underlying
-Course Model, and 'course_terms' is "calculated" by the
-`ResourceRelatedField` function to return the list of related CourseTerm instances (database rows).
+Course Model (I could have been lazy and just said `fields = ("__all__",)`),
+and 'course_terms' is "calculated" by the
+`ResourceRelatedField` class to return the list of related CourseTerm instances (database rows).
 
 ### Views and ViewSets
 
@@ -1662,7 +1663,7 @@ Date:   Fri Oct 26 16:36:49 2018 -0400
 
 You can now use the above commit as a template to start future projects if you like.
 
-Browse the source code for this project [here](..) or clone it. Most of the code is reproduced below as well,
+Browse the source code for this project or clone it. Most of the code is reproduced below as well,
 but is likely not completely up to date.
 
 ### Edit Settings to add DRF, DJA, OAuth, Debug, etc.
@@ -1761,7 +1762,6 @@ index 52940b5..a8dcdb6 100644
 +            'HOST': os.environ['DJANGO_SQLSERVER_HOST'],
 +            'PORT': '1433',
 +            'OPTIONS': {
-+                # 'driver': 'ODBC Driver 13 for SQL Server', # 17 blows up on MacOS??
 +                'driver': 'ODBC Driver 17 for SQL Server',
 +            },
 +        },
@@ -2047,7 +2047,7 @@ in `settings.py` for `INSTALLED_APPS` and so on.)
 
 ### Define URL routing and Views 
 
-A view function is defined for each HTTP endpoint in the app. DRF uses Class-based views (CBV)in which
+A view function is defined for each HTTP endpoint in the app. DRF uses Class-based views (CBV) in which
 the ViewSet class has an `as_view()` function that returns a view function. The HTTP endpoints are
 defined in the `urlpatterns` list in `urls.py` and reference the CBV's in `views.py`.
 
@@ -2225,7 +2225,6 @@ Running migrations:
 Anytime things are feeling confusing, just remove the sqlite3 database and re-migrate.
 <html><pre>
 (env) django-training$ <b>rm db.sqlite3</b>
-(env) django-training$ <b>/manage.py createsuperuser</b>
 (env) django-training$ <b>/manage.py makemigrations</b>
 (env) django-training$ <b>/manage.py migrate</b>
 (env) django-training$ <b>/manage.py createsuperuser</b>
@@ -2573,9 +2572,9 @@ index 57897c8..7d58129 100644
 #### Configuring SearchFilter
 
 The `search_fields` attribute is used by the `SearchFilter`. Try this GET:
-```
+
 http://127.0.0.1:8000/v1/courses/?filter[search]=data analytics&fields[courses]=course_name,course_description
-```
+
 
 Expect to see this result:
 ```json
@@ -2639,9 +2638,8 @@ This is configured using the standard Django double-underscore notation but can 
 notation: `course_terms.term_identifier`.
 
 Try this GET:
-```
+
 http://127.0.0.1:8000/v1/courses/?page[size]=2&filter[course_terms.term_identifier.lt]=20182&include=course_terms&filter[search]=psych
-```
 
 And expect this result:
 ```json
@@ -2818,9 +2816,7 @@ If a client requests a filter that is not defined, they'll see a `400 Bad Reques
 Note that some conditions are not easily represented, including NOT and empty string (as contrasted with `null`).
 Hint: try a regex:
 
-```text
 http://127.0.0.1:8000/v1/courses/?page[size]=2&filter[search]=psych&filter[school_bulletin_prefix_code.regex]=[^M]
-```
 
 Resulting in:
 ```json
@@ -2966,7 +2962,7 @@ index 4075d9c..cabd404 100644
 
 #### via the Model
 
-This serializer is probably **not** the right place for "business logic" in general as it allows Model
+The serializer is probably **not** the right place for "business logic" in general as it allows Model
 manipulation to bypass that logic. It should probably
 [happen in the Model](https://sunscrapers.com/blog/where-to-put-business-logic-django/) as that
 is the closest layer to the data and we want to always enforce the business rules.
@@ -2979,9 +2975,9 @@ for leaving the user-specific code in the serializer.
 If you need to do it in the Model, you'll want to use 
 [thread local data](https://docs.python.org/3/library/threading.html#thread-local-data)
 and grab the `request.user` in a [Django Middleware](https://docs.djangoproject.com/en/2.1/topics/http/middleware/)
-function and store it in thread local storage so it can be retrieved in the Model manager. Take a look
+function and store it in thread local storage so it can be retrieved in the Model manager. Also, take a look
 at the [Django Signals](https://docs.djangoproject.com/en/2.1/ref/signals/#django.db.models.signals.pre_save)
-documentation for some ideas.
+documentation for some alternative ideas.
 
 ### Using OAuth 2.0
 
@@ -4036,7 +4032,7 @@ or [sqlserver](#sqlcmd).
 #### sqlite3
 
 For the sqlite3 database, use sqlite3. For example:
-```bash
+```text
 (env) django-training$ sqlite3 db.sqlite3 
 -- Loading resources from /Users/ac45/.sqliterc
 SQLite version 3.24.0 2018-06-04 14:10:15
@@ -4211,7 +4207,7 @@ below.
 In normal OAuth 2.0 operations, there may be no need for the client app
 to know who the end user is. If the client does need to know this, then
 use the **openid** scope. This results in an
-[id_token*](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)
+[id_token](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)
 being returned to the requesting client, in addition to the usual
 *access_token* -- only if the client app has been
 [registered](#_c6p5zshh92vf) with permission to request
@@ -4229,6 +4225,8 @@ There's a complementary
 [userinfo](http://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
 endpoint that returns similar information. It is authorized using the
 access_token.
+
+TODO: Update documentation for group claim.
 
 #### End-user Generic Scopes
 
@@ -4320,7 +4318,7 @@ Resource server designers need to decide:
 One should attempt to be "RESTful" in designing application security:
 Base permissions on HTTP methods and resources. Using a modeling
 language like OAS 3.0 can help. See
-[Documenting the API in OAS 3.0](#documenting-the-api-in-oas-3.0), below and the
+[Documenting the API in OAS 3.0](#documenting-the-api-in-oas-3.0), and the
 equivalent Django
 [permission_classes](#authentication-and-authorization-permission),
 above.

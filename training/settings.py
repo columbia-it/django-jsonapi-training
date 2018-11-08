@@ -93,7 +93,6 @@ if SQLSERVER:
             'HOST': os.environ['DJANGO_SQLSERVER_HOST'],
             'PORT': '1433',
             'OPTIONS': {
-                # 'driver': 'ODBC Driver 13 for SQL Server', # 17 blows up on MacOS??
                 'driver': 'ODBC Driver 17 for SQL Server',
             },
         },
