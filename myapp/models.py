@@ -49,7 +49,7 @@ class CourseTerm(CommonModel):
     A specific course term (year+semester) instance.
     e.g. 20183COMSW1002
     """
-    term_identifier = models.TextField(max_length=10)
+    term_identifier = models.CharField(max_length=14, unique=True)
     audit_permitted_code = models.PositiveIntegerField(blank=True, default=0)
     exam_credit_flag = models.BooleanField(default=True)
     course = models.ForeignKey('myapp.Course', related_name='course_terms', on_delete=models.CASCADE, null=True,
