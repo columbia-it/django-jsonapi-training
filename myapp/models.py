@@ -60,3 +60,17 @@ class CourseTerm(CommonModel):
 
     def __str__(self):
         return '%s,%s,%s' % (self.id, self.term_identifier, self.course.course_identifier)
+
+
+class Instructor(CommonModel):
+    """
+    An instructor.
+    """
+    name = models.TextField(max_length=100, unique=True)
+    course_terms = models.ManyToManyField('myapp.CourseTerm', related_name='instructors')
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return '%s,%s' % (self.id, self.name)

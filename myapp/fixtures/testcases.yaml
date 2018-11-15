@@ -152,3 +152,39 @@
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
     last_mod_date: 2018-08-03, term_identifier: 20181AMST3704X, audit_permitted_code: 0,
     exam_credit_flag: false, course: 01ca197f-c00c-4f24-a743-091b62f1d500}
+- model: myapp.instructor
+  pk: 0a879dc6-63d4-4a79-aae6-63ee2b379b32
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-11-12, name: John Jay}
+- model: myapp.instructor
+  pk: 1b3b7d1a-7eb5-43a2-941f-c18364013f9c
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-11-12, name: Alexander Hamilton}
+- model: myapp.instructor
+  pk: 40678ab5-07fa-4c93-a680-bceda8a34735
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-11-12, name: Samuel Johnson}
+- model: myapp.instructor
+  pk: 4baaf8fa-9832-4732-a1dd-ee7bc5e58c21
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-11-12, name: Robert Livingston}
+- model: myapp.instructor
+  pk: aae87c7f-8515-44cf-b1c7-79c6f81cc5c5
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-11-12, name: Gouverneur Morris}
+- model: myapp.instructor_course_terms
+  pk: 1
+  fields: {instructor: 0a879dc6-63d4-4a79-aae6-63ee2b379b32, courseterm: 39ca7b38-f273-4fa3-9494-5a422780aebd}
+- model: myapp.instructor_course_terms
+  pk: 2
+  fields: {instructor: 0a879dc6-63d4-4a79-aae6-63ee2b379b32, courseterm: 00d14ddb-9fb5-4cff-9954-d52fc33217e7}
+- model: myapp.instructor_course_terms
+  pk: 3
+  fields: {instructor: aae87c7f-8515-44cf-b1c7-79c6f81cc5c5, courseterm: 00d14ddb-9fb5-4cff-9954-d52fc33217e7}
+- model: myapp.instructor_course_terms
+  pk: 4
+  fields: {instructor: 40678ab5-07fa-4c93-a680-bceda8a34735, courseterm: 00d14ddb-9fb5-4cff-9954-d52fc33217e7}
+- model: myapp.instructor_course_terms
+  pk: 5
+  fields: {instructor: 40678ab5-07fa-4c93-a680-bceda8a34735, courseterm: 00290ba0-ebae-44c0-9f4b-58a5f27240ed}
+  

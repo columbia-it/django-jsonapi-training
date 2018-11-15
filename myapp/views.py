@@ -1,3 +1,4 @@
+from django_filters import rest_framework as filters
 from oauth2_provider.contrib.rest_framework import (OAuth2Authentication,
                                                     TokenMatchesOASRequirements)
 from rest_condition import And, Or
@@ -6,8 +7,9 @@ from rest_framework.authentication import (BasicAuthentication,
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
-from myapp.models import Course, CourseTerm
-from myapp.serializers import CourseSerializer, CourseTermSerializer
+from myapp.models import Course, CourseTerm, Instructor
+from myapp.serializers import (CourseSerializer, CourseTermSerializer,
+                               InstructorSerializer)
 
 # TODO: simplify the following
 REQUIRED_SCOPES_ALTS = {
@@ -79,7 +81,7 @@ class CourseViewSet(CourseBaseViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte', 'in',)
+    usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte', 'in')
     text_rels = ('icontains', 'iexact', 'contains')
     # See https://docs.djangoproject.com/en/2.0/ref/models/querysets/#field-lookups for all the possible filters.
     filterset_fields = {
@@ -108,13 +110,46 @@ class CourseTermViewSet(CourseBaseViewSet):
         'term_identifier': usual_rels,
         'audit_permitted_code': ['exact'],
         'exam_credit_flag': ['exact'],
+        'course__id': usual_rels,
     }
     search_fields = ('term_identifier', )
 
 
+class InstructorFilterSet(filters.FilterSet):
+    """
+    :py:class:`django_filters.rest_framework.FilterSet` for the Instructor model
+    """
+    # A filter "alias" for a chained search from instructor->course_term->course:
+    # There does not appear to be a way to supply a list of `lookup_expr`'s as is allowed with the `fields` dict.
+    #: `course_name` is an alias for the path `course_terms.course.course_name`
+    course_name = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="iexact")
+    course_name__gt = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="gt")
+    course_name__gte = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="gte")
+    course_name__lt = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="lt")
+    course_name__lte = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="lte")
+
+    class Meta:
+        usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte')
+        model = Instructor
+        fields = {
+            'id': usual_rels,
+            'name': usual_rels,
+        }
+
+
+class InstructorViewSet(CourseBaseViewSet):
+    """
+    API endpoint that allows Instructor to be viewed or edited.
+    """
+    queryset = Instructor.objects.all()
+    serializer_class = InstructorSerializer
+    filterset_class = InstructorFilterSet
+    search_fields = ('name', 'course_terms__course__course_name')
+
+
 class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
-    view for relationships.course
+    view for courses.relationships
     """
     queryset = Course.objects
     self_link_view_name = 'course-relationships'
@@ -122,7 +157,15 @@ class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
 
 class CourseTermRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
-    view for relationships.course_terms
+    view for course_terms.relationships
     """
     queryset = CourseTerm.objects
     self_link_view_name = 'course_term-relationships'
+
+
+class InstructorRelationshipView(AuthnAuthzMixIn, RelationshipView):
+    """
+    view for instructors.relationships
+    """
+    queryset = Instructor.objects
+    self_link_view_name = 'instructor-relationships'

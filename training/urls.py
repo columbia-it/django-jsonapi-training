@@ -21,6 +21,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 from django.views.generic.base import RedirectView
 from rest_framework import routers
+from rest_framework.documentation import include_docs_urls
 
 from myapp import views
 
@@ -31,8 +32,10 @@ admin.autodiscover()
 router = routers.DefaultRouter()
 router.register(r'courses', views.CourseViewSet)
 router.register(r'course_terms', views.CourseTermViewSet)
+router.register(r'instructors', views.InstructorViewSet)
 
 urlpatterns = [
+
     path('', RedirectView.as_view(url='/v1', permanent=False)),
     path('v1/', include(router.urls)),
     # TODO: Is there a Router than can generate these for me? If not, create one.
@@ -53,6 +56,14 @@ urlpatterns = [
     path('v1/course_terms/<pk>/<related_field>/',
         views.CourseTermViewSet.as_view({'get': 'retrieve_related'}), # a toOne relationship
         name='course_term-related'),
+    # instructor relationships
+    path('v1/instructors/<pk>/relationships/<related_field>/',
+        views.InstructorRelationshipView.as_view(),
+        name='instructor-relationships'),
+    # use new `retrieve_related` functionality in DJA 2.6.0:
+    path('v1/instructors/<pk>/<related_field>/',
+        views.InstructorViewSet.as_view({'get': 'retrieve_related'}), # a toMany relationship
+        name='instructor-related'),
     # browseable API and admin stuff. TODO: Consider leaving out except when debugging.
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
