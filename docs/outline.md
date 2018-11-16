@@ -3824,8 +3824,8 @@ earlier version:
 1. We are OK with any version of Django 2.1.x and matching versions of django-cors-middleware, etc.
 2. We replace `django-oauth-toolkit`'s latest published release (1.2.0) with a newer commit that has been
    merged into the project but is not yet published.
-3. We replace `djangorestframework-jsonapi` 2.6.0 with a proposed PR that is still a work in progress and under
-   review by the project.
+3. We replace `djangorestframework-jsonapi` 2.6.0 with a commit of merged
+   [PR](https://github.com/django-json-api/django-rest-framework-json-api/pull/517) that is not yet released.
 4. All the customizations are commented so we know why they are there.
 
 ```text
@@ -3838,9 +3838,10 @@ django-debug-toolbar
 git+https://github.com/jazzband/django-oauth-toolkit.git@07f6430b
 django-pyodbc-azure
 djangorestframework>=3.8,<3.9
+# TODO: fix this when next release comes out
+# see https://github.com/django-json-api/django-rest-framework-json-api/pull/517
 # djangorestframework-jsonapi==2.6.0
-# see https://github.com/django-json-api/django-rest-framework-json-api/pull/492
-git+https://github.com/n2ygk/django-rest-framework-json-api.git@related_disable_pk_only
+git+https://github.com/django-json-api/django-rest-framework-json-api.git@8c075d0
 requests
 rest-condition
 # tox-pip-extensions breaks with tox 3.3+
