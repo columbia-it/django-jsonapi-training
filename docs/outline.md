@@ -5459,6 +5459,25 @@ Running migrations:
 Installed 38 object(s) from 1 fixture(s)  
 </pre></html>
 
+Here's what we fixed in the Instructor Model:
+```diff
+diff --git a/myapp/models.py b/myapp/models.py
+index dbb13e3..aad33d1 100644
+--- a/myapp/models.py
++++ b/myapp/models.py
+@@ -66,7 +66,9 @@ class Instructor(CommonModel):
+     """
+     An instructor.
+     """
+-    name = models.TextField(max_length=100, unique=True)
++    # 'name' is a reserved word in SQL server so just force the db_column name to be different.
++    # TODO: This might be a django-pyodbc-azure bug. Check it.
++    name = models.CharField(db_column='instr_name', max_length=100, unique=True)
+     course_terms = models.ManyToManyField('myapp.CourseTerm', related_name='instructors')
+ 
+     class Meta:
+```
+
 ### Squashing Migrations
 
 If you don't have data in the database that you care about, an easier approach is to
