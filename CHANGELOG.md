@@ -23,13 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - "name" is a reserved word. Change the `db_column` so that we can keep using it in our code.
   - Can't change AutoField to BigAutoField.
   - Non-ANSI SQL implementation of NULL UNIQUE
-  See the [docs](docs/outlined.md#advanced-topic-sql-server-workarounds).
+  See the [docs](docs/outline.md#advanced-topic-sql-server-workarounds).
 
 ## [0.2.0] - 2018-11-14
 
 ### Added
 - Instructor Model with ManyToMany relationship to CourseTerm.
-  See [docs](http://localhost:6419/docs/outline.md#another-modification-add-an-instructor-model-and-additional-relationship)
+  See [docs](docs/outline.md#another-modification-add-an-instructor-model-and-additional-relationship)
 
 ## [0.1.1] - 2018-11-09
 
