@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='courseterm',
             name='term_identifier',
-            field=models.TextField(max_length=14),
+            field=models.CharField(max_length=14),
         ),
         migrations.RunPython(
             fix_term_id,
@@ -43,6 +43,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='courseterm',
             name='term_identifier',
-            field=models.TextField(unique=True),
+            field=models.CharField(max_length=14, unique=True),
         ),
     ]

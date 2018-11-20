@@ -2,13 +2,15 @@ Django==2.1.3
 django-filter==2.0.0
 django-cors-middleware==1.3.1
 django-debug-toolbar==1.9.1
+# just grab the master branch of DOT for now
 # django-oauth-toolkit==1.2.0
-# master has my fix:
-git+https://github.com/jazzband/django-oauth-toolkit.git@07f6430b
+git+https://github.com/jazzband/django-oauth-toolkit.git
+# fix in django-ppyodbc-azure for NULL UNIQUE constraint https://github.com/michiya/django-pyodbc-azure/pull/188
+# git+https://github.com/n2ygk/django-pyodbc-azure.git@2.1-nullable
+# or just use settings.MIGRATION_MODULES to override for now:
 django-pyodbc-azure==2.1.0.0
 djangorestframework==3.9.0
-# TODO: fix this when next release comes out
-# see https://github.com/django-json-api/django-rest-framework-json-api/pull/517
+# PkOnlyObject error fixed: https://github.com/django-json-api/django-rest-framework-json-api/pull/517
 # djangorestframework-jsonapi==2.6.0
 git+https://github.com/django-json-api/django-rest-framework-json-api.git@8c075d0
 requests==2.20.0

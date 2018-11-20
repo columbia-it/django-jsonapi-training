@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'training.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 if SQLSERVER:
-    # Use the following if testing with MS SQL:
+    # Use the following if using with MS SQL:
     DATABASES = {
         'default': {
             'ENGINE': 'sql_server.pyodbc',
@@ -97,6 +97,12 @@ if SQLSERVER:
             },
         },
     }
+
+    # override the standard migrations because they break due to SQL Server deficiences.
+    MIGRATION_MODULES = {
+        'oauth2_provider': 'myapp.migration_overrides.oauth2_provider',
+    }
+
 else:
     DATABASES = {
         'default': {

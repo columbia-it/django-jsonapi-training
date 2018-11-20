@@ -66,7 +66,9 @@ class Instructor(CommonModel):
     """
     An instructor.
     """
-    name = models.TextField(max_length=100, unique=True)
+    # 'name' is a reserved word in SQL server so just force the db_column name to be different.
+    # TODO: This might be a django-pyodbc-azure bug. Check it.
+    name = models.CharField(db_column='instr_name', max_length=100, unique=True)
     course_terms = models.ManyToManyField('myapp.CourseTerm', related_name='instructors')
 
     class Meta:

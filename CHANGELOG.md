@@ -15,6 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.2.1] - 2018-11-20
+
+### Added
+- Workarounds for Microsoft SQL Server
+  - TextFields can't be unique. Use Charfield.
+  - "name" is a reserved word. Change the `db_column` so that we can keep using it in our code.
+  - Can't change AutoField to BigAutoField.
+  - Non-ANSI SQL implementation of NULL UNIQUE
+  See the [docs](docs/outlined.md#advanced-topic-sql-server-workarounds).
+
 ## [0.2.0] - 2018-11-14
 
 ### Added
