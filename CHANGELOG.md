@@ -15,6 +15,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.2.2] - YYYY-MM-DD 
+
+### Added
+- sphinx RTD configuration:
+  - Run `tox` and then `open docs/build/html/index.html` in your local browser.
+  - MyApp API autodoc.
+
+### Deprecated
+- No longer need `myapp/overridden_migrations` (see Fixed).
+
+### Changed
+- Split outline.md into individual chapter files:
+  See [index.md](index.md). 
+
+### Fixed
+- created [PR](https://github.com/michiya/django-pyodbc-azure/pull/189) 
+  for `django-pyodbc-azure` that elminates need for Microsoft SQL Server workarounds.
+
 ## [0.2.1] - 2018-11-20
 
 ### Added

@@ -168,15 +168,18 @@ class DJATestCase(APITestCase):
     @skip("test_patch_primary_rel not yet implemented")
     def test_patch_primary_rel(self):
         """
-        TODO: I should be able to PATCH the primary data and updated relationships.
+        Make sure we can PATCH the attributes *and* relationships
         """
+        # TODO: I should be able to PATCH the primary data and updated relationships.
         pass
 
     @skip("test_patch_rel not yet implemented")
     def test_patch_rel(self):
         """
-        TODO: I should be able to PATCH the relationships.
+        See https://jsonapi.org/format/#crud-updating-resource-relationships
         """
+        # TODO: I should be able to PATCH the relationships.
+
         pass
 
     def test_page_size(self):

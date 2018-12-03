@@ -12,6 +12,9 @@ from myapp.serializers import (CourseSerializer, CourseTermSerializer,
                                InstructorSerializer)
 
 # TODO: simplify the following
+#: For a given HTTP method, a list of valid alternative required scopes.
+#: For instance, GET will be allowed if "auth-columbia read" OR "auth-none read" scopes are provided.
+#: Note that even HEAD and OPTIONS require the client to be authorized with at least "read" scope.
 REQUIRED_SCOPES_ALTS = {
     'GET': [['auth-columbia', 'read'], ['auth-none', 'read']],
     'HEAD': [['read']],
@@ -37,9 +40,11 @@ REQUIRED_SCOPES_ALTS = {
 
 class MyDjangoModelPermissions(DjangoModelPermissions):
     """
-    Override DjangoModelPermissions to require view permission as well.
-    https://docs.djangoproject.com/en/dev/topics/auth/#permissions
+    Override `DjangoModelPermissions <https://docs.djangoproject.com/en/dev/topics/auth/#permissions>`_
+    to require view permission as well: The default allows view by anybody.
     """
+    # TODO: refactor to just add the GET key to super().perms_map
+    #: the usual permissions map plus GET. Also, we omit PUT since we only use PATCH with {json:api}.
     perms_map = {
         'GET': ['%(app_label)s.view_%(model_name)s'],
         'OPTIONS': ['%(app_label)s.view_%(model_name)s'],
@@ -54,36 +59,35 @@ class MyDjangoModelPermissions(DjangoModelPermissions):
 
 class AuthnAuthzMixIn(object):
     """
-    Common Authn/Authz stuff for all View and ViewSet-derived classes:
-    - authentication_classes: in production: Oauth2 preferred; Basic and Session for testing purposes.
-    - permission_classes: either use Scope-based OAuth 2.0 token checking
-      OR authenticated user w/Model Permissions.
+    Common Authn/Authz mixin for all View and ViewSet-derived classes:
     """
+    #: In production Oauth2 is preferred; Allow Basic and Session for testing and browseable API.
     authentication_classes = (BasicAuthentication, SessionAuthentication, OAuth2Authentication, )
+    #: Either use Scope-based OAuth 2.0 token checking OR authenticated user w/Model Permissions.
     permission_classes = [
         Or(TokenMatchesOASRequirements,
            And(IsAuthenticated, MyDjangoModelPermissions))
     ]
+    #: list of alternatives for required scopes
     required_alternate_scopes = REQUIRED_SCOPES_ALTS
 
 
 class CourseBaseViewSet(AuthnAuthzMixIn, ModelViewSet):
     """
     Base ViewSet for all our ViewSets:
+
     - Adds Authn/Authz
     """
     pass
 
 
 class CourseViewSet(CourseBaseViewSet):
-    """
-    API endpoint that allows course to be viewed or edited.
-    """
+    __doc__ = Course.__doc__
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte', 'in')
     text_rels = ('icontains', 'iexact', 'contains')
-    # See https://docs.djangoproject.com/en/2.0/ref/models/querysets/#field-lookups for all the possible filters.
+    #: See https://docs.djangoproject.com/en/stable/ref/models/querysets/#field-lookups for all the possible filters.
     filterset_fields = {
         'id': usual_rels,
         'subject_area_code': usual_rels,
@@ -94,17 +98,17 @@ class CourseViewSet(CourseBaseViewSet):
         'course_terms__term_identifier': usual_rels,
         'school_bulletin_prefix_code': ('exact', 'regex'),
     }
+    #: Keyword searches are across these fields.
     search_fields = ('course_name', 'course_description', 'course_identifier',
                      'course_number')
 
 
 class CourseTermViewSet(CourseBaseViewSet):
-    """
-    API endpoint that allows CourseTerm to be viewed or edited.
-    """
+    __doc__ = CourseTerm.__doc__
     queryset = CourseTerm.objects.all()
     serializer_class = CourseTermSerializer
     usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte')
+    #: defined filter[] names
     filterset_fields = {
         'id': usual_rels,
         'term_identifier': usual_rels,
@@ -112,23 +116,28 @@ class CourseTermViewSet(CourseBaseViewSet):
         'exam_credit_flag': ['exact'],
         'course__id': usual_rels,
     }
+    #: Keyword searches are just this one field.
     search_fields = ('term_identifier', )
 
 
 class InstructorFilterSet(filters.FilterSet):
     """
-    :py:class:`django_filters.rest_framework.FilterSet` for the Instructor model
+    Extend :py:class:`django_filters.rest_framework.FilterSet` for the Instructor model
+
+    Includes a filter "alias" for a chained search from instructor->course_term->course
     """
-    # A filter "alias" for a chained search from instructor->course_term->course:
-    # There does not appear to be a way to supply a list of `lookup_expr`'s as is allowed with the `fields` dict.
-    #: `course_name` is an alias for the path `course_terms.course.course_name`
+    #: `filter[course_name]` is an alias for the path `course_terms.course.course_name`
     course_name = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="iexact")
+    #: `filter[course_name_gt]` for greater-than, etc.
     course_name__gt = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="gt")
     course_name__gte = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="gte")
     course_name__lt = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="lt")
     course_name__lte = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="lte")
 
     class Meta:
+        """
+        In addition to specific filters defined above, also generate some automatic filters.
+        """
         usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte')
         model = Instructor
         fields = {
@@ -138,9 +147,7 @@ class InstructorFilterSet(filters.FilterSet):
 
 
 class InstructorViewSet(CourseBaseViewSet):
-    """
-    API endpoint that allows Instructor to be viewed or edited.
-    """
+    __doc__ = Instructor.__doc__
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
     filterset_class = InstructorFilterSet
@@ -149,7 +156,7 @@ class InstructorViewSet(CourseBaseViewSet):
 
 class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
-    view for courses.relationships
+    View for courses.relationships
     """
     queryset = Course.objects
     self_link_view_name = 'course-relationships'
@@ -157,7 +164,7 @@ class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
 
 class CourseTermRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
-    view for course_terms.relationships
+    View for course_terms.relationships
     """
     queryset = CourseTerm.objects
     self_link_view_name = 'course_term-relationships'
@@ -165,7 +172,7 @@ class CourseTermRelationshipView(AuthnAuthzMixIn, RelationshipView):
 
 class InstructorRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
-    view for instructors.relationships
+    View for instructors.relationships
     """
     queryset = Instructor.objects
     self_link_view_name = 'instructor-relationships'

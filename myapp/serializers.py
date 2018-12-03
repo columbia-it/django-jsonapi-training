@@ -8,8 +8,10 @@ from myapp.models import Course, CourseTerm, Instructor
 
 class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
     """
-    .models.CommonModel.last_mod_user_name/date should come from auth.user on a POST/PATCH, not from the client app.
+    Extends :py:class:`.models.CommonModel` to set `last_mod_user_name` and `...date` from auth.user on a
+    POST/PATCH, not from the client app.
     """
+    #: these are read-only fields
     read_only_fields = ('last_mod_user_name', 'last_mod_date')
 
     def _last_mod(self, validated_data):
@@ -23,14 +25,14 @@ class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         """
-        extended ModelSerializer to set last_mod_user/date
+        extend `ModelSerializer.create()` to set last_mod_user/date
         """
         self._last_mod(validated_data)
         return super(HyperlinkedModelSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
         """
-        extended ModelSerializer to set last_mod_user/date
+        extend `ModelSerializer.update()` to set last_mod_user/date
         """
         self._last_mod(validated_data)
         return super(HyperlinkedModelSerializer, self).update(instance, validated_data)
@@ -61,7 +63,7 @@ class CourseSerializer(HyperlinkedModelSerializer):
         related_link_view_name='course-related',
     )
 
-    # json api 'included' support (also used for `related_serializers` for DJA 2.6.0)
+    #: json api 'included' support (also used for `related_serializers` for DJA 2.6.0)
     included_serializers = {
         'course_terms': 'myapp.serializers.CourseTermSerializer',
     }
@@ -84,7 +86,7 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
 
     course = ResourceRelatedField(
         model=Course,
-        many=False,  # this breaks new 2.6.0 related support. Only works when True.
+        many=False,
         read_only=False,
         allow_null=True,
         required=False,
@@ -103,7 +105,7 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
         related_link_view_name='course_term-related',
     )
 
-    # json api 'included' support
+    #: json api 'included' support
     included_serializers = {
         'course': 'myapp.serializers.CourseSerializer',
         'instructors': 'myapp.serializers.InstructorSerializer',

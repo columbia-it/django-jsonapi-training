@@ -7,7 +7,7 @@
 This is some in-house staff developer training developed by and for
 [Columbia University Information Technology](https://cuit.columbia.edu).
  
-It consists of [lecture notes](docs/outline.md) and a sample Django app
+It consists of [lecture notes](index.md) and a sample Django app
 which attempts to demonstrate the full power of the [{json:api}](http://jsonapi.org)
 request/response framework and related components such as OAuth 2.0.
 

@@ -5,16 +5,18 @@ from django.db import models
 
 class CommonModel(models.Model):
     """
-    Abstract model with common fields for all "real" Models:
-    - id: globally unique UUID version 4
-    - effective dates
-    - last modified dates
+    Abstract :py:class:`~django.db.models.Model` with common fields for all "real" Models
     """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    effective_start_date = models.DateField(default=None, blank=True, null=True)
-    effective_end_date = models.DateField(default=None, blank=True, null=True)
-    last_mod_user_name = models.CharField(default=None, null=True, max_length=80)
-    last_mod_date = models.DateField(auto_now=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
+                          help_text='globally unique id (UUID4)')
+    effective_start_date = models.DateField(default=None, blank=True, null=True,
+                                            help_text='date when this model instance becomes valid')
+    effective_end_date = models.DateField(default=None, blank=True, null=True,
+                                          help_text='date when this model instance becomes invalid')
+    last_mod_user_name = models.CharField(default=None, null=True, max_length=80,
+                                          help_text='who last modified this instance')
+    last_mod_date = models.DateField(auto_now=True,
+                                     help_text='when they modified it.')
 
     class Meta:
         abstract = True

@@ -25,6 +25,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'c3pz+#@g%crl=bihc347a5)+l@cp==
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = strtobool(os.environ.get('DJANGO_DEBUG', 'true'))
 SQLSERVER = strtobool(os.environ.get('DJANGO_SQLSERVER', 'false'))
+MYSQL = strtobool(os.environ.get('DJANGO_MYSQL', 'false'))
 
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
@@ -99,10 +100,18 @@ if SQLSERVER:
     }
 
     # override the standard migrations because they break due to SQL Server deficiences.
-    MIGRATION_MODULES = {
-        'oauth2_provider': 'myapp.migration_overrides.oauth2_provider',
+    # MIGRATION_MODULES = {
+    #     'oauth2_provider': 'myapp.migration_overrides.oauth2_provider',
+    # }
+elif MYSQL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': '/Users/alan/my.cnf',
+            },
+        }
     }
-
 else:
     DATABASES = {
         'default': {
