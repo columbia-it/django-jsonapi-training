@@ -220,7 +220,7 @@ epub_exclude_files = ['search.html']
 
 autodoc_member_order = 'bysource'
 autodoc_inherit_docstrings = False
-autodoc_mock_imports = ['pyodbc']
+#autodoc_mock_imports = ['pyodbc']
 
 apidoc_module_dir = '../myapp'
 apidoc_output_dir = 'apidoc'
