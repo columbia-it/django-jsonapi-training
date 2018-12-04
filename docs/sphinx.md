@@ -22,28 +22,18 @@ for Python docstrings, and Markdown for stuff I type.
 
 To Use sphinx, we'll install a bunch of packages:
 
-```diff
-diff --git a/requirements.txt b/requirements.txt
-index 6716578..5d77ace 100644
---- a/requirements.txt
-+++ b/requirements.txt
-@@ -1,3 +1,4 @@
-+pip>=10.0.1
- Django==2.1.3
- django-filter==2.0.0
- django-cors-middleware==1.3.1
-@@ -19,3 +20,11 @@ rest-condition==1.0.3
- tox>=3.3.0,<3.4
- tox-pip-extensions==1.4.0
- PyYAML==3.13
-+Sphinx==1.8.2
-+sphinx-markdown-tables==0.0.9
-+sphinx-rtd-theme==0.4.2
-+sphinxcontrib-apidoc==0.3.0
-+sphinxcontrib-confluencebuilder==0.9
-+sphinxcontrib-django==0.4
-+sphinxcontrib-websupport==1.1.0
-+recommonmark==0.4.0
+```text
+# bring in requirements for my app (excepting the optional database):
+-r../requirements-django.txt
+# stuff needed for sphinx documentation:
+Sphinx==1.8.2
+sphinx-markdown-tables==0.0.9
+sphinx-rtd-theme==0.4.2
+sphinxcontrib-apidoc==0.3.0
+sphinxcontrib-confluencebuilder==0.9
+sphinxcontrib-django==0.4
+sphinxcontrib-websupport==1.1.0
+recommonmark==0.4.0
 ```
 
 Then run the quickstart:
@@ -53,7 +43,7 @@ sphinx-quickstart
 
 This creates a `conf.py` which is the core configuration file for Sphinx. And, since it's Python code,
 you can do all kinds of cool stuff.  Here are a few of my changes after the quickstart, which notably
-includes some django-specific stuff, support for Markdown and Markdown Tables:
+includes some django-specific stuff, autmatic API documentation and support for Markdown and Markdown Tables:
 
 ```diff
 diff --git b/docs/conf.py a/docs/conf.py
@@ -276,6 +266,53 @@ TODO: Document how to publish to confluence
 
 ### Publishing to RTD
 
-[https://readthedocs.io](https://readthedocs.io) is where most open-source projects host their documentation.
+[https://readthedocs.io](https://readthedocs.io) (RTD)
+is where most open-source projects host their documentation.
 
-TODO: Document how to use RTD.
+Once we've got sphinx working locally, and the project hosted on github, getting it working with RTD is pretty
+straightforward. See the
+[sphinx getting started guide](https://docs.readthedocs.io/en/latest/intro/getting-started-with-sphinx.html).
+
+On the [RTD dashboard](https://readthedocs.org/dashboard/) import a new project
+and make sure to:
+1. Pick a name. I've chosen
+   [columbia-it-django-jsonapi-training](https://columbia-it-django-jsonapi-training.readthedocs.io)
+2. Provide the github repository URL:
+   [https://github.com/columbia-it/django-jsonapi-training](https://github.com/columbia-it/django-jsonapi-training)
+3. In advanced settings configure the PIP requirements file: `docs/requirements.txt` and
+   make sure to select `CPython 3.x` as the Python interpreter.
+
+#### Fine print: pyodbc breakage
+
+I did have to split up the project `requirements.txt` into multiple pieces since I import Django and myapp into
+`conf.py` to enable `autoapi` and `autodoc`. Since I had the SQL Server packages (django-pyodbc-azure and pyodbc)
+in `requirements.txt`, pyodbc failed to install on RTD since it wants to compile some C source code
+using headers that are installed with an ODBC OS package. In fact, this stuff is all optional as the
+default database used in the project is sqlite3, so I restructured the requirements into `requirements.txt`:
+
+```text
+# requirements for our app:
+-rrequirements-django.txt
+# optional sqlserver requirements:
+-rrequirements-sqlserver.txt
+```
+
+with the main stuff in `requirements-django.txt` and the additional SQL Server stuff in `requirements-sqlserver.txt`.
+
+Finally, in `docs/requirements.txt` we bring in the necessary django and sphinx pieces:
+```
+# bring in requirements for my app (excepting the optional database):
+-r../requirements-django.txt
+# stuff needed for sphinx documentation:
+Sphinx==1.8.2
+sphinx-markdown-tables==0.0.9
+sphinx-rtd-theme==0.4.2
+sphinxcontrib-apidoc==0.3.0
+sphinxcontrib-confluencebuilder==0.9
+sphinxcontrib-django==0.4
+sphinxcontrib-websupport==1.1.0
+recommonmark==0.4.0
+```
+
+In anticipation of adding travis support on github,
+I also changed `tox.ini` to have a separate section for local sphinx builds: `tox -e sphinx`.

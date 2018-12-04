@@ -1,0 +1,21 @@
+# requirements for our django app
+pip>=10.0.1
+Django==2.1.3
+django-filter==2.0.0
+django-cors-middleware==1.3.1
+django-debug-toolbar==1.9.1
+# just grab the master branch of DOT for now
+# django-oauth-toolkit==1.2.0
+git+https://github.com/jazzband/django-oauth-toolkit.git
+djangorestframework==3.9.0
+# PkOnlyObject error fixed: https://github.com/django-json-api/django-rest-framework-json-api/pull/517
+# djangorestframework-jsonapi==2.6.0
+git+https://github.com/django-json-api/django-rest-framework-json-api.git@8c075d0
+# test https://github.com/django-json-api/django-rest-framework-json-api/pull/526
+# git+https://github.com/sliverc/django-rest-framework-json-api.git@null_relationships
+requests==2.20.0
+rest-condition==1.0.3
+# tox-pip-extensions breaks with tox 3.3+
+tox>=3.3.0,<3.4
+tox-pip-extensions==1.4.0
+PyYAML==3.13

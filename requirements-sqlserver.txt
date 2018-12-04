@@ -1,0 +1,5 @@
+# database requirements
+# See fixes in django-ppyodbc-azure https://github.com/michiya/django-pyodbc-azure/pull/189
+git+https://github.com/n2ygk/django-pyodbc-azure.git@autofield
+# or just use settings.MIGRATION_MODULES to override
+# django-pyodbc-azure==2.1.0.0
