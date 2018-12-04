@@ -2,4 +2,6 @@
 -rrequirements-django.txt
 # optional sqlserver requirements:
 -rrequirements-sqlserver.txt
+# optional musql requirements:
+-rrequirements-mysql.txt
 
