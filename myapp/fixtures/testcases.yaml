@@ -55,6 +55,7 @@
     last_mod_date: 2018-08-03, school_bulletin_prefix_code: B, suffix_two: '00', subject_area_code: BUEC,
     course_number: '72074', course_identifier: BUEC7255B, course_name: 'FinTech: Consumer
       Financial Se', course_description: 'FinTech: Consumer Financial Se'}
+# this course has no courseterm children:
 - model: myapp.course
   pk: 04893b8f-0cbe-4e09-b8e6-17a4745900c1
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
@@ -152,6 +153,12 @@
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
     last_mod_date: 2018-08-03, term_identifier: 20181AMST3704X, audit_permitted_code: 0,
     exam_credit_flag: false, course: 01ca197f-c00c-4f24-a743-091b62f1d500}
+# a coursterm item that doesn't refers back to a parent course:
+- model: myapp.courseterm
+  pk: 48a7ab4f-35d7-4004-97b2-2a95626dd25a
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: admin,
+    last_mod_date: 2018-12-05, term_identifier: 20181COMS3109W, audit_permitted_code: 0,
+    exam_credit_flag: false, course: null}
 - model: myapp.instructor
   pk: 0a879dc6-63d4-4a79-aae6-63ee2b379b32
   fields:
