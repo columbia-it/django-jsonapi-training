@@ -12,9 +12,12 @@ Using the Django REST Framework and DRF-JSONAPI
 
 *Lecture Notes*
 
-**Alan Crosswell**
+rev. |today|
 
-rev. 12/01/2018
+Author(s):
+
+.. include:: ../AUTHORS
+    :literal:
 
 Copyright © 2018 The Trustees of Columbia University in the City of New York
 

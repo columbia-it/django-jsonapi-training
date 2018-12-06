@@ -70,7 +70,7 @@ class Person(CommonModel):
     """
     # 'name' is a reserved word in SQL server so just force the db_column name to be different.
     # TODO: This might be a django-pyodbc-azure bug. Check it.
-    name = models.CharField(db_column='person_name', max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         ordering = ['name']

@@ -98,7 +98,7 @@ Use sqlcmd to create a new database and user that owns it:
 2> go
 1> USE DATABASE foo;
 2> go
-Changed database context to 'bar'.
+Changed database context to 'foo'.
 1> CREATE USER [foo] FROM LOGIN [foo];
 2> go
 1> exec sp_addrolemember 'db_owner','foo';
@@ -591,11 +591,9 @@ Things we've seen so far and have had to work around after prototyping
 our app using sqlite3:
 
 - TextFields can't be UNIQUE: Use CharField.
-- Stuff that's a reserved word for a column name: Rename the `db_column`.
 - Can't ALTER TABLE to change the primary key's type to an AutoField (e.g. AutoField to BigAutoField).
 - [The NULL UNIQUE constraint considers multiple rows containing NULL values to violate uniqueness](https://stackoverflow.com/questions/767657/how-do-i-create-a-unique-constraint-that-also-allows-nulls/767702#767702)
   (even though no two NULL values are equal).
-
   
 #### Reminder: DJANGO_SQLSERVER environnment variables
 
@@ -702,75 +700,8 @@ myapp
  [ ] 0006_auto_20181116_2058
 (env) django-training$ ./manage.py migrate myapp
 ```
- 
-Let's move on to the next error:
 
-#### "name" can't be a field name
-
-When we tried the `0005_instructor` migration, this error happened:
-```console
-django.db.utils.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Column 'name' in table 'myapp_instructor' is of a type that is invalid for use as a key column in an index. (1919) (SQLExecDirectW)")
-```
-and then (after fixing the above, described below) this error, which is the same problem as earlier: TextField can't be unique:
-```console
-pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Column 'instr_name' in table 'myapp_instructor' is of a type that is invalid for use as a key column in an index. (1919) (SQLExecDirectW)")
-```
-
-So I guess we need to fix the model not to use `name` as a field name. I like `name` and don't want to screw up
-my Model, serializer, views and so on, so let's use the `db_column` field to fix it.
-
-1. Remove the existing instructor migrations.
-2. Fix the model to specify a `db_column` name.
-3. Make new migrations for instructor
-4. Migrate.
-
-```console
-(env) django-training$ git rm myapp/migrations/0005_instructor.py 
-rm 'myapp/migrations/0005_instructor.py'
-(env) django-training$ git rm myapp/migrations/0006_auto_20181116_2058.py 
-rm 'myapp/migrations/0006_auto_20181116_2058.py'
-(env) django-training$ ./manage.py showmigrations myapp
-myapp
- [X] 0001_initial
- [X] 0002_auto_20181019_1821
- [X] 0003_unique_term_identifier
-(env) django-training$ ./manage.py makemigrations myapp
-Migrations for 'myapp':
-  myapp/migrations/0004_instructor.py
-    - Create model Instructor
-(env) django-training$ ./manage.py showmigrations myapp
-myapp
- [X] 0001_initial
- [X] 0002_auto_20181019_1821
- [X] 0003_unique_term_identifier
- [ ] 0004_instructor
-(env) django-training$ ./manage.py migrate myapp
-Operations to perform:
-  Apply all migrations: myapp
-Running migrations:
-  Applying myapp.0004_instructor... OK
-(env) django-training$ ./manage.py loaddata myapp/fixtures/testcases.yaml
-Installed 38 object(s) from 1 fixture(s)  
-```
-
-Here's what we fixed in the Instructor Model:
-```diff
-diff --git a/myapp/models.py b/myapp/models.py
-index dbb13e3..aad33d1 100644
---- a/myapp/models.py
-+++ b/myapp/models.py
-@@ -66,7 +66,9 @@ class Instructor(CommonModel):
-     """
-     An instructor.
-     """
--    name = models.TextField(max_length=100, unique=True)
-+    # 'name' is a reserved word in SQL server so just force the db_column name to be different.
-+    # TODO: This might be a django-pyodbc-azure bug. Check it.
-+    name = models.CharField(db_column='instr_name', max_length=100, unique=True)
-     course_terms = models.ManyToManyField('myapp.CourseTerm', related_name='instructors')
- 
-     class Meta:
-```
+It turns out I had the same TextField vs. CharField error with the `Instructor.name` (since changed to `Person.name`). 
 
 #### New Way: A fix for django-pyodbc-azure
 
@@ -784,7 +715,7 @@ so we pull it from the submitter's github for now with this entry in
 git+https://github.com/n2ygk/django-pyodbc-azure.git@autofield
 ```
 
-#### Old Way: Fixing django-oauth-toolkit Migrations
+#### Old Way: Overriding migrations
 
 See the [new way](#new-way-a-fix-for-django-pyodbc-azure) that fixes the
 deficiences via `django-pyodbc-azure`, above. For historical purposes,
@@ -1270,16 +1201,11 @@ Here's the difference for the resulting DDL:
 
 And that does it!
 
-Meanwhile, we'll go ahead and research the `django-pyodbc-azure` package and see if there's a fix: 
-[#188](https://github.com/michiya/django-pyodbc-azure/pull/188) -- but the AutoField error is still present
-so we need to continue using this overridden migration until that gets fixed or DOT squashes the migrations.
-
 #### Squashing Migrations
 
 If you don't have data in the database that you care about, an easier approach is to
 [squash migrations](https://docs.djangoproject.com/en/2.1/topics/migrations/#migration-squashing) or just
 remove all the migration scripts and re-do `./manage.py makemigrations`.
-
 
 #### Debugging Migration DDL
 
@@ -1338,5 +1264,3 @@ ALTER TABLE `myapp_instructor_course_terms` ADD CONSTRAINT `myapp_instructor_cou
 ALTER TABLE `myapp_instructor_course_terms` ADD CONSTRAINT `myapp_instructor_course__instructor_id_courseterm_8f50dbb5_uniq` UNIQUE (`instructor_id`, `courseterm_id`);
 COMMIT;
 ```
-
-

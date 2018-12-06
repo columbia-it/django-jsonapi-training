@@ -39,6 +39,8 @@ from myapp import VERSION
 version = VERSION
 # The full version, including alpha/beta/rc tags
 release = VERSION
+# substitution for |today| in .rst -- the date this documentation was built.
+today = datetime.date.today().isoformat()
 
 # Auto-generate API documentation.
 #os.environ['SPHINX_APIDOC_OPTIONS'] = "members,undoc-members,show-inheritance"
@@ -230,13 +232,13 @@ apidoc_toc_file = False
 apidoc_module_first = True
 apidoc_extra_args = ['-f']
 
-confluence_publish = False  # for now until we figure out how to make it work.
+confluence_publish = True  # for now until we figure out how to make it work.
+confluence_server_url = os.environ.get('CONFLUENCE_SERVER', "https://confluence.columbia.edu")
 confluence_space_name = os.environ.get('CONFLUENCE_SPACE', None)
 confluence_parent_page = os.environ.get('CONFLUENCE_PARENT', None)
-confluence_server_url = "https://confluence.columbia.edu"
 confluence_server_user = os.environ.get('CONFLUENCE_USER', None)
-confluence_ask_password = True
-# confluence_server_pass = os.environ['CONFLUENCE_PASS']
+#confluence_ask_password = True
+confluence_server_pass = os.environ.get('CONFLUENCE_PASS', None)
 
 # -- Options for intersphinx extension ---------------------------------------
 

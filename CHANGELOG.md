@@ -15,7 +15,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.2.2] - YYYY-MM-DD 
+## [0.2.3] - 2018-12-06
+
+### Added
+- Added a Person model
+- Documentation is now available at https://columbia-it-django-jsonapi-training.readthedocs.io
+
+### Changed
+- Instructor model is now OneToOne with Person model.
+
+### Fixed
+- I misunderstood one of the SQL Server errors as complaining about a column name when it wasn't.
+  This is fixed with migration 0007....
+
+## [0.2.2] - 2018-12-03
 
 ### Added
 - sphinx RTD configuration:
