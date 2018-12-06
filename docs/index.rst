@@ -37,6 +37,7 @@ Copyright © 2018 The Trustees of Columbia University in the City of New York
    modifying.md
    another1.md
    database.md
+   another2.md
    sphinx.md
    documenting-api.md
    oauth2.md

@@ -64,17 +64,32 @@ class CourseTerm(CommonModel):
         return '%s,%s,%s' % (self.id, self.term_identifier, self.course.course_identifier)
 
 
+class Person(CommonModel):
+    """
+    A person.
+    """
+    # 'name' is a reserved word in SQL server so just force the db_column name to be different.
+    # TODO: This might be a django-pyodbc-azure bug. Check it.
+    name = models.CharField(db_column='person_name', max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'people'
+
+    def __str__(self):
+        return '%s,%s' % (self.id, self.name)
+
+
 class Instructor(CommonModel):
     """
     An instructor.
     """
-    # 'name' is a reserved word in SQL server so just force the db_column name to be different.
-    # TODO: This might be a django-pyodbc-azure bug. Check it.
-    name = models.CharField(db_column='instr_name', max_length=100, unique=True)
+    person = models.OneToOneField('myapp.Person', related_name='instructor', on_delete=models.CASCADE, null=True,
+                                  default=None)
     course_terms = models.ManyToManyField('myapp.CourseTerm', related_name='instructors')
 
     class Meta:
-        ordering = ['name']
+        ordering = ['id']
 
     def __str__(self):
-        return '%s,%s' % (self.id, self.name)
+        return '%s' % (self.id)

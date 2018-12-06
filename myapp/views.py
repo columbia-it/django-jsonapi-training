@@ -7,9 +7,9 @@ from rest_framework.authentication import (BasicAuthentication,
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
-from myapp.models import Course, CourseTerm, Instructor
+from myapp.models import Course, CourseTerm, Instructor, Person
 from myapp.serializers import (CourseSerializer, CourseTermSerializer,
-                               InstructorSerializer)
+                               InstructorSerializer, PersonSerializer)
 
 # TODO: simplify the following
 #: For a given HTTP method, a list of valid alternative required scopes.
@@ -81,12 +81,14 @@ class CourseBaseViewSet(AuthnAuthzMixIn, ModelViewSet):
     pass
 
 
+usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte', 'in')
+text_rels = ('icontains', 'iexact', 'contains')
+
+
 class CourseViewSet(CourseBaseViewSet):
     __doc__ = Course.__doc__
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte', 'in')
-    text_rels = ('icontains', 'iexact', 'contains')
     #: See https://docs.djangoproject.com/en/stable/ref/models/querysets/#field-lookups for all the possible filters.
     filterset_fields = {
         'id': usual_rels,
@@ -107,7 +109,6 @@ class CourseTermViewSet(CourseBaseViewSet):
     __doc__ = CourseTerm.__doc__
     queryset = CourseTerm.objects.all()
     serializer_class = CourseTermSerializer
-    usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte')
     #: defined filter[] names
     filterset_fields = {
         'id': usual_rels,
@@ -118,6 +119,24 @@ class CourseTermViewSet(CourseBaseViewSet):
     }
     #: Keyword searches are just this one field.
     search_fields = ('term_identifier', )
+
+
+class PersonViewSet(CourseBaseViewSet):
+    __doc__ = Person.__doc__
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    filterset_fields = {}
+    search_fields = ('name', 'course_terms__course__course_name')
+
+    class Meta:
+        """
+        In addition to specific filters defined above, also generate some automatic filters.
+        """
+        model = Person
+        fields = {
+            'id': usual_rels,
+            'name': usual_rels,
+        }
 
 
 class InstructorFilterSet(filters.FilterSet):
@@ -133,16 +152,21 @@ class InstructorFilterSet(filters.FilterSet):
     course_name__gte = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="gte")
     course_name__lt = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="lt")
     course_name__lte = filters.CharFilter(field_name="course_terms__course__course_name", lookup_expr="lte")
+    #: `filter[name]` is an alias for the path `course_terms.instructor.person.name`
+    name = filters.CharFilter(field_name="course_terms__instructor__person__name", lookup_expr="iexact")
+    #: `filter[name_gt]` for greater-than, etc.
+    name__gt = filters.CharFilter(field_name="course_terms__instructor__person__name", lookup_expr="gt")
+    name__gte = filters.CharFilter(field_name="course_terms__instructor__person__name", lookup_expr="gte")
+    name__lt = filters.CharFilter(field_name="course_terms__instructor__person__name", lookup_expr="lt")
+    name__lte = filters.CharFilter(field_name="course_terms__instructor__person__name", lookup_expr="lte")
 
     class Meta:
         """
         In addition to specific filters defined above, also generate some automatic filters.
         """
-        usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte')
         model = Instructor
         fields = {
             'id': usual_rels,
-            'name': usual_rels,
         }
 
 
@@ -176,3 +200,11 @@ class InstructorRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
     queryset = Instructor.objects
     self_link_view_name = 'instructor-relationships'
+
+
+class PersonRelationshipView(AuthnAuthzMixIn, RelationshipView):
+    """
+    View for people.relationships
+    """
+    queryset = Person.objects
+    self_link_view_name = 'person-relationships'

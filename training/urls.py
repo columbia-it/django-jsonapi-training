@@ -32,6 +32,7 @@ admin.autodiscover()
 router = routers.DefaultRouter()
 router.register(r'courses', views.CourseViewSet)
 router.register(r'course_terms', views.CourseTermViewSet)
+router.register(r'people', views.PersonViewSet)
 router.register(r'instructors', views.InstructorViewSet)
 
 urlpatterns = [
@@ -56,6 +57,14 @@ urlpatterns = [
     path('v1/course_terms/<pk>/<related_field>/',
         views.CourseTermViewSet.as_view({'get': 'retrieve_related'}), # a toOne relationship
         name='course_term-related'),
+    # person relationships
+    path('v1/people/<pk>/relationships/<related_field>/',
+        views.PersonRelationshipView.as_view(),
+        name='person-relationships'),
+    # use new `retrieve_related` functionality in DJA 2.6.0:
+    path('v1/people/<pk>/<related_field>/',
+        views.PersonViewSet.as_view({'get': 'retrieve_related'}),
+        name='person-related'),
     # instructor relationships
     path('v1/instructors/<pk>/relationships/<related_field>/',
         views.InstructorRelationshipView.as_view(),

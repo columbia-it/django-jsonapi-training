@@ -55,7 +55,6 @@
     last_mod_date: 2018-08-03, school_bulletin_prefix_code: B, suffix_two: '00', subject_area_code: BUEC,
     course_number: '72074', course_identifier: BUEC7255B, course_name: 'FinTech: Consumer
       Financial Se', course_description: 'FinTech: Consumer Financial Se'}
-# this course has no courseterm children:
 - model: myapp.course
   pk: 04893b8f-0cbe-4e09-b8e6-17a4745900c1
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
@@ -124,6 +123,11 @@
     last_mod_date: 2018-08-03, term_identifier: 20181ACCT7022B, audit_permitted_code: 0,
     exam_credit_flag: false, course: 016659e9-e29f-49b4-b85d-d25da0724dbb}
 - model: myapp.courseterm
+  pk: 48a7ab4f-35d7-4004-97b2-2a95626dd25a
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: admin,
+    last_mod_date: 2018-12-05, term_identifier: 20181COMS3109W, audit_permitted_code: 0,
+    exam_credit_flag: false, course: null}
+- model: myapp.courseterm
   pk: 52cc86dd-7a78-48b8-a6a5-76c1fc7fc9be
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
     last_mod_date: 2018-08-03, term_identifier: 20181ACCT8122B, audit_permitted_code: 0,
@@ -153,12 +157,26 @@
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
     last_mod_date: 2018-08-03, term_identifier: 20181AMST3704X, audit_permitted_code: 0,
     exam_credit_flag: false, course: 01ca197f-c00c-4f24-a743-091b62f1d500}
-# a coursterm item that doesn't refers back to a parent course:
-- model: myapp.courseterm
-  pk: 48a7ab4f-35d7-4004-97b2-2a95626dd25a
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: admin,
-    last_mod_date: 2018-12-05, term_identifier: 20181COMS3109W, audit_permitted_code: 0,
-    exam_credit_flag: false, course: null}
+- model: myapp.person
+  pk: 4a64f7fa-0c47-402c-907b-83fa339afc64
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-12-05, name: John Jay}
+- model: myapp.person
+  pk: 7fe24e43-eceb-4d03-94e7-73ef73ffccb0
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-12-05, name: Gouverneur Morris}
+- model: myapp.person
+  pk: 8c1bf6eb-810e-4060-8a41-e87e9732e545
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-12-05, name: Samuel Johnson}
+- model: myapp.person
+  pk: a060bdbe-6a3f-49a0-8172-ad89742b82c4
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-12-05, name: Robert Livingston}
+- model: myapp.person
+  pk: b3e1d967-e886-4797-aaf2-8dbe669ceb07
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-12-05, name: Alexander Hamilton}
 - model: myapp.instructor
   pk: 0a879dc6-63d4-4a79-aae6-63ee2b379b32
   fields:
@@ -166,7 +184,7 @@
     effective_end_date: null
     last_mod_user_name: null
     last_mod_date: 2018-11-12
-    name: John Jay
+    person: 4a64f7fa-0c47-402c-907b-83fa339afc64
     course_terms: [39ca7b38-f273-4fa3-9494-5a422780aebd, 00d14ddb-9fb5-4cff-9954-d52fc33217e7]
 - model: myapp.instructor
   pk: 1b3b7d1a-7eb5-43a2-941f-c18364013f9c
@@ -175,7 +193,7 @@
     effective_end_date: null
     last_mod_user_name: null
     last_mod_date: 2018-11-12
-    name: Alexander Hamilton
+    person: b3e1d967-e886-4797-aaf2-8dbe669ceb07
     course_terms: []
 - model: myapp.instructor
   pk: 40678ab5-07fa-4c93-a680-bceda8a34735
@@ -184,7 +202,7 @@
     effective_end_date: null
     last_mod_user_name: null
     last_mod_date: 2018-11-12
-    name: Samuel Johnson
+    person: 8c1bf6eb-810e-4060-8a41-e87e9732e545
     course_terms: [00d14ddb-9fb5-4cff-9954-d52fc33217e7, 00290ba0-ebae-44c0-9f4b-58a5f27240ed]
 - model: myapp.instructor
   pk: 4baaf8fa-9832-4732-a1dd-ee7bc5e58c21
@@ -193,7 +211,7 @@
     effective_end_date: null
     last_mod_user_name: null
     last_mod_date: 2018-11-12
-    name: Robert Livingston
+    person: a060bdbe-6a3f-49a0-8172-ad89742b82c4
     course_terms: []
 - model: myapp.instructor
   pk: aae87c7f-8515-44cf-b1c7-79c6f81cc5c5
@@ -202,5 +220,5 @@
     effective_end_date: null
     last_mod_user_name: null
     last_mod_date: 2018-11-12
-    name: Gouverneur Morris
+    person: 7fe24e43-eceb-4d03-94e7-73ef73ffccb0
     course_terms: [00d14ddb-9fb5-4cff-9954-d52fc33217e7]

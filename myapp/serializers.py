@@ -3,7 +3,7 @@ from datetime import datetime
 from rest_framework_json_api.relations import ResourceRelatedField
 from rest_framework_json_api.serializers import HyperlinkedModelSerializer
 
-from myapp.models import Course, CourseTerm, Instructor
+from myapp.models import Course, CourseTerm, Instructor, Person
 
 
 class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
@@ -112,10 +112,31 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
     }
 
 
+class PersonSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Person
+        fields = ('url', 'name', 'instructor')
+
+    instructor = ResourceRelatedField(
+        model=Instructor,
+        many=False,
+        read_only=False,
+        allow_null=True,
+        required=False,
+        queryset=Instructor.objects.all(),
+        self_link_view_name='person-relationships',
+        related_link_view_name='person-related',
+    )
+
+    included_serializers = {
+        'instructor': 'myapp.serializers.InstructorSerializer',
+    }
+
+
 class InstructorSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Instructor
-        fields = ('name', 'course_terms', 'url')
+        fields = ('person', 'course_terms', 'url')
 
     course_terms = ResourceRelatedField(
         model=CourseTerm,
@@ -128,6 +149,18 @@ class InstructorSerializer(HyperlinkedModelSerializer):
         related_link_view_name='instructor-related',
     )
 
+    person = ResourceRelatedField(
+        model=Person,
+        many=False,
+        read_only=False,
+        allow_null=True,
+        required=False,
+        queryset=Person.objects.all(),
+        self_link_view_name='instructor-relationships',
+        related_link_view_name='instructor-related'
+    )
+
     included_serializers = {
         'course_terms': 'myapp.serializers.CourseTermSerializer',
+        'person': 'myapp.serializers.PersonSerializer',
     }
