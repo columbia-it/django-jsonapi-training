@@ -16,6 +16,8 @@ or more Instructors. We'll:
 ### Instructor model
 This model is ManyToMany with CourseTerm.
 
+`GIT TAG: instructor`
+
 ```python
 class Instructor(CommonModel):
     """

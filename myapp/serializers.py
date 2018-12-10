@@ -8,11 +8,24 @@ from myapp.models import Course, CourseTerm, Instructor, Person
 
 class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
     """
+    Common serializer class for all model serializers.
     Extends :py:class:`.models.CommonModel` to set `last_mod_user_name` and `...date` from auth.user on a
     POST/PATCH, not from the client app.
+    This silently *ignores* anything CREATEd or PATCHed for these fields.
     """
-    #: these are read-only fields
-    read_only_fields = ('last_mod_user_name', 'last_mod_date')
+    class Meta:
+        """
+        In order for this Meta inner class to be inherited by the various serializers,
+        one must explicitly inherit it as in this example::
+
+            class MySerializer(HyperlinkedModelSerializer):
+                class Meta(HyperlinkedModelSerializer.Meta):
+                    model = MyModel
+        """
+        #: serialize all model fields unless otherwise overridden
+        fields = "__all__"
+        #: mark these fields as read-only
+        read_only_fields = ('last_mod_user_name', 'last_mod_date')
 
     def _last_mod(self, validated_data):
         """
@@ -40,18 +53,12 @@ class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
 
 class CourseSerializer(HyperlinkedModelSerializer):
     """
-    (de-)serialize the Course.
+    (de-)serialize the Course model.
     """
-    class Meta:
+    class Meta(HyperlinkedModelSerializer.Meta):
         model = Course
-        fields = (
-            'url',
-            'school_bulletin_prefix_code', 'suffix_two', 'subject_area_code',
-            'course_number', 'course_identifier', 'course_name', 'course_description',
-            'effective_start_date', 'effective_end_date',
-            'last_mod_user_name', 'last_mod_date',
-            'course_terms')
 
+    #: a course has zero or more course_term instances
     course_terms = ResourceRelatedField(
         model=CourseTerm,
         many=True,
@@ -63,7 +70,8 @@ class CourseSerializer(HyperlinkedModelSerializer):
         related_link_view_name='course-related',
     )
 
-    #: json api 'included' support (also used for `related_serializers` for DJA 2.6.0)
+    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
+    #: (also used for `related_serializers` for DJA 2.6.0)
     included_serializers = {
         'course_terms': 'myapp.serializers.CourseTermSerializer',
     }
@@ -74,16 +82,13 @@ class CourseSerializer(HyperlinkedModelSerializer):
 
 
 class CourseTermSerializer(HyperlinkedModelSerializer):
-    class Meta:
+    """
+    (de-)serialize the CourseTerm model.
+    """
+    class Meta(HyperlinkedModelSerializer.Meta):
         model = CourseTerm
-        fields = (
-            'url',
-            'term_identifier', 'audit_permitted_code',
-            'exam_credit_flag',
-            'effective_start_date', 'effective_end_date',
-            'last_mod_user_name', 'last_mod_date',
-            'course', 'instructors')
 
+    #: a course_term has zero or one parent courses
     course = ResourceRelatedField(
         model=Course,
         many=False,
@@ -94,6 +99,7 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
         self_link_view_name='course_term-relationships',
         related_link_view_name='course_term-related',
     )
+    #: a course_term can have many instructors
     instructors = ResourceRelatedField(
         model=Instructor,
         many=True,
@@ -105,7 +111,8 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
         related_link_view_name='course_term-related',
     )
 
-    #: json api 'included' support
+    #: ``?include=course`` or ``?include=instructors``
+    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
     included_serializers = {
         'course': 'myapp.serializers.CourseSerializer',
         'instructors': 'myapp.serializers.InstructorSerializer',
@@ -113,10 +120,13 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
 
 
 class PersonSerializer(HyperlinkedModelSerializer):
-    class Meta:
+    """
+    (de-)serialize the Person model.
+    """
+    class Meta(HyperlinkedModelSerializer.Meta):
         model = Person
-        fields = ('url', 'name', 'instructor')
 
+    #: a person is an instructor
     instructor = ResourceRelatedField(
         model=Instructor,
         many=False,
@@ -128,16 +138,21 @@ class PersonSerializer(HyperlinkedModelSerializer):
         related_link_view_name='person-related',
     )
 
+    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
     included_serializers = {
         'instructor': 'myapp.serializers.InstructorSerializer',
     }
 
 
 class InstructorSerializer(HyperlinkedModelSerializer):
-    class Meta:
+    """
+    (de-)serialize the Instructor model.
+    """
+    class Meta(HyperlinkedModelSerializer.Meta):
         model = Instructor
-        fields = ('person', 'course_terms', 'url')
+        fields = "__all__"
 
+    #: an instructor teaches zero or more course instances
     course_terms = ResourceRelatedField(
         model=CourseTerm,
         many=True,
@@ -149,6 +164,7 @@ class InstructorSerializer(HyperlinkedModelSerializer):
         related_link_view_name='instructor-related',
     )
 
+    #: an instructor is a person
     person = ResourceRelatedField(
         model=Person,
         many=False,
@@ -160,6 +176,7 @@ class InstructorSerializer(HyperlinkedModelSerializer):
         related_link_view_name='instructor-related'
     )
 
+    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
     included_serializers = {
         'course_terms': 'myapp.serializers.CourseTermSerializer',
         'person': 'myapp.serializers.PersonSerializer',

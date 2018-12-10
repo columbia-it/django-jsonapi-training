@@ -162,6 +162,10 @@
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
     last_mod_date: 2018-12-05, name: John Jay}
 - model: myapp.person
+  pk: 4a81ad58-5f78-470c-bf65-b173da0473f7
+  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
+    last_mod_date: 2018-12-06, name: Jane Doe}
+- model: myapp.person
   pk: 7fe24e43-eceb-4d03-94e7-73ef73ffccb0
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
     last_mod_date: 2018-12-05, name: Gouverneur Morris}

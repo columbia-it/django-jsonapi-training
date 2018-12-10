@@ -1,6 +1,26 @@
 ## Building our DJA project
 
-### PIP Package Requirements
+### Start a new project with a blank slate
+
+*Development project teams generally have a starter template which avoids a lot of
+these steps; they are provided here just as an illustration of what's happening.*
+
+#### Create initial project
+```console
+src$ mkdir django-jsonapi-training
+src$ cd django-jsonapi-training
+django-jsonapi-training$ git init
+Initialized empty Git repository in /Users/alan/src/django-jsonapi-training/.git/
+```
+
+#### Set up virtualenv
+```console
+django-jsonapi-training$ python3 -m venv env
+django-jsonapi-training$ source env/bin/activate
+```
+
+#### Install required packages
+
 We are going to use a few Python packages for Django and various add-ons. This mostly-complete list of requirements
 is here, but, in practice, you would build up this list over time as you develop your project.
 
@@ -20,30 +40,9 @@ is here, but, in practice, you would build up this list over time as you develop
 
 For the complete list of required packages and any version constraints, see `requirements.txt`.
 
-Following is an example of "manually" adding the packages, one at a time. 
+Following is an example of "manually" adding the packages, one at a time, but you
+would more likely use `pip install -r requirements.txt` as [shown below](#freeze-python-package-requirements).
 
-### Start a new project with a blank slate
-
-*FYI, development project teams generally have a starter template which avoids a lot of
-these steps; they are provided here just as an illustration of what's happening.*
-
-<!-- have to use HTML markup to highlight typing vs. output:-( -->
-
-#### Create initial project
-```console
-src$ mkdir django-jsonapi-training
-src$ cd django-jsonapi-training
-django-jsonapi-training$ git init
-Initialized empty Git repository in /Users/alan/src/django-jsonapi-training/.git/
-```
-
-#### Set up virtualenv
-```console
-django-jsonapi-training$ python3 -m venv env
-django-jsonapi-training$ source env/bin/activate
-```
-
-#### Install required packages
 ```console
 (env) django-jsonapi-training$ pip install django
 Collecting django
@@ -214,6 +213,10 @@ See [below](#using-unreleased-packages) for an example of a more sophisticated `
 specific version ranges and pre-released package versions to work around some bugs or use new features.
 
 #### Make sure git ignores irrelevant (non-source) files
+
+We want to ignore our virtualenv directory, and various output files created by IDEs, editors, tox,
+compiled python and so on.
+
 ```console
 (env) django-jsonapi-training$ <b>cat >.gitignore
 env/
@@ -225,13 +228,17 @@ db.sqlite3
 htmlcov/
 *~
 *.egg-info/
-</b>
 ```
 
 #### Do initial migration and superuser account setup
 
 Now that all the prerequisite Python packages are installed we can
 start:
+
+1. Start a new Django project.
+1. Start a new app within that project.
+1. Perform initial database setup (migrations).
+1. Create the Django superuser account.
 
 ```console
 (env) django-jsonapi-training$ django-admin startproject training .
@@ -362,9 +369,23 @@ Date:   Fri Oct 26 16:36:49 2018 -0400
 You can now use the above commit as a template to start future projects if you like.
 
 Browse the source code for this project or clone it. Most of the code is reproduced below as well,
-but is likely not completely up to date.
+but is likely not completely up to date. Here's a summary of cloning, assuming you've already
+setup your git SSH keys:
+
+```console
+src$ git clone git@github.com:columbia-it/django-jsonapi-training.git
+src$ cd django-jsonapi-training
+django-jsonapi-training$ git checkout initial
+```
+
+If you want to follow along, you can uses the various git tags to check out pieces of the project.
+We'll indicate them like this:
+
+`GIT TAG: initial`
 
 ### Edit Settings to add DRF, DJA, OAuth, Debug, etc.
+
+`GIT TAG: settings`
 
 An initial version of `training/settings.py` is created by
 `django-admin startproject` and `django-admin startapp`. It's full of comments suggesting changes. 
@@ -578,6 +599,8 @@ index 52940b5..a8dcdb6 100644
 
 ### Define Models
 
+`GIT TAG: models`
+
 `django-admin startapp` created a starter `myapp/models.py`. Now add some actual model definitions to it.
 These are just like in "vanilla" Django.
 
@@ -655,6 +678,9 @@ class CourseTerm(CommonModel):
 ```
 
 ### Define Serializers
+
+`GIT TAG: serializers`
+
 Serializers render the Models in the "wire" format, which is JSON, and specifically {json:api},
 so we import our serializers from `rest_framework_json_api.serializers`.
 We will:
@@ -743,7 +769,184 @@ the one shown here, where the first serializer references the second and vice-ve
 that is referenced before being defined, so we just consistently use the string reference style. (We also saw this
 in `settings.py` for `INSTALLED_APPS` and so on.)
 
+#### Keep it DRY
+
+I could have made life easier for myself by using `fields = "__all__""` which tells the ModelSerializer to
+just include all the fields of the model plus the additional fields defined in this class (and, for the
+HyperlinkedModelSerializer, also the `url` field). Also, to keep things DRY (Don't Repeat Yourself) I've tried to
+minimize repetive code:
+
+```diff
+diff --git a/myapp/serializers.py b/myapp/serializers.py
+index 32604cb..beb962c 100644
+--- a/myapp/serializers.py
++++ b/myapp/serializers.py
+@@ -8,11 +8,24 @@ from myapp.models import Course, CourseTerm, Instructor, Person
+ 
+ class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
+     """
++    Common serializer class for all model serializers.
+     Extends :py:class:`.models.CommonModel` to set `last_mod_user_name` and `...date` from auth.user on a
+     POST/PATCH, not from the client app.
++    This silently *ignores* anything CREATEd or PATCHed for these fields.
+     """
+-    #: these are read-only fields
+-    read_only_fields = ('last_mod_user_name', 'last_mod_date')
++    class Meta:
++        """
++        In order for this Meta inner class to be inherited by the various serializers,
++        one must explicitly inherit it as in this example::
++
++            class MySerializer(HyperlinkedModelSerializer):
++                class Meta(HyperlinkedModelSerializer.Meta):
++                    model = MyModel
++        """
++        #: serialize all model fields unless otherwise overridden
++        fields = "__all__"
++        #: mark these fields as read-only
++        read_only_fields = ('last_mod_user_name', 'last_mod_date')
+ 
+     def _last_mod(self, validated_data):
+         """
+@@ -40,18 +53,12 @@ class HyperlinkedModelSerializer(HyperlinkedModelSerializer):
+ 
+ class CourseSerializer(HyperlinkedModelSerializer):
+     """
+-    (de-)serialize the Course.
++    (de-)serialize the Course model.
+     """
+-    class Meta:
++    class Meta(HyperlinkedModelSerializer.Meta):
+         model = Course
+-        fields = (
+-            'url',
+-            'school_bulletin_prefix_code', 'suffix_two', 'subject_area_code',
+-            'course_number', 'course_identifier', 'course_name', 'course_description',
+-            'effective_start_date', 'effective_end_date',
+-            'last_mod_user_name', 'last_mod_date',
+-            'course_terms')
+ 
++    #: a course has zero or more course_term instances
+     course_terms = ResourceRelatedField(
+         model=CourseTerm,
+         many=True,
+@@ -63,7 +70,8 @@ class CourseSerializer(HyperlinkedModelSerializer):
+         related_link_view_name='course-related',
+     )
+ 
+-    #: json api 'included' support (also used for `related_serializers` for DJA 2.6.0)
++    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
++    #: (also used for `related_serializers` for DJA 2.6.0)
+     included_serializers = {
+         'course_terms': 'myapp.serializers.CourseTermSerializer',
+     }
+@@ -74,16 +82,13 @@ class CourseSerializer(HyperlinkedModelSerializer):
+ 
+ 
+ class CourseTermSerializer(HyperlinkedModelSerializer):
+-    class Meta:
++    """
++    (de-)serialize the CourseTerm model.
++    """
++    class Meta(HyperlinkedModelSerializer.Meta):
+         model = CourseTerm
+-        fields = (
+-            'url',
+-            'term_identifier', 'audit_permitted_code',
+-            'exam_credit_flag',
+-            'effective_start_date', 'effective_end_date',
+-            'last_mod_user_name', 'last_mod_date',
+-            'course', 'instructors')
+ 
++    #: a course_term has zero or one parent courses
+     course = ResourceRelatedField(
+         model=Course,
+         many=False,
+@@ -94,6 +99,7 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
+         self_link_view_name='course_term-relationships',
+         related_link_view_name='course_term-related',
+     )
++    #: a course_term can have many instructors
+     instructors = ResourceRelatedField(
+         model=Instructor,
+         many=True,
+@@ -105,7 +111,8 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
+         related_link_view_name='course_term-related',
+     )
+ 
+-    #: json api 'included' support
++    #: ``?include=course`` or ``?include=instructors``
++    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
+     included_serializers = {
+         'course': 'myapp.serializers.CourseSerializer',
+         'instructors': 'myapp.serializers.InstructorSerializer',
+@@ -113,10 +120,13 @@ class CourseTermSerializer(HyperlinkedModelSerializer):
+ 
+ 
+ class PersonSerializer(HyperlinkedModelSerializer):
+-    class Meta:
++    """
++    (de-)serialize the Person model.
++    """
++    class Meta(HyperlinkedModelSerializer.Meta):
+         model = Person
+-        fields = ('url', 'name', 'instructor')
+ 
++    #: a person is an instructor
+     instructor = ResourceRelatedField(
+         model=Instructor,
+         many=False,
+@@ -128,16 +138,21 @@ class PersonSerializer(HyperlinkedModelSerializer):
+         related_link_view_name='person-related',
+     )
+ 
++    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
+     included_serializers = {
+         'instructor': 'myapp.serializers.InstructorSerializer',
+     }
+ 
+ 
+ class InstructorSerializer(HyperlinkedModelSerializer):
+-    class Meta:
++    """
++    (de-)serialize the Instructor model.
++    """
++    class Meta(HyperlinkedModelSerializer.Meta):
+         model = Instructor
+-        fields = ('person', 'course_terms', 'url')
++        fields = "__all__"
+ 
++    #: an instructor teaches zero or more course instances
+     course_terms = ResourceRelatedField(
+         model=CourseTerm,
+         many=True,
+@@ -149,6 +164,7 @@ class InstructorSerializer(HyperlinkedModelSerializer):
+         related_link_view_name='instructor-related',
+     )
+ 
++    #: an instructor is a person
+     person = ResourceRelatedField(
+         model=Person,
+         many=False,
+@@ -160,6 +176,7 @@ class InstructorSerializer(HyperlinkedModelSerializer):
+         related_link_view_name='instructor-related'
+     )
+ 
++    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
+     included_serializers = {
+         'course_terms': 'myapp.serializers.CourseTermSerializer',
+         'person': 'myapp.serializers.PersonSerializer',
+
+```
+
+
+Note that I've followed a somewhat common pattern of extending a class using the same name as the
+base class (HyperlinkedModelSerialzer). This can be somewhat confusing at first glance but also
+makes it easy to add functionality without changing a lot of source code.
+
 ### Define URL routing and Views 
+
+`GIT TAG: views`
 
 A view function is defined for each HTTP endpoint in the app. DRF uses Class-based views (CBV) in which
 the ViewSet class has an `as_view()` function that returns a view function. The HTTP endpoints are
@@ -878,6 +1081,8 @@ class CourseTermRelationshipView(RelationshipView):
 
 ### Migrate the newly-installed apps.
 
+`GIT TAG: migrations`
+
 Now we'll make sure our database is in sync with the newly-defined app models and then apply migrations
 that include those for Django core and various add-on packages as well as `myapp`.
 
@@ -930,6 +1135,8 @@ Anytime things are feeling confusing, just remove the sqlite3 database and re-mi
 
 ### Add some test data
 
+`GIT TAG: fixtures`
+
 See `client/loader.py` which loads some data found at
 [opendataservice.columbia.edu](http://opendataservice.columbia.edu/).
 
@@ -971,6 +1178,9 @@ application.
 ![alt-text](./media/postman1.png "screenshot of GET /v1/courses/")
 
 ### Adding Authentication and Authorization
+
+`GIT TAG: view-permissions`
+
 To make life easy, we started the example above with no 
 [authentication](#authentication-authentication_classes) (identifying clients)
 or [authorization](#authorization-permission_classes) (permission to GET, POST, PATCH, DELETE resources).
@@ -1211,6 +1421,8 @@ See `settings.py` for where the `REST_FRAMEWORK` default classes are configured.
 You can also add these classes on a per-view basis using, for example, the `.pagination_class` attribute.
  
 ### Configure additional Filter Backends
+
+`GIT TAG: views-filter`
 
 As you may have noticed in `settings.py`, we've added several Filter Backends: 
 - [`rest_framework_json_api.filters.QueryParameterValidationFilter`](https://django-rest-framework-json-api.readthedocs.io/en/stable/usage.html#queryparametervalidationfilter)
@@ -1615,6 +1827,8 @@ Resulting in:
 
 #### via the Serializer
 
+`GIT TAG: serializers-lastmod`
+
 Say we want to prevent the client from updating who the `last_mod_user_name` was or when the `last_mod_date`
 happened. This example _silently_ overrides the serializer `create` and `update` methods to use the authenticated
 user and current date when updating the underlying Model. Let's mark those fields read-only as well.
@@ -1787,6 +2001,8 @@ rm 'myapp/tests.py'
 ``` 
 
 #### Test Models 
+
+`GIT TAG: test-models`
 
 Let's start with the basics and make sure our Models make sense. Django has a nice testing framework that,
 by default, makes a new in-memory sqlite database each time a test suite is run. This guarantees that the
@@ -1979,6 +2195,8 @@ It's always good to write some negative tests to make sure expected errors actua
 `test_dup_fail()` we see that it failed on a uniqueness constraint, which is an expected error. So let's update
 the test code to check for the error:
 
+`GIT TAG: test-models-IntegrityError`
+
 ```python
     def test_dup_fail(self):
         with self.assertRaises(IntegrityError):
@@ -2168,6 +2386,10 @@ Also, one test fails, exercising a bug in the current DJA 2.6.0 release. We'll g
 
 ### Use Tox to automate testing
 
+`GIT TAG: tox`
+
+`GIT TAG: requirements-bandit-safety`
+
 #### The `tox.ini`
 Add a
 [tox.ini](./tox.ini)
@@ -2264,6 +2486,8 @@ Above we see a couple of `flake8` errors that have to be fixed before the tests 
 1. `myapp/admin.py` (an `django-admin startapp` auto-generated file that we don't need) has an unused `import`.
 2. `myapp/tests/test_views.py` also has an unused `import`.
 3. Let's use that `expectedFailure` import and label the failing test so we can move on.
+
+`GIT TAG: tox-flake8-expectedFailure`
 
 ```diff
 diff --git a/myapp/admin.py b/myapp/admin.py
@@ -2494,6 +2718,8 @@ This is another auto-generated file from `django-admin startapp` and is a candid
 remove from the project.
 
 ### Using unreleased packages
+
+`GIT TAG: requirements-pre-release`
 
 Sometimes we'll run into a bug or want to use a new feature in one of the packages we rely on, that
 is available but hasn't been released yet. It's actually pretty easy to do this via updates to

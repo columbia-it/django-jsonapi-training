@@ -577,6 +577,8 @@ mysql> describe myapp_course;
 
 ### Advanced Topic: SQL Server Workarounds
 
+`GIT TAG: v0.2.1`
+
 Unfortunately, Microsoft SQL Server and the `django-pyodbc-azure` package
 have a number of implementation deficiences and failures to comply with the
 [ANSI SQL](https://en.wikipedia.org/wiki/SQL#SQL_standards_documents) standard.
