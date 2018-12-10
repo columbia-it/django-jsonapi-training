@@ -31,7 +31,7 @@ django.setup()
 # See https://pypi.org/project/sphinxcontrib-django/
 project = 'Django {json:api} training'
 year = datetime.date.today().year
-copyright = '{}, The Trustees of Columbia University in the City of New York'.format(year)
+copyright = '{}, The Trustees of Columbia University in the City of New York. '.format(year)
 author = 'Alan Crosswell'
 
 # The short X.Y version
