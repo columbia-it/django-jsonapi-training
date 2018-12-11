@@ -240,7 +240,7 @@ apidoc_toc_file = False
 apidoc_module_first = True
 apidoc_extra_args = ['-f']
 
-confluence_publish = True  # for now until we figure out how to make it work.
+confluence_publish = True
 confluence_server_url = os.environ.get('CONFLUENCE_SERVER', "https://confluence.columbia.edu")
 confluence_space_name = os.environ.get('CONFLUENCE_SPACE', None)
 confluence_parent_page = os.environ.get('CONFLUENCE_PARENT', None)

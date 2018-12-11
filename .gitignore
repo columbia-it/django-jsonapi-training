@@ -7,4 +7,5 @@ db.sqlite3
 htmlcov/
 *~
 *.egg-info/
-__pycache__
+.pytest_cache/
+*.sh
