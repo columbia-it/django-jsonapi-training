@@ -601,6 +601,20 @@ index 52940b5..a8dcdb6 100644
 
 `GIT TAG: models`
 
+Generally, you need to have an application architecture sketched out in advance. This includes a data model.
+You can start by sketching your entity-relationship diagrams on a whiteboard or use a modeling tool to generate a
+[UML](https://en.wikipedia.org/wiki/Unified_Modeling_Language)
+diagram. Or, you can just make Django models
+and then pretend you designed them first using the `django-extensions` package. Your manager will never known;-)
+
+```bash
+./manage.py graph_models -g -S --disable-abstract-fields -E -o docs/media/initial-uml.png myapp
+```
+
+Here's our model with the CommonModel off to the side to make things more readable:
+
+![alt-text](./media/initial-uml.png "UML diagram of data model")
+
 `django-admin startapp` created a starter `myapp/models.py`. Now add some actual model definitions to it.
 These are just like in "vanilla" Django.
 
@@ -1360,7 +1374,7 @@ previously-added `admin` superuser:
 For "free" out of the box with DJA are pagination, sorting and _sparse fieldsets_. For an example,
 try this GET: 
 
-http://127.0.0.1:8000/v1/courses/?page[size]=3&page[number]=42&sort=-course_number&fields[courses]=course_number,course_name
+[http://127.0.0.1:8000/v1/courses/?page[size]=3&page[number]=42&sort=-course_number&fields[courses]=course_number,course_name](http://127.0.0.1:8000/v1/courses/?page[size]=3&page[number]=42&sort=-course_number&fields[courses]=course_number,course_name)
 
 
 The result should look like this:
@@ -1433,7 +1447,7 @@ As you may have noticed in `settings.py`, we've added several Filter Backends:
   implements sorting.
 - [`rest_framework_json_api.django_filters.DjangoFilterBackend`](https://django-rest-framework-json-api.readthedocs.io/en/stable/usage.html#djangofilterbackend)
   implements the `filter` query parameter and requires additional configuration to define what filters are allowed.
-- [`rest_framework.filters.SearchFilter`](https://django-rest-framework.readthedocs.io/en/latest/api-guide/filtering/#searchfilter)
+- [`rest_framework.filters.SearchFilter`](https://www.django-rest-framework.org/api-guide/filtering/#searchfilter)
   implements a keyword search across multiple fields.
 
 Both the `DjangoFilterBackend` and `SearchFilter` require additional configuration before they'll work:
@@ -1483,7 +1497,7 @@ index 57897c8..7d58129 100644
 
 The `search_fields` attribute is used by the `SearchFilter`. Try this GET:
 
-http://127.0.0.1:8000/v1/courses/?filter[search]=data analytics&fields[courses]=course_name,course_description
+[http://127.0.0.1:8000/v1/courses/?filter[search]=data analytics&fields[courses]=course_name,course_description](http://127.0.0.1:8000/v1/courses/?filter[search]=data analytics&fields[courses]=course_name,course_description)
 
 
 Expect to see this result:
@@ -1549,7 +1563,7 @@ notation: `course_terms.term_identifier`.
 
 Try this GET:
 
-http://127.0.0.1:8000/v1/courses/?page[size]=2&filter[course_terms.term_identifier.lt]=20182&include=course_terms&filter[search]=psych
+[http://127.0.0.1:8000/v1/courses/?page[size]=2&filter[course_terms.term_identifier.lt]=20182&include=course_terms&filter[search]=psych](http://127.0.0.1:8000/v1/courses/?page[size]=2&filter[course_terms.term_identifier.lt]=20182&include=course_terms&filter[search]=psych)
 
 And expect this result:
 ```json
@@ -1724,9 +1738,9 @@ If a client requests a filter that is not defined, they'll see a `400 Bad Reques
 ```  
 
 Note that some conditions are not easily represented, including NOT and empty string (as contrasted with `null`).
-Hint: try a regex:
+Hint: try a regex (`school_bulletin_prefix_code` not starting with "M"):
 
-http://127.0.0.1:8000/v1/courses/?page[size]=2&filter[search]=psych&filter[school_bulletin_prefix_code.regex]=[^M]
+[http://127.0.0.1:8000/v1/courses/?page[size]=2&filter[search]=psych&filter[school_bulletin_prefix_code.regex]=[^M]](http://127.0.0.1:8000/v1/courses/?page[size]=2&filter[search]=psych&filter[school_bulletin_prefix_code.regex]=[^M])
 
 Resulting in:
 ```json
@@ -1872,6 +1886,8 @@ index 4075d9c..cabd404 100644
 +        return super(HyperlinkedModelSerializer, self).update(instance, validated_data)
 ```
 
+(hint: there's a mistake above. Can you find it?)
+
 #### via the Model
 
 The serializer is probably **not** the right place for "business logic" in general as it allows Model
@@ -1911,7 +1927,7 @@ Access Token:
 
 You can cut-n-paste the above from here:
 
-```
+```text
 Token Name: *pick a name*
 Grant Type: Authorization Code
 Callback URL: http://localhost:5432/oauth2client
@@ -2266,29 +2282,29 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> 
 ```
 
-#### Developing tests in Pycharm.
+#### Developing tests in PyCharm.
 
-[Pycharm](https://www.jetbrains.com/pycharm/) is an IDE for Python. There are both licensed and 
+[PyCharm](https://www.jetbrains.com/PyCharm/) is an IDE for Python. There are both licensed and 
 community editions. I'm using the licensed edition
-which has some Django-specific support, but even Pycharm CE can be used to develop and debug. 
+which has some Django-specific support, but even PyCharm CE can be used to develop and debug. 
 
 (If you are an
 old-school CLI purist, I guess you could always use `python -m pdb ./manage.py shell`;-)
 
 ##### Set up Run/Debug Configurations for Tests
 
-Here's an example of confguring a Pycharm test. This will run all the tests under Pycharm -- equivalent
+Here's an example of confguring a PyCharm test. This will run all the tests under PyCharm -- equivalent
 to `./manage.py test`. We will:
 
 1. Configure run/debug test.
 2. Set a breakpoint on line 87 of `test_models.py` and start the debugger.
 4. Take a look at values and/or use the expression evaluator to evaluate any expression in the current context.
 
-![alt-text](./media/pycharm1.png "configure pycharm run/debug test")
+![alt-text](./media/PyCharm1.png "configure PyCharm run/debug test")
 
-![alt-text](./media/pycharm2.png "pycharm debug breakpoint")
+![alt-text](./media/PyCharm2.png "PyCharm debug breakpoint")
 
-![alt-text](./media/pycharm3.png "pycharm debug evaluate")
+![alt-text](./media/PyCharm3.png "PyCharm debug evaluate")
 
 I find this a really powerful way to develop new tests as I can have a look at a result
 before writing the test assertion code.
@@ -2299,12 +2315,12 @@ You can also set up the equivalent of `./manage.py runserver` which I've found i
 handy for settting various environment variables. For example, I have both a sqlite3 and a sqlserver
 "flavor" for running this project.
 
-![alt-text](./media/pycharm4.png "configure pycharm run/debug with environment variables")
+![alt-text](./media/PyCharm4.png "configure PyCharm run/debug with environment variables")
 
 
 #### Check for Python Warnings
 
-An especially useful enviroment variable to set from time-to-time (either in pycharm or just
+An especially useful enviroment variable to set from time-to-time (either in PyCharm or just
 in the shell) is:
 `PYTHONWARNINGS=default` since the _default_ value for
 [PYTHONWARNINGS](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONWARNINGS) is `ignore`.
@@ -2313,7 +2329,7 @@ This helps find all those deprecation warnings that are otherwise not displayed:
 
 ```console
 Testing started at 3:20 PM ...
-/Users/alan/src/django-training/env/bin/python /Applications/PyCharm.app/Contents/helpers/pycharm/django_test_manage.py test /Users/alan/src/django-training
+/Users/alan/src/django-training/env/bin/python /Applications/PyCharm.app/Contents/helpers/PyCharm/django_test_manage.py test /Users/alan/src/django-training
 /Users/ac45/.pyenv/versions/3.6.6/lib/python3.6/importlib/_bootstrap_external.py:426: ImportWarning: Not importing directory /Users/alan/src/django-training/env/lib/python3.6/site-packages/aspy: missing __init__
   _warnings.warn(msg.format(portions[0]), ImportWarning)
 Creating test database for alias 'default'...
@@ -2391,8 +2407,7 @@ Also, one test fails, exercising a bug in the current DJA 2.6.0 release. We'll g
 `GIT TAG: requirements-bandit-safety`
 
 #### The `tox.ini`
-Add a
-[tox.ini](./tox.ini)
+Add a `tox.ini`
 to automate testing for coding style standards as well as running the tests
 you wrote:
 
@@ -2711,7 +2726,7 @@ from unittest import skip
         pass
 ```
 
-By the way, Pycharm's `TODO` view shows me any comments marked "TODO" (except those in `.md` files:-()
+By the way, PyCharm's `TODO` view shows me any comments marked "TODO" (except those in `.md` files:-()
 
 I also found that I have code that is never tested (myapp/apps.py).
 This is another auto-generated file from `django-admin startapp` and is a candidate to

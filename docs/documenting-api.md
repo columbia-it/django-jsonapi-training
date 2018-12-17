@@ -2,13 +2,21 @@
 
 The [Open API Specification](https://github.com/OAI/OpenAPI-Specification/versions/3.0.0.md)
 (OAS 3.0), a follow-on to Swagger 2.0 which merges in many of the
-modeling features of RAML 1.0, allows us to model and document our APIs
+modeling features of
+[RAML](https://raml.org/)
+1.0, allows us to model and document our APIs
 in a machine- and human-readable format. See the following example.
 
 *OAS 3.0 support is still evolving (the standard is just about one year
 old) so many of the tools that work for Swagger 2.0 are not yet ready.
 These tools (see [https://swagger.io](https://swagger.io))
 will help clients build their apps.*
+
+DRF 3.9 has _begun_ adding
+[OAS 3.0](https://www.django-rest-framework.org/community/3.9-announcement/#built-in-openapi-schema-support)
+support, but it currently breaks when trying to render DJA's `ResourceRelatedField`.
+This will likely be fixed when the `coreapi` dependency is removed in a
+[future release](https://www.django-rest-framework.org/community/3.9-announcement/#whats-next).
 
 ```yaml
 openapi: "3.0.0"
@@ -60,5 +68,3 @@ paths:
           description: course deleted
 ```
 
-TODO: DRF 3.9 adds the beginnings of support to generate an OAS schema, eventually replacing `coreapi` but it
-currently breaks when trying to render DJA's `ResourceRelatedField`.

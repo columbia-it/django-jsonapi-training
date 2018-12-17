@@ -76,11 +76,11 @@ sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' \
    -d mcr.microsoft.com/mssql/server:2017-latest
 ```
 
+##### MS SQL Client
+
 See the
 [Microsoft instructions](https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-2017)
 to install the SQL Server ODBC client code.
-
-In summary, for MacOS:
 
 ```bash
 brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
@@ -107,7 +107,7 @@ Changed database context to 'foo'.
 
 #### MySQL server
 
-You can install a MacOS MySQL server using homebrew:
+You can install a MacOS MySQL server and client using homebrew:
 
 ```console
 (env) django-training$ brew install mysql
@@ -579,7 +579,9 @@ mysql> describe myapp_course;
 
 `GIT TAG: v0.2.1`
 
-Unfortunately, Microsoft SQL Server and the `django-pyodbc-azure` package
+Unfortunately, Microsoft SQL Server and the
+[django-pyodbc-azure](https://pypi.org/project/django-pyodbc-azure/)
+package
 have a number of implementation deficiences and failures to comply with the
 [ANSI SQL](https://en.wikipedia.org/wiki/SQL#SQL_standards_documents) standard.
 SQL Server is not one of the
@@ -712,10 +714,14 @@ fixes the latter two of the problems outlined above. It has still not been merge
 so we pull it from the submitter's github for now with this entry in
 `requirements-sqlserver.txt`:
 
+(Note that as of `pip>=10.0.1` you can now
+[reference a PR directly](https://stackoverflow.com/questions/6743514/how-can-i-fetch-an-unmerged-pull-request-for-a-branch-i-dont-own)
+instead of having to find the source of the PR.)
+
 ```text
-# See fixes in django-ppyodbc-azure https://github.com/michiya/django-pyodbc-azure/pull/189
-git+https://github.com/n2ygk/django-pyodbc-azure.git@autofield
+git+https://github.com/michiya/django-pyodbc-azure@refs/pull/189/head
 ```
+
 
 #### Old Way: Overriding migrations
 
@@ -987,7 +993,7 @@ Violation of UNIQUE KEY constraint 'UQ__oauth2_p__A1C69CA698B1DABA'. Cannot inse
 The statement has been terminated.
 ```
 
-Looks like there's not actually an index but maybe the `bigint NULL UNIQUE` column. Let's try:
+Looks like there's not actually an index but maybe the `bigint NULL UNIQUE` constraint. Let's try:
 
 1. Undo the migration.
 1. Change `accesstoken(source_refresh_token_id)` from 'NULL UNIQUE' to 'NULL' in 0001 by making it a `ForeignKey`.
@@ -1002,7 +1008,7 @@ Running migrations:
   Unapplying oauth2_provider.0001_initial... OK
 ```
 
-We'll add some SQL to remove the NULL UNIQUE from the column attributes and
+We'll add some SQL to remove the NULL UNIQUE from the column constraints and
 instead implement proper NULL UNIQUE enforcement by manually adding a "CREATE UNIQUE INDEX ... WHERE ... IS NOT NULL".
 
 Due to the various referential intregrity constraints in the models, we have to do a bit of extra work:
@@ -1231,7 +1237,7 @@ CREATE INDEX "myapp_instructor_course_terms_courseterm_id_5af9ffbe" ON "myapp_in
 COMMIT;
 ```
 
-Here's what a sqlserver migration looks like:
+Compare that to a sqlserver migration:
 ```console
 (env) django-training$ ./sqlserver.sh ./manage.py sqlmigrate myapp 0004_instructor
 ```

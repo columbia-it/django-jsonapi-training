@@ -6,11 +6,47 @@ Standard](https://docs.google.com/document/d/13XW4-L_j9CCeB6jAPjPHK6V5-rMpcBUiF9
 ![alt-text](./media/image2.png "OAuth 2.0 flows diagram")
 
 
+N.B. OAuth 2.0 is largely *unrelated* to OAuth 1.0; it's not just an upgrade, but a totally
+new protocol.  Many [LTI](https://andyfmiller.com/2013/02/10/does-lti-use-oauth/)
+APIs are based on OAuth 1.0. Different thing entirely.
+
+### Dramatis Personae
+
+The players in the world of OAuth 2.0 are:
+
+**User:** The user is the human who logs in the usual way via a browser (e.g. using CAS in our case).
+The user login is generally initiated by the client making a request of the AS (below).
+
+**Client:** The client app operates on behalf of the user. Since it's frequently referred to
+as just the "client", it is sometimes confused with the user, but it isn't. It is the app
+that the user is authorizing to act on her behalf, sometimes even when the user is no longer present.
+
+**Resource Server (RS):** The resource server is the "backend" (in our cast RESTful Django) server.
+It uses information passed by the client (described below) to see if the resources it manages are
+permitted to be manipulated using the HTTP methods.
+
+**Authorization Server (AS):** This is the central control point. All clients and RS's talk to the
+AS to get and validated a *Token*. Clients and RS's are registered in advance with the AS.
+
+More on these roles below.
+
 ### Tokens
 
-*Access Tokens* are used for all authorization decisions. How they get
+*Access Tokens* are used for all authorization decisions. An *Access Token*
+is usually an opaque object that has no intrinsic meaning to the client app that received
+it from the AS. How access tokens get
 created and constrained is described below. Additional token types
-include Refresh and ID tokens.
+include *Refresh* and *ID tokens*.
+
+*Refresh Tokens*, which can only be granted for an Authorization Code grant,
+are used to get a new *Access Token* when the old one expires. These are
+used for long-term authorization of 3rd-party apps to do something on
+behalf of the initial authorizing user without them having to be present at the time.
+
+*ID tokens* contain information that identifies the user to the client app
+and are only made available if using the Open ID Connect (OIDC) profile (with
+`openid` scope, described below). In general, the client app does not know
+who their user is, since the *Access Token* is an opaque object.
 
 ### Scopes
 
@@ -35,10 +71,10 @@ are concerned with are:
 [Client is operating with an end user present](#client-is-operating-with-an-end-user-present),
 below.
 
-**auth-none**: Do not perform a user login. See 
-[Client is a trusted server](#client-is-a-trusted-server), below.
+**auth-none**: Do not perform a user login. This scope is used for backend server-to-server relationships.
+See [Client is a trusted server](#client-is-a-trusted-server), below.
 
-### Scope for Client to Learn the User's Identity
+#### Scope for Client to Learn the User's Identity
 
 In normal OAuth 2.0 operations, there may be no need for the client app
 to know who the end user is. If the client does need to know this, then
@@ -59,8 +95,8 @@ additional scopes are added:
 
 There's a complementary
 [userinfo](http://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
-endpoint that returns similar information. It is authorized using the
-access_token.
+endpoint that returns similar information, called *claims*.
+It is authorized using the access_token.
 
 TODO: Update documentation for group claim.
 
@@ -72,13 +108,13 @@ not appropriate to limit access to enterprise-owned data that the
 end-user might need special permissions for 
 (see [Enterprise Scopes](#enterprise-scopes)):
 
-**create**: Permission to create new resources (POST)
+**create**: Permission to create new resources (POST) on my behalf.
 
-**read**: Permission to read an existing resource (GET)
+**read**: Permission to read an existing resource (GET) of mine.
 
-**update:** Permission to update an existing resource (PATCH)
+**update:** Permission to update an existing resource (PATCH) of mine.
 
-**delete**: Permission to delete a resource (DELETE)
+**delete**: Permission to delete a resource (DELETE) of mine.
 
 #### Enterprise Scopes
 
@@ -96,9 +132,16 @@ Enterprise Scopes may also be used with **auth-none** scope as a means
 of defining access for [trusted servers](#client-is-a-trusted-server).
 In this case, both the trusted server's client credentials must be
 configured to allow auth-none and the enterprise scope, for example,
-sas-coursemgt-create.
+`auth-none sas-coursemgt-create`.
 
-### Determine Resource Server Authentication Requirements
+### What kind of client is it?
+
+No matter the OAuth "style", the Resource Server (RS) is always
+presented with basically the same thing: an opaque *Access Token*
+in the `Authorization: Bearer <token>` header.
+The RS (backend Django app in this context) must
+validate the *Access Token* to grant or deny appropriate permission
+for a given HTTP request.
 
 #### Client is operating with an end user present
 
@@ -108,7 +151,7 @@ browser redirect to Shibboleth/CAS/Duo). The result is, as above, an
 access token. In a fully browser-based client, the access token would be
 persisted in a cookie, analogously to the way a session cookie is used.
 
-#### Caching end-user approval
+#### Client is pre-authorized by the end user who is no longer present
 
 What OAuth 2.0 adds is the ability for a user to delegate permission
 once to your "third party" app. In this use case, the client app
@@ -125,17 +168,17 @@ would traditionally use IP addresses or HTTP Basic Auth to determine
 whether one server should trust another. In the OAuth 2.0 world, this is
 implemented by the client using HTTP Basic Auth with the AS to get back
 an Access Token. Validation of (introspecting) the access token
-(Authorization: "Bearer *<token>*" header) is done by the server using
+is done by the server using
 HTTP Basic Auth to identify itself and then introspecting the token. No
 user identity or permissions are provided because there is no user. In
 addition to using the scopes associated with the access token, the
 server app can always keep a list of client IDs if necessary. However,
 the cleanest design approach is to base the authorization decision
-entirely on the access token's scopes.
+entirely on the access token's granted scopes.
 
-### Determine Resource Server Authorization Requirements
+### Determining Resource Server Authorization Requirements
 
-In all use cases, the resource server is presented with an access token
+In all use cases, the Resource Server is presented with an access token
 in the Authorization header. The resource server decides what actions
 are authorized based on the scopes associated with the token, which it
 learns from token introspection. It can also make decisions based on the
@@ -145,21 +188,22 @@ introspection.
 
 Resource server designers need to decide:
 
-1.  Is a user approval required vs. a trusted server.
-2.  On a per-REST method and resource basis, what scopes are required to
-    implement the action (coarse-grained authorization).
-3.  What additional security decisions need to be made based on the
-    logged-in user and/or data (fine-grained authorization).
+1. Is a human user approval required vs. a trusted server.
+2. On a per-REST method and resource basis, what scopes are required to
+   implement the action (coarse-grained authorization).
+3. What additional security decisions need to be made based on the
+   logged-in user and/or data (fine-grained authorization).
 
 One should attempt to be "RESTful" in designing application security:
 Base permissions on HTTP methods and resources. Using a modeling
 language like OAS 3.0 can help. See
-[Documenting the API in OAS 3.0](#documenting-the-api-in-oas-3.0), and the
+[Documenting the API in OAS 3.0](documenting-api.html), and the
 equivalent Django
-[permission_classes](#authentication-and-authorization-permission),
+[permission_classes](building.html#adding-authentication-and-authorization).
 above.
 
-### Register Resource Server for Token Introspection
+### Registering with the AS
+#### Register Resource Server for Token Introspection
 
 The Resource Server must be a registered client with the OAuth 2.0
 Authorization Server before it is allowed to perform token
@@ -173,15 +217,15 @@ You need to provide:
     server)
 
 You'll be given a *client_id* and *client_secret*. Configure these in
-[settings.OAUTH2_PROVIDER](#edit-settings-to-add-drf-dja-oauth-debug-etc)
+[settings.OAUTH2_PROVIDER](building.html#edit-settings-to-add-drf-dja-oauth-debug-etc)
 using environment variables or some other method to protect the credentials (e.g. not in the source code!).
 
-### Register Client App(s)
+#### Register Client App(s)
 
 Every client app must be a registered OAuth 2.0 client. Things to think
 about when registering a client are:
 
-#### Client is operating on behalf of an end user
+##### Client is operating on behalf of an end user
 
 1.  Is it a fully in-browser (javascript) app? If so, it will be using
     the Implicit grant type and will be requiring a user to log in,
@@ -191,7 +235,7 @@ about when registering a client are:
 3.  Should the end-user scope-approval page be presented or bypassed? In
     most cases, this will be bypassed.
 
-#### Client is a server
+##### Client is a server
 
 In this case, the app should be registered with permission to request
 the auth-none and additional scopes.

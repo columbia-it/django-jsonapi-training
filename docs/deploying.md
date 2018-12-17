@@ -10,7 +10,7 @@ this is generally done with Puppet. For simplicity, I'll just show some sample f
 `/etc/httpd/conf.d/wsgi.conf`:
 ```console
 # The WSGI Apache module configuration file is being
-# managed by Puppet an changes will be overwritten.
+# managed by Puppet. Any changes will be overwritten.
 <IfModule mod_wsgi.c>
   WSGISocketPrefix /var/run/wsgi
   WSGIPythonHome "/var/www/django-jsonapi-training/env"

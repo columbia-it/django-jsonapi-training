@@ -9,6 +9,14 @@ at this time. In general, these are not something you need access to benefit fro
 
 ["Sharing is caring!"](http://barney.wikia.com/wiki/Sharing_Is_Caring!)
 
+### Acknowledgements
+
+I would like to acknowledge many of my CUIT colleagues who have helped me develop this tutorial
+through their experience and great examples of Django-based development, especially members
+of the
+[SIS project team](https://confluence.columbia.edu/confluence/display/SISPROJ/SIS+Project+Home)
+(this link will likely not work for you; sorry).
+
 ---
 
 ### Document Revision History

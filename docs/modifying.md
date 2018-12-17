@@ -123,7 +123,7 @@ which we have to fix to be unique. We can describe this pretty easily as "Concat
 
 One approach would be to just manually "fix" the data. But a much cooler approach is to 
 develop some migration code, which documents what we fixed and is reproducible and _reversible_. See
-[this migration how-to](https://docs.djangoproject.com/en/2.1/howto/writing-migrations/#migrations-that-add-unique-fields)
+[this migration how-to](https://docs.djangoproject.com/en/stable/howto/writing-migrations/#migrations-that-add-unique-fields)
 for an example.
 
 Let's try it:
@@ -341,6 +341,9 @@ Running migrations:
   Rendering model states... DONE
   Unapplying myapp.0003_unique_term_identifier... OK
 ```
+
+Make migrations reversible allows you to revert to a prior production release of your code just in case
+you discover an issue.
 
 #### Do another migration
 

@@ -4,9 +4,9 @@
 or, Why are we doing this?
 
 [Standards](https://confluence.columbia.edu/confluence/display/CUITEA/Enterprise+Integration)
-or, How are we doing this?
+or, How are we (would we like to be) doing this?
 
--   API contract (~~RAML 1.0~~ or [OAS 3.0](https://github.com/OAI/OpenAPI-Specification/))
+-   API contract ([OAS 3.0](https://github.com/OAI/OpenAPI-Specification/))
 -   API content ([jsonapi.org 1.0](https://jsonapi.org/format))
 -   JSON Schema ([json-schema.org](https://json-schema.org)) -
     [example](https://spacetelescope.github.io/understanding-json-schema/structuring.html)

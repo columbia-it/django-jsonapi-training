@@ -1,5 +1,7 @@
 # database requirements
 # See fixes in django-ppyodbc-azure https://github.com/michiya/django-pyodbc-azure/pull/189
-git+https://github.com/n2ygk/django-pyodbc-azure.git@autofield
+# git+https://github.com/n2ygk/django-pyodbc-azure.git@autofield
+# as of PIP 10.0.1 you can get to this via the PR rather than figuring out the PR's repo and tag:
+git+https://github.com/michiya/django-pyodbc-azure@refs/pull/189/head
 # or just use settings.MIGRATION_MODULES to override
 # django-pyodbc-azure==2.1.0.0

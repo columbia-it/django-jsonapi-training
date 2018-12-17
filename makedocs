@@ -1,5 +1,6 @@
 #!/bin/sh
 # make sphinx docs
+./manage.py graph_models -g -S --disable-abstract-fields -E -o docs/media/current-uml.png myapp
 cd docs
 make html
 # and also a simple markdown index of the source files to aid in browsing via gitlab/github/grip

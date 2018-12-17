@@ -18,6 +18,8 @@ This model is ManyToMany with CourseTerm.
 
 `GIT TAG: instructor`
 
+![alt-text](./media/instructor-uml.png "UML diagram of data model")
+
 ```python
 class Instructor(CommonModel):
     """
@@ -219,7 +221,7 @@ index d186cf0..f29c44f 100644
      path('admin/', admin.site.urls),
 ```
 
-### Filters
+## Filters
 
 Let's further make the InstructorViewSet more useful by adding a few filters. In this case,
 we'll use the [django-filter](https://django-filter.readthedocs.io/en/master/guide/rest_framework.html)

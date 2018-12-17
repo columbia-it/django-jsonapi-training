@@ -76,7 +76,8 @@ to specify a starting page and number of items per page (or a
 navigation links (*first, last, prev, next*) are included in the
 response.
 
-For example: GET http://localhost:8000/v1/courses/?page[size]=5&page[number]=2]
+For example: GET
+[http://localhost:8000/v1/courses/?page[size]=5&page[number]=2](http://localhost:8000/v1/courses/?page[size]=5&page[number]=2)
 
 (_FYI - If you run the sample app and click on any of these sample URLs, they will open in your
 browser using [DRF's Browseable API](https://www.django-rest-framework.org/topics/browsable-api/).
@@ -90,7 +91,8 @@ multiple Filters are ANDed. Note that the {json:api} specification only
 says the *filter* parameter is reserved but we've chosen to follow the
 [recommended convention](http://jsonapi.org/recommendations/#filtering). For example:
 
-GET http://127.0.0.1:8000/v1/courses/?filter[course_identifier]=ANTH3160V
+GET
+[http://127.0.0.1:8000/v1/courses/?filter[course_identifier]=ANTH3160V](http://127.0.0.1:8000/v1/courses/?filter[course_identifier]=ANTH3160V)
 
 Filters work on *course_identifier*.
 
@@ -98,7 +100,8 @@ Filters work on *course_identifier*.
 
 Sorting using the *sort* query parameter can be ascending or descending:
 
-GET http://127.0.0.1:8000/v1/courses/?sort=-course_name,course_number
+GET
+[http://127.0.0.1:8000/v1/courses/?sort=-course_name,course_number](http://127.0.0.1:8000/v1/courses/?sort=-course_name,course_number)
 
 ### Sparse Fieldsets
 
@@ -106,7 +109,8 @@ Finally, since a resource may have dozens or hundreds of attributes, perhaps you
 want to see a few of them. This is requested using the
 *fields[type]=fieldname1,fieldname2,...* query parameter.
 
-GET http://127.0.0.1:8000/v1/courses/?fields[courses]=course_name
+GET
+[http://127.0.0.1:8000/v1/courses/?fields[courses]=course_name](http://127.0.0.1:8000/v1/courses/?fields[courses]=course_name)
 
 ### Installing Postman
 
@@ -120,7 +124,8 @@ the need for subsequent HTTP requests to get that information.
 
 ![alt-text](./media/postman.png "postman screenshot response is included following")
 
-GET http://127.0.0.1:8000/v1/courses/?include=course_terms&page[size]=2
+GET
+[http://127.0.0.1:8000/v1/courses/?include=course_terms&page[size]=2](http://127.0.0.1:8000/v1/courses/?include=course_terms&page[size]=2)
 
 ```json
 {

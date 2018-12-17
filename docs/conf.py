@@ -258,7 +258,7 @@ intersphinx_mapping = {
     'djangorestframework-jsonapi': ('https://django-rest-framework-json-api.readthedocs.io/en/stable/',
                                     'https://django-rest-framework-json-api.readthedocs.io/en/stable/objects.inv'),
     # DRF doesn't use sphinx but rather mkdocs:-(
-    #'djangorestframework': ('https://django-rest-framework.readthedocs.io/en/stable/', None),
+    #'djangorestframework': ('https://django-rest-framework.org/', None),
 }
 
 # -- Options for todo extension ----------------------------------------------

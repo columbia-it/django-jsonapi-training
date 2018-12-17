@@ -3,7 +3,7 @@
 ### About Sphinx
 
 [Sphinx](http://www.sphinx-doc.org) is a popular tool for documenting Python projects,
-including the ability to generate automatic documentation using docstrings in your
+including the ability to  automatically generate documentation using docstrings in your
 source code.
 
 ### reStructuredText (RST) vs. Markdown (MD)
@@ -23,6 +23,7 @@ for Python docstrings, and Markdown for stuff I type.
 To Use sphinx, we'll install a bunch of packages:
 
 ```text
+cat docs/requirements.txt
 # bring in requirements for my app (excepting the optional database):
 -r../requirements-django.txt
 # stuff needed for sphinx documentation:
@@ -43,7 +44,7 @@ sphinx-quickstart
 
 This creates a `conf.py` which is the core configuration file for Sphinx. And, since it's Python code,
 you can do all kinds of cool stuff.  Here are a few of my changes after the quickstart, which notably
-includes some django-specific stuff, autmatic API documentation and support for Markdown and Markdown Tables:
+includes some django-specific stuff, automatic API documentation and support for Markdown and Markdown Tables:
 
 ```diff
 diff --git b/docs/conf.py a/docs/conf.py
@@ -212,7 +213,7 @@ index 55c2351..dc4c7a4 100644
 +    'djangorestframework-jsonapi': ('https://django-rest-framework-json-api.readthedocs.io/en/stable/',
 +                                    'https://django-rest-framework-json-api.readthedocs.io/en/stable/objects.inv'),
 +    # DRF doesn't use sphinx but rather mkdocs:-(
-+    #'djangorestframework': ('https://django-rest-framework.readthedocs.io/en/stable/', None),
++    #'djangorestframework': ('https://django-rest-framework.org/', None),
 +}
 ```
 
@@ -357,7 +358,8 @@ After adding an appropriate `.htaccess` you can see these, if you are a CUIT sta
 ### Publishing to RTD
 
 [https://readthedocs.io](https://readthedocs.io) (RTD)
-is where most open-source projects host their documentation.
+is where most open-source projects host their documentation. While your project is probably internal,
+here's how to do it if you are open-sourcing it.
 
 Once we've got sphinx working locally, and the project hosted on github, getting it working with RTD is pretty
 straightforward. See the

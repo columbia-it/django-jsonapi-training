@@ -20,3 +20,6 @@ rest-condition==1.0.3
 tox>=3.3.0,<3.4
 tox-pip-extensions==1.4.0
 PyYAML==3.13
+# graph_models:
+django-extensions==2.1.4
+pygraphviz==1.5
