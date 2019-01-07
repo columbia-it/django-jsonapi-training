@@ -1,6 +1,14 @@
 ## Welcome and Caveat
 
-These are some lecture notes that we use for internal software developers at Columbia University. 
+[Columbia Universtiy IT](https://cuit.columbia.edu) is developing new
+applications with a microservices REST API architecture using the
+Python Django REST framework, the [{json:api}](https://jsonapi.org)
+request/response framework and OAuth 2.0 for authentication and
+authorization for the backend. These are some lecture notes that we
+use for internal software developers at Columbia University. They
+introduce the key concepts and demonstrate how to build a toy backend
+service.
+
 We are releasing the notes publicly on github in the hope that they are more generally useful and accessible,
 with the caveat that, while suggestions and improvements are appreciated,
 there is no promise of support or even accuracy. Also, with apologies in advance, some
