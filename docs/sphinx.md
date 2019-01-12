@@ -282,7 +282,10 @@ $*
 #### Confluencebuilder shortcomings
 
 The `sphinxcontrib-confluencebuilder` attempts to generate Confluence content but suffers from
-several shortcomings:
+several shortcomings. An
+[example of hosting this document](https://confluence.columbia.edu/confluence/display/~alansphinx/Sphinx+Documentation#SphinxDocumentation-Confluencebuildershortcomings)
+demonstrates the problems.
+
 
 1. Several common code languages are not recognized, yielding these errors:
    ```text
@@ -332,7 +335,8 @@ several shortcomings:
      These can be worked around by excluding undocumented members
      and removing docstrings or `#:` comments (which sphinx treats like docstrings).
 	 This was supposedly [fixed](https://github.com/tonybaloney/sphinxcontrib-confluencebuilder/pull/43) but is apparently
-     not (or this is a new way to trigger the issue).
+     not (or this is a new way to trigger the issue). A
+	 [fix](https://github.com/tonybaloney/sphinxcontrib-confluencebuilder/issues/161) is in the works.
 3. There's no way to put the [ToC in the sidebar](https://jira.atlassian.com/browse/CONFSERVER-43090) so navigation sucks.
 4. No search.
 4. Poor formatting of autodocs.
