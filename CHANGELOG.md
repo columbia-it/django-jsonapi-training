@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- browseable api for courses raised an exception when related course was none.
+- upgrade to Django 2.1.7 due to CVE-2019-6975
 
 ## [0.2.3] - 2018-12-06
 

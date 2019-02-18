@@ -61,7 +61,7 @@ class CourseTerm(CommonModel):
         ordering = ["term_identifier"]
 
     def __str__(self):
-        return '%s,%s,%s' % (self.id, self.term_identifier, self.course.course_identifier)
+        return '%s,%s,%s' % (self.id, self.term_identifier, self.course.course_identifier if self.course else 'NONE')
 
 
 class Person(CommonModel):
