@@ -14,10 +14,14 @@ class MyDemo(object):
 
     def login(self):
         """
-        Perform an OAuth login
+        Perform an OAuth login.
+        Handles "all the flavors" of grants.
+        Will automatically refresh if a refresh_token is available.
         """
-        log.debug("logging in")
-        if self.oauth is None or self.oauth.access_token is None:
+        # TODO: Take a look at using `tenacity` or `jsonapi_requests` to refresh the token automagically.
+
+        log.debug("logging in...")
+        if self.oauth is None or self.oauth.access_token is None or self.oauth.refresh_token is None:
             # initial session establishment
             self.oauth = OAuth2Session(oauth_server=self.opt.oauth_url,
                                   client_id=self.opt.id,
@@ -26,21 +30,26 @@ class MyDemo(object):
                                   grant=self.opt.grant,
                                   scopes=self.opt.requested_scopes,
                                   refresh_token=self.opt.refresh_token)
-            if self.opt.grant == 'authorization_code':
-                self.oauth.do_authorization_code()
-            elif self.opt.grant == 'refresh_token':
-                self.oauth.do_refresh_token()
-            elif self.opt.grant == 'client_credentials':
-                self.oauth.do_client_credentials()
+            grant_func = {
+                'authorization_code': self.oauth.do_authorization_code,
+                'refresh_token': self.oauth.do_refresh_token,
+                'client_credentials': self.oauth.do_client_credentials,
+                'implicit': self.oauth.do_implicit,
+            }
+            if self.opt.grant in grant_func:
+                log.debug("... using {} grant".format(self.opt.grant))
+                grant_func[self.opt.grant]()
             else:
                 log.error("{} grant not (yet) implemented".format(self.opt.grant))
                 exit(1)
             log.debug(pformat(self.oauth.oauth_tokens))
         else:
             # assume an access_token expiration if there's an available refresh_token
+            log.debug("... by refreshing the access token with refresh: {}".format(self.oauth.refresh_token))
             if self.oauth.refresh_token:
-                log.error("TODO: write me")
-                exit(1)
+                self.oauth.do_refresh_token()
+        print("logged in access_token: {} and refresh_token: {}".format(self.oauth.access_token,
+                                                                        self.oauth.refresh_token))
 
 
     @staticmethod
@@ -145,10 +154,17 @@ def main(args=None):
     logging.basicConfig(level=logging.DEBUG if opt.debug else logging.INFO)
 
     myapp = MyDemo(opt)
-    # TODO: Take a look at using `tenacity` or `jsonapi_requests` to refresh the token automagically.
     myapp.login()
     myapp.get_api()
     myapp.try_non_ORM()
+    ####
+    # Try to get a new access_token via refresh_token: login() figures it out.
+    # If there is no refresh_token then a new web login will pop up for authorization_code or implicit grants.
+    ####
+    print("refreshing the login and repeating")
+    myapp.login()
+    myapp.try_non_ORM()
+
 
 
 if __name__ == '__main__':
