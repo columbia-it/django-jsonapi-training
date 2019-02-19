@@ -44,6 +44,7 @@ Copyright © 2018 The Trustees of Columbia University in the City of New York
    sphinx.md
    documenting-api.md
    oauth2.md
+   cli_client.md
    help.md
 
    api.rst
