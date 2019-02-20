@@ -7,26 +7,220 @@ See `jsonapi_demo_cli`.
 This client demonstrates a rudimentary Python command-line tool that interacts with our demo
 JSONAPI project. It:
 1. performs an OAuth 2.0 login to acquire the Bearer token. If the type of OAuth 2.0 grant
-   requires an browser login, a browser window is opened to perform the login.
+   requires a browser login, a browser window is opened to perform the login.
 2. uses the [`jsonapi-requests`](https://github.com/socialwifi/jsonapi-requests/) library
    to do a few queries.
 
-It's not the best example by far and doesn't (currently) handle automated refresh token use,
-among other things.
+This demo client is overly complicated (I couldn't resist;-) as it automates the web browser popup and
+callback handling for the Authorization Code or Implicit grants. Below is a simplified description
+of the key stuff you will likely actually need to do if you are writing a "headless" backend client,
+probably to implement some sort of "batch" activities where the client backend is trusted (rather than needing
+an end-user to login).
 
-N.B. there are a number of
+### Oauth 2.0 Login
+
+The first step is to end up with a "bearer" Access Token that gets put into the `Authorization` header.
+Using [oauthlib](https://github.com/oauthlib/oauthlib) you first initialize the library, which differs
+based on the type of grant. You'll want to include a list of requested scopes based on what the Resource Server
+(our demo DJA app) requires.
+
+There are a number of OAuth 2.0/Openid Connect 1.0 client libraries. I've chosen just
+to base this example on [oauthlib](https://github.com/oauthlib/oauthlib).
+
+TODO: There's also integrated OAuth client support in [requests-oauthlib](https://requests-oauthlib.readthedocs.io)
+including automated token refresh.
+
+#### OAuth 2.0 Service Endpoints
+
+You need to know the various endpoints of the OAuth2 server. You can hard code them or query the
+server itself via the `/.well-known/openid-configuration` URL.
+
+```python
+import requests
+
+oauth_server = 'https://oauth-test.cc.columbia.edu'
+
+r = requests.get(oauth_server + '/.well-known/openid-configuration')
+if r.status_code == 200:
+    oauth_endpoints = r.json()
+
+```
+
+#### Oauth 2.0 Client Basic Auth
+
+In most all cases you need to use HTTP Basic Auth to authenticate your client to the OAuth 2.0 Authorization Server
+using pre-registered client credentials (`client_id` and `client_secret`). This creates an HTTP header
+that looks like `Authorization: Basic YWRtaW46YWRtaW4xMjM=`.
+
+The standard Python `requests` library has an `HTTPBasicAuth()` function that does the right thing.
+
+```python
+client_id = 'demo_trusted_client'
+client_secret = 's9ht0XNvHEkvXfUhVD1Ka9DtXFxRHfTm'
+
+oauth_auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
+```
+
+#### A Backend (Client Credentials) Client
+
+A "backend" client uses a very simple OAuth 2.0 grant: Client Credentials -- which uses the
+OAuth 2.0 `token` endpoint.
+
+Use an instance of oauthlib's `BackendApplicationClient` to `prepare_token_request()` and post it.
+(The oauthlib `prepare_*` functions fill in everything needed for the HTTP request except the
+authorization info, which we've already set up, above.) 
+
+```python
+from oauthlib.oauth2 import BackendApplicationClient
+
+scopes = 'auth-none read'
+
+oauth_client = BackendApplicationClient(client_id)
+(token_url, headers, body) = oauth_client.prepare_token_request(oauth_endpoints['token_endpoint'], scope=scopes)
+token_response = requests.post(token_url, headers=headers, data=body, auth=oauth_auth)
+``` 
+A successful token response will look like this:
+```json
+{
+    'access_token': 'jAjCraG0uJ7YGXvIDWaCgl3eRDEm',
+    'expires_in': 7199,
+    'token_type': 'Bearer',
+}
+```
+
+```python
+if token_response.status_code == 200:
+    access_token = token_response.json()['access_token']
+    
+```
+
+### JSONAPI client
+
+There are a number of
 [JSONAPI client libraries](https://jsonapi.org/implementations/#client-libraries)
-available for many languages. This just uses one of them (and poorly;-).
+available for many languages. You can also just directly manipulate the JSON responses
+and requests as we did in the examples with Postman.
 
-There are also a number of OAuth 2.0/Openid Connect 1.0 client libraries. I've chosen just
-to base this example on [oauthlib](https://github.com/oauthlib/oauthlib)
-(which isn't the best for clients; it's more of a server library).
+The examples use [jsonapi-requests](https://github.com/socialwifi/jsonapi-requests/) which has both a basic
+and an ORM-style. Let's start with the basic style.
 
-TODO: There's also some OAuth client support in
-[requests-oauthlib](https://requests-oauthlib.readthedocs.io) but it's not clear how this
-would work `jsonapi-requests`.
+```python
+import jsonapi_requests
+from pprint import pprint, pformat
 
-### Installation
+api_url = 'http://localhost:8000/v1'
+
+
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, access_token = None):
+        if access_token:
+            self.access_token = access_token
+    def __call__(self, r):
+        r.headers['Authorization'] = 'Bearer ' + self.access_token
+        return r
+
+api = jsonapi_requests.Api.config({
+    'API_ROOT': api_url,
+    'AUTH': BearerAuth(access_token),
+    'VALIDATE_SSL': False,
+    'TIMEOUT': 1,
+})
+
+courses = api.endpoint('courses').get(params={'filter[search]': 'research dance', 'include': 'course_terms'})
+print("found {} courses that match the filter".format(len(courses.data)))
+one = courses.data[0]
+pprint(one.attributes, indent=2)
+for r in one.relationships:
+    print("relationship {}:\n{}".format(r, pformat(one.relationships[r].data, indent=2)))
+    print("links:\n{}".format(pformat(one.relationships[r].links, indent=2)))
+# take a look at what was included:
+print(courses.payload['included'][0]['id'])
+pprint(courses.payload['included'][0]['attributes'], indent=2)
+```
+
+Following is a sample execution of the above code snippets. Your mileage may vary based on what data is in
+your resource server.
+```text
+django-jsonapi-training$ python
+Python 3.6.6 (default, Jul 27 2018, 14:31:43) 
+[GCC 4.2.1 Compatible Apple LLVM 9.1.0 (clang-902.0.39.2)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import requests
+>>> oauth_server = 'https://oauth-test.cc.columbia.edu'
+>>> r = requests.get(oauth_server + '/.well-known/openid-configuration')
+>>> if r.status_code == 200:
+...     oauth_endpoints = r.json()
+... 
+>>> client_id = 'demo_trusted_client'
+>>> client_secret = 's9ht0XNvHEkvXfUhVD1Ka9DtXFxRHfTm'
+>>> oauth_auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
+>>> from oauthlib.oauth2 import BackendApplicationClient
+>>> scopes = 'auth-none read'
+>>> oauth_client = BackendApplicationClient(client_id)
+>>> (token_url, headers, body) = oauth_client.prepare_token_request(oauth_endpoints['token_endpoint'], scope=scopes)
+>>> token_response = requests.post(token_url, headers=headers, data=body, auth=oauth_auth)
+>>> token_response
+<Response [200]>
+>>> if token_response.status_code == 200:
+...     access_token = token_response.json()['access_token']
+... 
+>>> access_token
+'KFmOrqrQjLBWHrLZQiAooyvtIxMW'
+>>> import jsonapi_requests
+>>> from pprint import pprint, pformat
+>>> api_url = 'http://localhost:8000/v1'
+>>> class BearerAuth(requests.auth.AuthBase):
+...     def __init__(self, access_token = None):
+...         if access_token:
+...             self.access_token = access_token
+...     def __call__(self, r):
+...         r.headers['Authorization'] = 'Bearer ' + self.access_token
+...         return r
+... 
+>>> api = jsonapi_requests.Api.config({
+...     'API_ROOT': api_url,
+...     'AUTH': BearerAuth(access_token),
+...     'VALIDATE_SSL': False,
+...     'TIMEOUT': 1,
+... })
+>>> courses = api.endpoint('courses').get(params={'filter[search]': 'research dance', 'include': 'course_terms'})
+>>> print("found {} courses that match the filter".format(len(courses.data)))
+found 1 courses that match the filter
+>>> one = courses.data[0]
+>>> pprint(one.attributes, indent=2)
+{ 'course_description': 'SR PROJECT:RESEARCH FOR DANCE',
+  'course_identifier': 'DNCE3592X',
+  'course_name': 'SR PROJECT: RESEARCH FOR DANCE',
+  'course_number': '03467',
+  'effective_end_date': None,
+  'effective_start_date': None,
+  'last_mod_date': '2018-10-07',
+  'last_mod_user_name': 'admin',
+  'school_bulletin_prefix_code': 'XCEFG',
+  'subject_area_code': 'DANB',
+  'suffix_two': '00'}
+>>> for r in one.relationships:
+...     print("relationship {}:\n{}".format(r, pformat(one.relationships[r].data, indent=2)))
+...     print("links:\n{}".format(pformat(one.relationships[r].links, indent=2)))
+... 
+relationship course_terms:
+DynamicCollection.from_data([{'type': 'course_terms', 'id': 'd7db932c-daf2-426a-8e5b-8df1a4f9ecdb'}])
+links:
+{ 'related': 'http://localhost:8000/v1/courses/18839a7f-dde3-4dfb-95e8-2b0e4c58d4ce/course_terms/',
+  'self': 'http://localhost:8000/v1/courses/18839a7f-dde3-4dfb-95e8-2b0e4c58d4ce/relationships/course_terms/'}
+>>> print(courses.payload['included'][0]['id'])
+d7db932c-daf2-426a-8e5b-8df1a4f9ecdb
+>>> pprint(courses.payload['included'][0]['attributes'], indent=2)
+{ 'audit_permitted_code': 0,
+  'effective_end_date': None,
+  'effective_start_date': None,
+  'exam_credit_flag': False,
+  'last_mod_date': '2018-10-07',
+  'last_mod_user_name': 'admin',
+  'term_identifier': '20181DNCE3592X'}
+>>> 
+```
+### Installing and running the demo client
 
 Make sure you have a local pypi repo that has this package installed and:
 
@@ -42,8 +236,6 @@ or just run as
 ```text
 cd jsonapi_demo_cli; PYTHONPATH=$PWD python jsonapi_demo_cli/__main__.py
 ```
-
-### Usage
 
 ```text
 usage: jsonapi-demo-cli [options]
