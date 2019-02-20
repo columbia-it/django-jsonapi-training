@@ -1,2 +1,2 @@
-from .oauth2_session import OAuth2Session
+from .oauth2_session import MyOAuth2Session
 from .cli import main

@@ -5,7 +5,9 @@
 See `jsonapi_demo_cli`.
 
 This client demonstrates a rudimentary Python command-line tool that interacts with our demo
-JSONAPI project. It:
+JSONAPI project. 
+
+It:
 1. performs an OAuth 2.0 login to acquire the Bearer token. If the type of OAuth 2.0 grant
    requires a browser login, a browser window is opened to perform the login.
 2. uses the [`jsonapi-requests`](https://github.com/socialwifi/jsonapi-requests/) library
@@ -101,9 +103,149 @@ There are a number of
 available for many languages. You can also just directly manipulate the JSON responses
 and requests as we did in the examples with Postman.
 
-The examples use [jsonapi-requests](https://github.com/socialwifi/jsonapi-requests/) which has both a basic
-and an ORM-style. Let's start with the basic style.
+The examples use [jsonapi-requests](https://github.com/socialwifi/jsonapi-requests/) which has both
+an ORM and raw (non-ORM) style. Let's start with the ORM style. You'll have to define your classes but then operations
+are really easy, looking similar to Django's model managers.
 
+#### ORM Style
+
+```python
+import jsonapi_requests
+
+api_url = 'http://localhost:8000/v1'
+
+
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, access_token = None):
+        if access_token:
+            self.access_token = access_token
+    def __call__(self, r):
+        r.headers['Authorization'] = 'Bearer ' + self.access_token
+        return r
+
+api = jsonapi_requests.orm.OrmApi.config({
+    'API_ROOT': api_url,
+    'AUTH': BearerAuth(access_token),
+    'VALIDATE_SSL': False,
+    'TIMEOUT': 1,
+})
+
+class Course(jsonapi_requests.orm.ApiModel):
+    class Meta:
+        type = 'courses'
+        api = api
+    # attributes:
+    school_bulletin_prefix_code = jsonapi_requests.orm.AttributeField('school_bulletin_prefix_code')
+    suffix_two = jsonapi_requests.orm.AttributeField('suffix_two')
+    subject_area_code = jsonapi_requests.orm.AttributeField('subject_area_code')
+    course_number = jsonapi_requests.orm.AttributeField('course_number')
+    course_identifier = jsonapi_requests.orm.AttributeField('course_identifier')
+    course_name = jsonapi_requests.orm.AttributeField('course_name')
+    course_description = jsonapi_requests.orm.AttributeField('course_description')
+    # relationships
+    course_terms = jsonapi_requests.orm.RelationField('course_terms')
+
+class CourseTerm(jsonapi_requests.orm.ApiModel):
+    class Meta:
+        type = 'course_terms'
+        api = api
+    # attributes:
+    term_identifier = jsonapi_requests.orm.AttributeField('term_identifier')
+    audit_permitted_code = jsonapi_requests.orm.AttributeField('audit_permitted_code')
+    exam_credit_flag = jsonapi_requests.orm.AttributeField('exam_credit_flag')
+    # relationships:
+    course = jsonapi_requests.orm.RelationField('course')
+
+courses = Course.get_list(params={'filter[search]': 'accounting'})
+print("Retrieved {} courses on this page".format(len(courses)))
+for c in courses:
+    print("Course {}: {} {}".format(c.id, c.course_identifier, c.course_name))
+
+```
+
+Sample exeution of the above: 
+```text
+django-jsonapi-training$ python
+Python 3.6.6 (default, Jul 27 2018, 14:31:43) 
+[GCC 4.2.1 Compatible Apple LLVM 9.1.0 (clang-902.0.39.2)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import requests
+>>> 
+>>> oauth_server = 'https://oauth-test.cc.columbia.edu'
+>>> 
+>>> r = requests.get(oauth_server + '/.well-known/openid-configuration')
+>>> if r.status_code == 200:
+...     oauth_endpoints = r.json()
+... 
+>>> client_id = 'demo_trusted_client'
+>>> client_secret = 's9ht0XNvHEkvXfUhVD1Ka9DtXFxRHfTm'
+>>> 
+>>> oauth_auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
+>>> from oauthlib.oauth2 import BackendApplicationClient
+>>> 
+>>> scopes = 'auth-none read'
+>>> oauth_client = BackendApplicationClient(client_id)
+>>> (token_url, headers, body) = oauth_client.prepare_token_request(oauth_endpoints['token_endpoint'], scope=scopes)
+>>> token_response = requests.post(token_url, headers=headers, data=body, auth=oauth_auth)
+>>> if token_response.status_code == 200:
+...     access_token = token_response.json()['access_token']
+... 
+>>> import jsonapi_requests
+>>> api_url = 'http://localhost:8000/v1'
+>>> class BearerAuth(requests.auth.AuthBase):
+...     def __init__(self, access_token = None):
+...         if access_token:
+...             self.access_token = access_token
+...     def __call__(self, r):
+...         r.headers['Authorization'] = 'Bearer ' + self.access_token
+...         return r
+... 
+>>> api = jsonapi_requests.orm.OrmApi.config({
+...     'API_ROOT': api_url,
+...     'AUTH': BearerAuth(access_token),
+...     'VALIDATE_SSL': False,
+...     'TIMEOUT': 1,
+... })
+>>> class Course(jsonapi_requests.orm.ApiModel):
+...     class Meta:
+...         type = 'courses'
+...         api = api
+...     # attributes:
+...     school_bulletin_prefix_code = jsonapi_requests.orm.AttributeField('school_bulletin_prefix_code')
+...     suffix_two = jsonapi_requests.orm.AttributeField('suffix_two')
+...     subject_area_code = jsonapi_requests.orm.AttributeField('subject_area_code')
+...     course_number = jsonapi_requests.orm.AttributeField('course_number')
+...     course_identifier = jsonapi_requests.orm.AttributeField('course_identifier')
+...     course_name = jsonapi_requests.orm.AttributeField('course_name')
+...     course_description = jsonapi_requests.orm.AttributeField('course_description')
+...     # relationships
+...     course_terms = jsonapi_requests.orm.RelationField('course_terms')
+... 
+>>> class CourseTerm(jsonapi_requests.orm.ApiModel):
+...     class Meta:
+...         type = 'course_terms'
+...         api = api
+...     # attributes:
+...     term_identifier = jsonapi_requests.orm.AttributeField('term_identifier')
+...     audit_permitted_code = jsonapi_requests.orm.AttributeField('audit_permitted_code')
+...     exam_credit_flag = jsonapi_requests.orm.AttributeField('exam_credit_flag')
+...     # relationships:
+...     course = jsonapi_requests.orm.RelationField('course')
+... 
+>>> courses = Course.get_list(params={'filter[search]': 'accounting'})
+>>> print("Retrieved {} courses on this page".format(len(courses)))
+Retrieved 2 courses on this page
+>>> for c in courses:
+...     print("Course {}: {} {}".format(c.id, c.course_identifier, c.course_name))
+... 
+Course 00fb17bb-e4a0-49a0-a27e-6939e3e04b62: ACCT8122B Accounting for Consultants
+Course 016659e9-e29f-49b4-b85d-d25da0724dbb: ACCT7022B Accounting for Value
+>>> 
+```
+
+N.B. Each RelationField you create must have a corresponding class definition or you'll get a key error.
+
+#### Raw (non-ORM) Style
 ```python
 import jsonapi_requests
 from pprint import pprint, pformat
@@ -137,6 +279,8 @@ for r in one.relationships:
 print(courses.payload['included'][0]['id'])
 pprint(courses.payload['included'][0]['attributes'], indent=2)
 ```
+
+See the demo app source code for more sophisticated ORM operations.
 
 Following is a sample execution of the above code snippets. Your mileage may vary based on what data is in
 your resource server.
@@ -264,274 +408,184 @@ optional arguments:
 
 ### Example
 
-```test
-(env) jsonapi_demo_cli$ PYTHONPATH=$PWD python jsonapi_demo_cli/__main__.py -i demo_client -s b322573a7176A49FCBEF46554d3381d5 -r http://localhost:5432/oauth2client -o https://oauth-test.cc.columbia.edu -S 'auth-columbia read openid'
+```text
+jsonapi-demo-cli -i demo_trusted_client -s s9ht0XNvHEkvXfUhVD1Ka9DtXFxRHfTm -r http://localhost:5432/oauth2client -o https://oauth-test.cc.columbia.edu -g client_credentials -S "auth-none read"
+logged in access_token: yUhXV3vn2gZS1aA5wU1AZZTCi2zJ and refresh_token: None
+
+ORM demo
+
+Retrieved 2 courses on this page
+Course 00fb17bb-e4a0-49a0-a27e-6939e3e04b62: ACCT8122B Accounting for Consultants: terms: 2
+  CourseTerm 52cc86dd-7a78-48b8-a6a5-76c1fc7fc9be: 20181ACCT8122B ACCT8122B
+  CourseTerm 00d14ddb-9fb5-4cff-9954-d52fc33217e7: 20191ACCT8122B ACCT8122B
+    Instructor 0a879dc6-63d4-4a79-aae6-63ee2b379b32: John Jay (also teaching {'ACCT7022B'})
+    Instructor 40678ab5-07fa-4c93-a680-bceda8a34735: Samuel Johnson (also teaching {'ANTH3160V'})
+    Instructor aae87c7f-8515-44cf-b1c7-79c6f81cc5c5: Gouverneur Morris
+Course 016659e9-e29f-49b4-b85d-d25da0724dbb: ACCT7022B Accounting for Value: terms: 2
+  CourseTerm 39ca7b38-f273-4fa3-9494-5a422780aebd: 20181ACCT7022B ACCT7022B
+    Instructor 0a879dc6-63d4-4a79-aae6-63ee2b379b32: John Jay (also teaching {'ACCT8122B'})
+  CourseTerm 010a7ff7-ef5a-4b36-b3ff-9c34e30b76e8: 20191ACCT7022B ACCT7022B
+Expected circular reference: 00fb17bb-e4a0-49a0-a27e-6939e3e04b62 == 00fb17bb-e4a0-49a0-a27e-6939e3e04b62
+refreshing the login
+logged in access_token: kupU8a4hqbyqoOqJd4awbSBjjRBi and refresh_token: None
+
+raw (non-ORM) demo
+
 Collection courses: http://localhost:8000/v1/courses/
 Collection course_terms: http://localhost:8000/v1/course_terms/
 Collection people: http://localhost:8000/v1/people/
 Collection instructors: http://localhost:8000/v1/instructors/
 ======================================================================
 Getting first page of courses collection:
-links: { 'first': 'http://localhost:8000/v1/courses/?page%5Bnumber%5D=1',
-  'last': 'http://localhost:8000/v1/courses/?page%5Bnumber%5D=448',
-  'next': 'http://localhost:8000/v1/courses/?page%5Bnumber%5D=2',
+links: { 'first': 'http://localhost:8000/v1/courses/?page%5Bnumber%5D=1&page%5Bsize%5D=5',
+  'last': 'http://localhost:8000/v1/courses/?page%5Bnumber%5D=2&page%5Bsize%5D=5',
+  'next': 'http://localhost:8000/v1/courses/?page%5Bnumber%5D=2&page%5Bsize%5D=5',
   'prev': None}
-meta: {'pagination': {'count': 4473, 'page': 1, 'pages': 448}}
-there are 10 items in this page:
+meta: {'pagination': {'count': 10, 'page': 1, 'pages': 2}}
+there are 5 items in this page:
 there are also 0 included items
 ----------------------------------------------------------------------
-type: courses id: c823b5de-6018-4878-80e9-932d20eaa18a:
+type: courses id: 01ca197f-c00c-4f24-a743-091b62f1d500:
 attributes:
-{ 'course_description': 'foo bar',
-  'course_identifier': 'ENGL3189X',
-  'course_name': 'POSTMODERNISM',
-  'course_number': '00217',
+{ 'course_description': 'SENIOR RESEARCH ESSAY SEMINAR',
+  'course_identifier': 'AMST3704X',
+  'course_name': 'SENIOR RESEARCH ESSAY SEMINAR',
+  'course_number': '00373',
   'effective_end_date': None,
   'effective_start_date': None,
-  'last_mod_date': '2019-02-01',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'CEFKX9',
-  'subject_area_code': 'ENGB',
-  'suffix_two': '00'}
-links:
-{ 'self': 'http://localhost:8000/v1/courses/c823b5de-6018-4878-80e9-932d20eaa18a/'}
-relationships:
-relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': 'a1d34785-cc25-4c1c-9806-9d05a98068c7'}])
-links:
-{ 'related': 'http://localhost:8000/v1/courses/c823b5de-6018-4878-80e9-932d20eaa18a/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/c823b5de-6018-4878-80e9-932d20eaa18a/relationships/course_terms/'}
-----------------------------------------------------------------------
-type: courses id: e92164fc-4d87-4a27-867a-bd05c1a5d108:
-attributes:
-{ 'course_description': 'SOCIAL PSYCHOLOGY-LEC',
-  'course_identifier': 'PSYC1138X',
-  'course_name': 'SOCIAL PSYCHOLOGY-LEC',
-  'course_number': '00241',
-  'effective_end_date': None,
-  'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
+  'last_mod_date': '2018-08-03',
+  'last_mod_user_name': 'loader',
   'school_bulletin_prefix_code': 'XCEFK9',
-  'subject_area_code': 'PSYB',
+  'subject_area_code': 'AMSB',
   'suffix_two': '00'}
 links:
-{ 'self': 'http://localhost:8000/v1/courses/e92164fc-4d87-4a27-867a-bd05c1a5d108/'}
+{ 'self': 'http://localhost:8000/v1/courses/01ca197f-c00c-4f24-a743-091b62f1d500/'}
 relationships:
 relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '70034667-3159-4f0d-9158-a7e256d37931'}])
+DynamicCollection.from_data([{'type': 'course_terms', 'id': 'f9aa1a51-bf3b-45cf-b1cc-34ce47ca9913'}, {'type': 'course_terms', 'id': '01163a94-fc8f-47fe-bb4a-5407ad1a35fe'}])
 links:
-{ 'related': 'http://localhost:8000/v1/courses/e92164fc-4d87-4a27-867a-bd05c1a5d108/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/e92164fc-4d87-4a27-867a-bd05c1a5d108/relationships/course_terms/'}
+{ 'related': 'http://localhost:8000/v1/courses/01ca197f-c00c-4f24-a743-091b62f1d500/course_terms/',
+  'self': 'http://localhost:8000/v1/courses/01ca197f-c00c-4f24-a743-091b62f1d500/relationships/course_terms/'}
 ----------------------------------------------------------------------
-type: courses id: 2b205052-a329-40ee-b5eb-1e8bd2fcc941:
+type: courses id: 001b55e0-9a60-4386-98c7-4c856bb840b4:
 attributes:
-{ 'course_description': 'SR SEM: SHORT FICT AMER WOMEN',
-  'course_identifier': 'ENGL3907X',
-  'course_name': 'SR SEM: SHORT FICT AMER WOMEN',
-  'course_number': '00252',
+{ 'course_description': 'THE BODY AND SOCIETY',
+  'course_identifier': 'ANTH3160V',
+  'course_name': 'THE BODY AND SOCIETY',
+  'course_number': '04961',
   'effective_end_date': None,
   'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'X',
-  'subject_area_code': 'ENGB',
-  'suffix_two': '00'}
-links:
-{ 'self': 'http://localhost:8000/v1/courses/2b205052-a329-40ee-b5eb-1e8bd2fcc941/'}
-relationships:
-relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '881fd75c-fca9-4492-b46d-9cf786ac8675'}])
-links:
-{ 'related': 'http://localhost:8000/v1/courses/2b205052-a329-40ee-b5eb-1e8bd2fcc941/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/2b205052-a329-40ee-b5eb-1e8bd2fcc941/relationships/course_terms/'}
-----------------------------------------------------------------------
-type: courses id: e9decab5-c806-4a60-ae97-000c91d0c7b9:
-attributes:
-{ 'course_description': 'INTRO TO LANGUAGE & CULTURE',
-  'course_identifier': 'ANTH1009V',
-  'course_name': 'INTRO TO LANGUAGE & CULTURE',
-  'course_number': '00267',
-  'effective_end_date': None,
-  'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'CEFKX',
+  'last_mod_date': '2018-08-03',
+  'last_mod_user_name': 'loader',
+  'school_bulletin_prefix_code': 'XCEFK9',
   'subject_area_code': 'ANTB',
   'suffix_two': '00'}
 links:
-{ 'self': 'http://localhost:8000/v1/courses/e9decab5-c806-4a60-ae97-000c91d0c7b9/'}
+{ 'self': 'http://localhost:8000/v1/courses/001b55e0-9a60-4386-98c7-4c856bb840b4/'}
 relationships:
 relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '1d56cd36-86a7-47b1-8cb6-d495b5ce1011'}])
+DynamicCollection.from_data([{'type': 'course_terms', 'id': '243e2b9c-a3c6-4d40-9b9a-2750d6c03250'}, {'type': 'course_terms', 'id': '00290ba0-ebae-44c0-9f4b-58a5f27240ed'}])
 links:
-{ 'related': 'http://localhost:8000/v1/courses/e9decab5-c806-4a60-ae97-000c91d0c7b9/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/e9decab5-c806-4a60-ae97-000c91d0c7b9/relationships/course_terms/'}
+{ 'related': 'http://localhost:8000/v1/courses/001b55e0-9a60-4386-98c7-4c856bb840b4/course_terms/',
+  'self': 'http://localhost:8000/v1/courses/001b55e0-9a60-4386-98c7-4c856bb840b4/relationships/course_terms/'}
 ----------------------------------------------------------------------
-type: courses id: 6844f209-8b57-4504-995c-2fc6641436c3:
+type: courses id: 03e32754-3da7-4005-be6b-8de0e088816a:
 attributes:
-{ 'course_description': "THE QUR'AN:A COMPAR PERSPECTV",
-  'course_identifier': 'RELI3314V',
-  'course_name': "THE QUR'AN:A COMPAR PERSPECTV",
-  'course_number': '00269',
+{ 'course_description': 'IND STUDIES-CIVIL ENGIN-SENIOR',
+  'course_identifier': 'CIEN3304E',
+  'course_name': 'IND STUDIES-CIVIL ENGIN-SENIOR',
+  'course_number': '26118',
   'effective_end_date': None,
   'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'XCEFK9',
-  'subject_area_code': 'RELB',
+  'last_mod_date': '2018-08-03',
+  'last_mod_user_name': 'loader',
+  'school_bulletin_prefix_code': 'XCEF',
+  'subject_area_code': 'CEEM',
   'suffix_two': '00'}
 links:
-{ 'self': 'http://localhost:8000/v1/courses/6844f209-8b57-4504-995c-2fc6641436c3/'}
+{ 'self': 'http://localhost:8000/v1/courses/03e32754-3da7-4005-be6b-8de0e088816a/'}
 relationships:
 relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '49cba2ec-5a50-4716-ab50-3587fb66372f'}])
+DynamicCollection.from_data([{'type': 'course_terms', 'id': '964ff272-acb8-4adc-9a7e-21a241e63ff1'}, {'type': 'course_terms', 'id': '035c31c5-398d-43b7-a55b-19f6d1472797'}])
 links:
-{ 'related': 'http://localhost:8000/v1/courses/6844f209-8b57-4504-995c-2fc6641436c3/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/6844f209-8b57-4504-995c-2fc6641436c3/relationships/course_terms/'}
+{ 'related': 'http://localhost:8000/v1/courses/03e32754-3da7-4005-be6b-8de0e088816a/course_terms/',
+  'self': 'http://localhost:8000/v1/courses/03e32754-3da7-4005-be6b-8de0e088816a/relationships/course_terms/'}
 ----------------------------------------------------------------------
-type: courses id: 85f35510-d603-414f-92f9-eb0356b51f71:
+type: courses id: 046741cd-c700-4752-b57a-e37a948ebc44:
 attributes:
-{ 'course_description': 'foo bar',
-  'course_identifier': 'WMST4302W',
-  'course_name': "2ND WAVE & JEWISH WOMEN'S ART",
-  'course_number': '00295',
+{ 'course_description': 'FinTech: Consumer Financial Se',
+  'course_identifier': 'BUEC7255B',
+  'course_name': 'FinTech: Consumer Financial Se',
+  'course_number': '72074',
   'effective_end_date': None,
   'effective_start_date': None,
-  'last_mod_date': '2019-02-01',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'RXCEIGFKU',
-  'subject_area_code': 'WSTB',
+  'last_mod_date': '2018-08-03',
+  'last_mod_user_name': 'loader',
+  'school_bulletin_prefix_code': 'B',
+  'subject_area_code': 'BUEC',
   'suffix_two': '00'}
 links:
-{ 'self': 'http://localhost:8000/v1/courses/85f35510-d603-414f-92f9-eb0356b51f71/'}
+{ 'self': 'http://localhost:8000/v1/courses/046741cd-c700-4752-b57a-e37a948ebc44/'}
 relationships:
 relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '86d6f2fe-8b9f-4550-bbf6-d33ea383fa6d'}])
+DynamicCollection.from_data([{'type': 'course_terms', 'id': 'bca761f7-03f6-4ff5-bbb8-b58467ef3970'}, {'type': 'course_terms', 'id': '0378c6c0-b658-4cf6-b8ba-6fa19614e3aa'}])
 links:
-{ 'related': 'http://localhost:8000/v1/courses/85f35510-d603-414f-92f9-eb0356b51f71/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/85f35510-d603-414f-92f9-eb0356b51f71/relationships/course_terms/'}
+{ 'related': 'http://localhost:8000/v1/courses/046741cd-c700-4752-b57a-e37a948ebc44/course_terms/',
+  'self': 'http://localhost:8000/v1/courses/046741cd-c700-4752-b57a-e37a948ebc44/relationships/course_terms/'}
 ----------------------------------------------------------------------
-type: courses id: c7d863c5-fe2f-42df-ba8a-8f17504d4699:
+type: courses id: 00fb17bb-e4a0-49a0-a27e-6939e3e04b62:
 attributes:
-{ 'course_description': 'FIELD METHOD ARCHAEOLO',
-  'course_identifier': 'ANTH2011X',
-  'course_name': 'FIELD METHOD ARCHAEOLOGY',
-  'course_number': '00301',
+{ 'course_description': 'Accounting for Consultants',
+  'course_identifier': 'ACCT8122B',
+  'course_name': 'Accounting for Consultants',
+  'course_number': '73272',
   'effective_end_date': None,
   'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'CEFKGRUXI',
-  'subject_area_code': 'ANTB',
+  'last_mod_date': '2018-08-03',
+  'last_mod_user_name': 'loader',
+  'school_bulletin_prefix_code': 'B',
+  'subject_area_code': 'ACCT',
   'suffix_two': '00'}
 links:
-{ 'self': 'http://localhost:8000/v1/courses/c7d863c5-fe2f-42df-ba8a-8f17504d4699/'}
+{ 'self': 'http://localhost:8000/v1/courses/00fb17bb-e4a0-49a0-a27e-6939e3e04b62/'}
 relationships:
 relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '9b601a89-3c0e-4bd9-bf2b-0a530f738fe9'}])
+DynamicCollection.from_data([{'type': 'course_terms', 'id': '52cc86dd-7a78-48b8-a6a5-76c1fc7fc9be'}, {'type': 'course_terms', 'id': '00d14ddb-9fb5-4cff-9954-d52fc33217e7'}])
 links:
-{ 'related': 'http://localhost:8000/v1/courses/c7d863c5-fe2f-42df-ba8a-8f17504d4699/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/c7d863c5-fe2f-42df-ba8a-8f17504d4699/relationships/course_terms/'}
-----------------------------------------------------------------------
-type: courses id: 6911e0d5-8abf-4bbd-937a-33ae2949d448:
-attributes:
-{ 'course_description': 'LAB METHODS ARCHAEOLOGY',
-  'course_identifier': 'ANTH2012X',
-  'course_name': 'LAB METHODS ARCHAEOLOGY',
-  'course_number': '00302',
-  'effective_end_date': None,
-  'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'CEFKGRUXI',
-  'subject_area_code': 'ANTB',
-  'suffix_two': '00'}
-links:
-{ 'self': 'http://localhost:8000/v1/courses/6911e0d5-8abf-4bbd-937a-33ae2949d448/'}
-relationships:
-relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '08e07046-68a3-4388-bbc7-50d5ac091edf'}])
-links:
-{ 'related': 'http://localhost:8000/v1/courses/6911e0d5-8abf-4bbd-937a-33ae2949d448/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/6911e0d5-8abf-4bbd-937a-33ae2949d448/relationships/course_terms/'}
-----------------------------------------------------------------------
-type: courses id: c905b170-9d9f-41fb-bfe4-5af6dfb871a0:
-attributes:
-{ 'course_description': 'SR SEM:INTL TOPICS URB STDIES',
-  'course_identifier': 'URBS3997V',
-  'course_name': 'SR SEM:INTL TOPICS URB STUDIES',
-  'course_number': '00350',
-  'effective_end_date': None,
-  'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'XCEFK9',
-  'subject_area_code': 'URSB',
-  'suffix_two': '00'}
-links:
-{ 'self': 'http://localhost:8000/v1/courses/c905b170-9d9f-41fb-bfe4-5af6dfb871a0/'}
-relationships:
-relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': 'b9888866-5244-4601-aa03-a17a8d458b57'}])
-links:
-{ 'related': 'http://localhost:8000/v1/courses/c905b170-9d9f-41fb-bfe4-5af6dfb871a0/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/c905b170-9d9f-41fb-bfe4-5af6dfb871a0/relationships/course_terms/'}
-----------------------------------------------------------------------
-type: courses id: c4a20c04-5426-49c4-a517-23cde9bd74c2:
-attributes:
-{ 'course_description': 'RUSSIA AND THE WEST',
-  'course_identifier': 'POLS4875W',
-  'course_name': 'RUSSIA AND THE WEST',
-  'course_number': '00352',
-  'effective_end_date': None,
-  'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'RXCEIGFKU',
-  'subject_area_code': 'PLSB',
-  'suffix_two': '00'}
-links:
-{ 'self': 'http://localhost:8000/v1/courses/c4a20c04-5426-49c4-a517-23cde9bd74c2/'}
-relationships:
-relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '3d3219d7-715b-4148-96a1-f360d69de238'}])
-links:
-{ 'related': 'http://localhost:8000/v1/courses/c4a20c04-5426-49c4-a517-23cde9bd74c2/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/c4a20c04-5426-49c4-a517-23cde9bd74c2/relationships/course_terms/'}
+{ 'related': 'http://localhost:8000/v1/courses/00fb17bb-e4a0-49a0-a27e-6939e3e04b62/course_terms/',
+  'self': 'http://localhost:8000/v1/courses/00fb17bb-e4a0-49a0-a27e-6939e3e04b62/relationships/course_terms/'}
 ======================================================================
 Getting 2nd page of filtered courses collection:
-links: { 'first': 'http://localhost:8000/v1/courses/?filter%5Bsearch%5D=research&include=course_terms&page%5Bnumber%5D=1',
-  'last': 'http://localhost:8000/v1/courses/?filter%5Bsearch%5D=research&include=course_terms&page%5Bnumber%5D=19',
-  'next': 'http://localhost:8000/v1/courses/?filter%5Bsearch%5D=research&include=course_terms&page%5Bnumber%5D=3',
-  'prev': 'http://localhost:8000/v1/courses/?filter%5Bsearch%5D=research&include=course_terms&page%5Bnumber%5D=1'}
-meta: {'pagination': {'count': 184, 'page': 2, 'pages': 19}}
-there are 10 items in this page:
-there are also 10 included items
+links: { 'first': 'http://localhost:8000/v1/courses/?include=course_terms&page%5Bnumber%5D=1&page%5Bsize%5D=5',
+  'last': 'http://localhost:8000/v1/courses/?include=course_terms&page%5Bnumber%5D=2&page%5Bsize%5D=5',
+  'next': None,
+  'prev': 'http://localhost:8000/v1/courses/?include=course_terms&page%5Bnumber%5D=1&page%5Bsize%5D=5'}
+meta: {'pagination': {'count': 10, 'page': 2, 'pages': 2}}
+there are 5 items in this page:
+there are also 8 included items
 let's just look at the 3rd item on the 2nd page:
 ----------------------------------------------------------------------
-type: courses id: a478546a-8629-432d-97ac-9a70aab311e3:
+type: courses id: 02e2e004-326e-4be8-aecc-aa67ece50fdf:
 attributes:
-{ 'course_description': 'SENIOR RESEARCH SEMINAR',
-  'course_identifier': 'AHIS3960X',
-  'course_name': 'SENIOR RESEARCH SEMINAR',
-  'course_number': '05407',
+{ 'course_description': 'MODERN iOS APPLICATION DEVELOP',
+  'course_identifier': 'COMS3102W',
+  'course_name': 'DEVELOPMENT TECHNOLOGY',
+  'course_number': '84695',
   'effective_end_date': None,
   'effective_start_date': None,
-  'last_mod_date': '2018-10-07',
-  'last_mod_user_name': 'admin',
-  'school_bulletin_prefix_code': 'XCEFK9',
-  'subject_area_code': 'ARHB',
+  'last_mod_date': '2018-08-03',
+  'last_mod_user_name': 'loader',
+  'school_bulletin_prefix_code': 'RXCEIGF2U',
+  'subject_area_code': 'COMS',
   'suffix_two': '00'}
 links:
-{ 'self': 'http://localhost:8000/v1/courses/a478546a-8629-432d-97ac-9a70aab311e3/'}
+{ 'self': 'http://localhost:8000/v1/courses/02e2e004-326e-4be8-aecc-aa67ece50fdf/'}
 relationships:
 relationship course_terms:
-DynamicCollection.from_data([{'type': 'course_terms', 'id': '835870fa-87cd-4be3-9050-0542ac725a12'}])
+DynamicCollection.from_data([{'type': 'course_terms', 'id': '2d763c14-a566-4600-860f-329e44cbbd4a'}, {'type': 'course_terms', 'id': '02e877b2-35c4-47d4-b72c-25bab1e87065'}])
 links:
-{ 'related': 'http://localhost:8000/v1/courses/a478546a-8629-432d-97ac-9a70aab311e3/course_terms/',
-  'self': 'http://localhost:8000/v1/courses/a478546a-8629-432d-97ac-9a70aab311e3/relationships/course_terms/'}
-(env) jsonapi_demo_cli$ 
+{ 'related': 'http://localhost:8000/v1/courses/02e2e004-326e-4be8-aecc-aa67ece50fdf/course_terms/',
+  'self': 'http://localhost:8000/v1/courses/02e2e004-326e-4be8-aecc-aa67ece50fdf/relationships/course_terms/'}
 ```
 
 ### TODO

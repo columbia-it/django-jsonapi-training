@@ -3,7 +3,6 @@ import webbrowser
 import http.server
 import threading
 import requests
-import json
 import pyperclip
 import time
 import uuid
@@ -15,9 +14,9 @@ from urllib.parse import parse_qs, splitport, urlparse
 log = logging.getLogger(__name__)
 
 
-class OAuth2Session(object):
+class MyOAuth2Session(object):
     """
-    Establish an OAuth2 "session".
+    Establish an OAuth2 "session" using raw oauthlib.
 
     For authorization_code and implicit flows, this will open a browser to log the user in.
     In order to test token refresh without having to wait, you can set `expire_faster` to a smaller number.
@@ -52,7 +51,7 @@ class OAuth2Session(object):
         # get oauth 2.0 endpoints by asking the AS for them:
         r = requests.get(oauth_server + '/.well-known/openid-configuration')
         if r.status_code == 200:
-            self.oauth_endpoints = json.loads(r.content)
+            self.oauth_endpoints = r.json()
         else:
             raise ConnectionError("failed to get OAuth 2 endpoints: {} {}: {}".format(r.status_code, r.reason, r.content))
         # if we are testing with non-TLS then tell oauthlib that's OK

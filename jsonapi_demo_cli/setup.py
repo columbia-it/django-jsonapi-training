@@ -6,7 +6,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='jsonapi-demo-cli',
-    version='0.1.0',
+    version='0.2.0',
     packages=find_packages(),
     include_package_data=True,
     entry_points={"console_scripts": ["jsonapi-demo-cli=jsonapi_demo_cli:main"]},

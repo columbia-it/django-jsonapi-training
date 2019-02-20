@@ -2,11 +2,20 @@ import jsonapi_requests
 import logging
 import argparse
 from pprint import pprint, pformat
-from jsonapi_demo_cli import OAuth2Session
+from jsonapi_demo_cli import MyOAuth2Session
 
 log = logging.getLogger(__name__)
 
 class MyDemo(object):
+    """
+    A simple demo of doing an OAuth 2 login, and using ORM and "raw" (non-ORM) styles of access to the resources.
+
+    N.B. This code does limited error checking and works best when the jsonapi resource server has loaded the
+    standard test cases::
+
+        ./manage.py loaddata myapp/fixtures/testcases.yaml
+
+    """
     def __init__(self, opt):
         self.opt = opt
         self.oauth = None
@@ -16,14 +25,13 @@ class MyDemo(object):
         """
         Perform an OAuth login.
         Handles "all the flavors" of grants.
-        Will automatically refresh if a refresh_token is available.
         """
-        # TODO: Take a look at using `tenacity` or `jsonapi_requests` to refresh the token automagically.
+        # TODO: Take a look at using `jsonapi_requests` to refresh the token automagically.
 
         log.debug("logging in...")
         if self.oauth is None or self.oauth.access_token is None or self.oauth.refresh_token is None:
             # initial session establishment
-            self.oauth = OAuth2Session(oauth_server=self.opt.oauth_url,
+            self.oauth = MyOAuth2Session(oauth_server=self.opt.oauth_url,
                                   client_id=self.opt.id,
                                   client_secret=self.opt.secret,
                                   redirect_url=self.opt.redirect_url,
@@ -51,32 +59,6 @@ class MyDemo(object):
         print("logged in access_token: {} and refresh_token: {}".format(self.oauth.access_token,
                                                                         self.oauth.refresh_token))
 
-
-    @staticmethod
-    def print_jsonapi_item(i):
-        """
-        print a collection item (non-ORM style)
-        """
-        print("-" * 70)
-        print("type: {} id: {}:".format(i.type, i.id))
-        print("attributes:\n{}".format(pformat(i.attributes, indent=2)))
-        print("links:\n{}".format(pformat(i.links, indent=2)))
-        print("relationships:")
-        for r in i.relationships:
-            print("relationship {}:\n{}".format(r, pformat(i.relationships[r].data, indent=2)))
-            print("links:\n{}".format(pformat(i.relationships[r].links, indent=2)))
-
-    @staticmethod
-    def print_jsonapi_metadata(response):
-        """
-        print some response metadata (non-ORM style)
-        """
-        print("links: {}".format(pformat(response.content.links, indent=2)))
-        print("meta: {}".format(pformat(response.content.meta, indent=2)))
-        print("there are {} items in this page:".format(len(response.data)))
-        if hasattr(response.content, 'included'):
-            print("there are also {} included items".format(len(response.content.included)))
-
     def get_api(self):
         ####
         # Initialize the API's root, using OAuth Bearer tokens.
@@ -87,6 +69,105 @@ class MyDemo(object):
             'VALIDATE_SSL': self.opt.redirect_url.startswith('https'),
             'TIMEOUT': 1,
         })
+
+    def try_ORM(self):
+        """
+        Try out the ORM style
+        """
+
+        ####
+        # Define classes for each resource type. These look a lot like our models/serializers on the server.
+        ####
+        class Course(jsonapi_requests.orm.ApiModel):
+            class Meta:
+                type = 'courses'
+                api = self.api
+
+            # attributes:
+            school_bulletin_prefix_code = jsonapi_requests.orm.AttributeField('school_bulletin_prefix_code')
+            suffix_two = jsonapi_requests.orm.AttributeField('suffix_two')
+            subject_area_code = jsonapi_requests.orm.AttributeField('subject_area_code')
+            course_number = jsonapi_requests.orm.AttributeField('course_number')
+            course_identifier = jsonapi_requests.orm.AttributeField('course_identifier')
+            course_name = jsonapi_requests.orm.AttributeField('course_name')
+            course_description = jsonapi_requests.orm.AttributeField('course_description')
+            # relationships
+            course_terms = jsonapi_requests.orm.RelationField('course_terms')
+
+            def __str__(self):
+                return 'Course %s: %s %s' % (self.id, self.course_identifier, self.course_name)
+
+        class CourseTerm(jsonapi_requests.orm.ApiModel):
+            class Meta:
+                type = 'course_terms'
+                api = self.api
+
+            # attributes:
+            term_identifier = jsonapi_requests.orm.AttributeField('term_identifier')
+            audit_permitted_code = jsonapi_requests.orm.AttributeField('audit_permitted_code')
+            exam_credit_flag = jsonapi_requests.orm.AttributeField('exam_credit_flag')
+            # relationships:
+            course = jsonapi_requests.orm.RelationField('course')
+            instructors = jsonapi_requests.orm.RelationField('instructors')
+
+            def __str__(self):
+                return 'CourseTerm %s: %s %s' % (
+                self.id, self.term_identifier, self.course.course_identifier if self.course else 'NONE')
+
+        class Person(jsonapi_requests.orm.ApiModel):
+            class Meta:
+                type = 'people'
+                api = self.api
+
+            # attributes:
+            name = jsonapi_requests.orm.AttributeField('name')
+
+            def __str__(self):
+                return 'Person {}: {}'.format(self.id, self.name)
+
+        class Instructor(jsonapi_requests.orm.ApiModel):
+            class Meta:
+                type = 'instructors'
+                api = self.api
+
+            # relationships
+            person = jsonapi_requests.orm.RelationField('person')
+            course_terms = jsonapi_requests.orm.RelationField('course_terms')
+
+            def __str__(self):
+                return 'Instructor {}'.format(self.id)
+
+        print("\nORM demo\n")
+        ####
+        # Now try out a few ORM operations:
+        #  1. get a list of courses that match the search filter for "accounting"
+        #  2. for each course, see which course_term instances they are offered.
+        #  3. or each course_term, identifier the instructor(s) teaching that instance.
+        #  4. and, if an instructor is teaching more than one course, show the others.
+        ####
+        courses = Course.get_list(params={'filter[search]': 'accounting'})
+        print("Retrieved {} courses on this page".format(len(courses)))
+        for c in courses:
+            print("{}: terms: {}".format(c, len(c.course_terms)))
+            for t in c.course_terms:
+                print("  {}".format(t))
+                for i in t.instructors:
+                    teaching = set([q.course.course_identifier for q in i.course_terms])
+                    also_teaching = teaching - set([t.course.course_identifier])
+                    if also_teaching:
+                        print("    {}: {} (also teaching {})".format(i, i.person.name, also_teaching))
+                    else:
+                        print("    {}: {}".format(i, i.person.name))
+
+        ####
+        # Just show that we can chain ORM relationships right around in a circle:
+        ####
+        one = courses[0]
+        thisterm = one.course_terms[0]
+        self_ref = thisterm.course
+        print("Expected circular reference: {} {} {}".format(self_ref.id,
+                                                             '==' if self_ref.id == one.id else '!=',
+                                                             one.id))
 
     def try_non_ORM(self):
         """
@@ -102,6 +183,30 @@ class MyDemo(object):
         # Having said that, let's get the root anyway to find out what collections are below it.
         # (This will like not work correctly with a different jsonapi service)
         ####
+        def print_jsonapi_item(i):
+            """
+            print a collection item (non-ORM style)
+            """
+            print("-" * 70)
+            print("type: {} id: {}:".format(i.type, i.id))
+            print("attributes:\n{}".format(pformat(i.attributes, indent=2)))
+            print("links:\n{}".format(pformat(i.links, indent=2)))
+            print("relationships:")
+            for r in i.relationships:
+                print("relationship {}:\n{}".format(r, pformat(i.relationships[r].data, indent=2)))
+                print("links:\n{}".format(pformat(i.relationships[r].links, indent=2)))
+
+        def print_jsonapi_metadata(response):
+            """
+            print some response metadata (non-ORM style)
+            """
+            print("links: {}".format(pformat(response.content.links, indent=2)))
+            print("meta: {}".format(pformat(response.content.meta, indent=2)))
+            print("there are {} items in this page:".format(len(response.data)))
+            if hasattr(response.content, 'included'):
+                print("there are also {} included items".format(len(response.content.included)))
+
+        print("\nraw (non-ORM) demo\n")
         root = self.api.endpoint('/').get()
         log.debug('root response (not JSONAPI format):\n{}'.format(pformat(root.payload, indent=2)))
         collections = {}
@@ -113,10 +218,10 @@ class MyDemo(object):
         # Get the first page of the (paginated) /v1/courses collection.
         ####
         print("{}\nGetting first page of courses collection:".format('='*70))
-        courses = collections['courses']['endpoint'].get()
-        self.print_jsonapi_metadata(courses)
+        courses = collections['courses']['endpoint'].get(params={'page[size]': 5})
+        print_jsonapi_metadata(courses)
         for c in courses.data:
-            self.print_jsonapi_item(c)
+            print_jsonapi_item(c)
 
         ####
         # Get the second page of the (paginated) /v1/courses collection.
@@ -124,12 +229,13 @@ class MyDemo(object):
         # Query parameters are just passed in the `params` kwarg for get.
         ####
         print("{}\nGetting 2nd page of filtered courses collection:".format('='*70))
-        courses = collections['courses']['endpoint'].get(params={'page[number]': 2,
-                                                                 'filter[search]': 'research',
+        courses = collections['courses']['endpoint'].get(params={'page[size]': 5,
+                                                                 'page[number]': 2,
                                                                  'include': 'course_terms'})
-        self.print_jsonapi_metadata(courses)
+        print_jsonapi_metadata(courses)
         print("let's just look at the 3rd item on the 2nd page:")
-        self.print_jsonapi_item(courses.data[2])
+        print_jsonapi_item(courses.data[2])
+
 
 def main(args=None):
     parser = argparse.ArgumentParser(usage='%(prog)s [options]')
@@ -156,15 +262,14 @@ def main(args=None):
     myapp = MyDemo(opt)
     myapp.login()
     myapp.get_api()
-    myapp.try_non_ORM()
+    myapp.try_ORM()
     ####
     # Try to get a new access_token via refresh_token: login() figures it out.
     # If there is no refresh_token then a new web login will pop up for authorization_code or implicit grants.
     ####
-    print("refreshing the login and repeating")
+    print("refreshing the login")
     myapp.login()
     myapp.try_non_ORM()
-
 
 
 if __name__ == '__main__':
