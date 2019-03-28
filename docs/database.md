@@ -105,6 +105,9 @@ Changed database context to 'foo'.
 2> go
 ```
 
+TODO: Change above to use
+[ALTER ROLE](https://docs.microsoft.com/en-us/sql/t-sql/statements/alter-role-transact-sql?view=sql-server-2017)
+ 
 #### MySQL server
 
 You can install a MacOS MySQL server and client using homebrew:
