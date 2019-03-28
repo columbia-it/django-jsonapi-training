@@ -1,6 +1,8 @@
 ## Help Wanted
 
 There are still quite a few things I want to test and document. Contributions are welcome and encouraged!
+- Embed Swagger-UI in our project. See this
+  [great tutorial](https://dev.to/matthewhegarty/swaggerui-inside-django-rest-framework-1c2p) on how to do it!
 - Complete the full suite of {json:api} tests to make sure all the various flavors of PATCH actually work.
 - [`django-guardian`](https://django-guardian.readthedocs.io/en/stable/) model and object-level permissions.
 - [`django-signals`](https://docs.djangoproject.com/en/stable/topics/signals/)

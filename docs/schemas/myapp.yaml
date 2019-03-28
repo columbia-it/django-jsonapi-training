@@ -1,0 +1,302 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: 'django-jsonapi-training example'
+  description: >-
+    A sample API that uses courses as an example to demonstrate representing
+    [JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.
+  contact:
+    name: Alan Crosswell
+    email: alan@columbia.edu
+    url: 'http://www.columbia.edu/~alan'
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - url: 'http://localhost:9123/v1'
+paths:
+  /courses/:
+    get:
+      description: Returns a collection of courses
+      operationId: find courses
+      security:
+        - basicAuth: []
+        - oauth-dev: [auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      parameters:
+        - name: sort
+          in: query
+          description: fields to sort by
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'fields[courses]'
+          in: query
+          description: 'Sparse Fieldsets: return only the specified course fields'
+          required: false
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: course response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseCollection'
+  '/courses/{id}/':
+    get:
+      description: Returns a single course
+      operationId: return course by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of course to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: course response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseItem'
+  '/courses/{id}/relationships/course_terms':
+    get:
+      description: Returns a single course's related terms
+      parameters:
+        - name: id
+          in: path
+          description: ID of course to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: course relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/relationships'
+  /courses_terms/:
+    get:
+      description: Returns a collection of course terms
+      operationId: find course terms
+      parameters:
+        - name: sort
+          in: query
+          description: fields to sort by
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'fields[course_terms]'
+          in: query
+          description: 'Sparse Fieldsets: return only the specified course fields'
+          required: false
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: course term response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseTermCollection'
+  '/course_terms/{id}/':
+    get:
+      description: Returns a single course term
+      operationId: return course term by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of course term to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: course term response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseTermItem'
+  '/course_terms/{id}/relationships/course':
+    get:
+      description: Returns a single term's related course
+      parameters:
+        - name: id
+          in: path
+          description: ID of term to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: course relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/relationships'
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    oauth-test:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://oauth-test.cc.columbia.edu/as/authorization.oauth2
+          tokenUrl: https://oauth-test.cc.columbia.edu/as/token.oauth2
+          scopes:
+            "auth-columbia": Columbia UNI login
+            create: create
+            read: read
+            update: update
+            delete: delete
+            openid: disclose your identity
+            profile: your user profile
+            email: your email address
+            https://api.columbia.edu/scope/group: groups you are a member of
+            "demo-netphone-admin": Administrative access to netphone resources
+    oauth-dev:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://oauth-dev.cuit.columbia.edu:8443/as/authorization.oauth2
+          tokenUrl: https://oauth-dev.cuit.columbia.edu:8443/as/token.oauth2
+          scopes:
+            "auth-columbia": Columbia UNI login
+            create: create
+            read: read
+            update: update
+            delete: delete
+            openid: disclose your identity
+            profile: your user profile
+            email: your email address
+            https://api.columbia.edu/scope/group: groups you are a member of
+            "demo-netphone-admin": Administrative access to netphone resources
+    oauth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://oauth.cc.columbia.edu/as/authorization.oauth2
+          tokenUrl: https://oauth.cc.columbia.edu/as/token.oauth2
+          scopes:
+            "auth-columbia": Columbia UNI login
+            create: create
+            read: read
+            update: update
+            delete: delete
+            openid: disclose your identity
+            profile: your user profile
+            email: your email address
+            https://api.columbia.edu/scope/group: groups you are a member of
+            "demo-netphone-admin": Administrative access to netphone resources
+  schemas:
+    CommonItem:
+      description: Attributes common to all our schemas.
+      type: object
+      properties:
+        effective_start_date:
+          type: string
+        effective_end_date:
+          type: string
+        last_mod_user_name:
+          type: string
+        last_mod_date:
+          type: string
+      required:
+        - last_mod_user_name
+        - last_mod_date
+    CourseCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/CourseItem'
+    CourseItem:
+      allOf:
+        - $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/CourseSchema'
+            relationships:
+              $ref: '#/components/schemas/CourseRelationships'
+    CourseTermCollection:
+      type: array
+      items:
+        $ref: '#/components/schemas/CourseTermItem'
+    CourseTermItem:
+      allOf:
+        - $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/CourseTermSchema'
+            relationships:
+              $ref: '#/components/schemas/CourseTermRelationships'
+    CourseSchema:
+      allOf:
+        - $ref: '#/components/schemas/CommonItem'
+        - $ref: '#/components/schemas/CourseAttributes'
+    CourseAttributes:
+      type: object
+      description: data model for Course
+      required:
+        - name
+      properties:
+        school_bulletin_prefix_code:
+          type: string
+          maxLength: 10
+        suffix_two:
+          type: string
+          maxLength: 2
+        subject_area_code:
+          type: string
+          maxLength: 10
+        course_number:
+          type: string
+          maxLength: 10
+        course_identifier:
+          type: string
+          maxLength: 10
+          uniqueItems: true
+          pattern: "[A-Z]{5}[0-9]{5}"
+        course_name:
+          type: string
+          maxLength: 80
+        course_description:
+          type: string
+    CourseRelationships:
+      type: object
+      properties:
+        course_terms:
+          $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/relationships'
+    CourseTermSchema:
+      allOf:
+        - $ref: '#/components/schemas/CommonItem'
+        - $ref: '#/components/schemas/CourseTermAttributes'
+    CourseTermAttributes:
+      type: object
+      description: data model for CourseTerm
+      properties:
+        term_identifier:
+          type: string
+          maxLength: 10
+        audit_permitted_code:
+          type: integer
+          minimum: 0
+          default: 0
+        exam_credit_flag:
+          type: boolean
+          default: true
+    CourseTermRelationships:
+      type: object
+      properties:
+        courses:
+          $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/relationshipToOne'
