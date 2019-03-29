@@ -5,6 +5,8 @@ info:
   description: >-
     A sample API that uses courses as an example to demonstrate representing
     [JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.
+#  To externalize jsonapi.yaml, replace `./jsonapi.yaml` with `http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml`.
+#  But, more likely you'll just want to bundle this with: `swagger-ui-watcher -b myapp.json myapp.yaml`.
   contact:
     name: Alan Crosswell
     email: alan@columbia.edu
@@ -25,16 +27,347 @@ paths:
         - oauth-test: [auth-columbia, read]
         - oauth: [auth-columbia, read]
       parameters:
-        - name: sort
+        # I wish I could pull all these in at once...
+        - $ref: './jsonapi.yaml#/components/parameters/include'
+        - $ref: './jsonapi.yaml#/components/parameters/sort'
+        - $ref: './jsonapi.yaml#/components/parameters/pageSize'
+        - $ref: './jsonapi.yaml#/components/parameters/pageNumber'
+        # unable to generically represent filter and fields
+        - name: 'fields[courses]'
           in: query
-          description: fields to sort by
+          description: 'Sparse Fieldsets: return only the specified course fields'
           required: false
           style: form
           schema:
             type: string
-        - name: 'fields[courses]'
+        - name: 'fields[course_terms]'
           in: query
           description: 'Sparse Fieldsets: return only the specified course fields'
+          required: false
+          style: form
+          schema:
+            type: string
+        # Keyword searches are across these fields:
+        # search_fields = ('course_name', 'course_description', 'course_identifier', 'course_number')
+        - name: 'filter[search]'
+          in: query
+          description: keyword search across course_name, course_description, course_identifier, course_number
+          required: false
+          style: form
+          schema:
+            type: string
+        # enumerate ever single filterset: easy to automate, boring to type by hand;-)
+        # usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte', 'in')
+        # text_rels = ('icontains', 'iexact', 'contains')
+        # 'id': usual_rels,
+        - name: 'filter[id]'
+          in: query
+          description: exact id
+          required: false
+          style: form
+          schema:
+            # use an exact schema match here...
+            $ref: './jsonapi.yaml#/components/schemas/id'
+        - name: 'filter[id.gte]'
+          in: query
+          description: id greater-than or equal
+          required: false
+          style: form
+          schema:
+            # ... but here allow a free-form string for relationship matches
+            type: string
+        - name: 'filter[id.lte]'
+          in: query
+          description: id less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.lt]'
+          in: query
+          description: id less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.gt]'
+          in: query
+          description: id greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.in]'
+          in: query
+          description: id in list
+          required: false
+          style: form
+          schema:
+            type: string
+        # 'course_name': ('exact', ) + text_rels,
+        - name: 'filter[course_name]'
+          in: query
+          description: exact course_name
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseAttributes/properties/course_name'
+        - name: 'filter[course_name.iexact]'
+          in: query
+          description: case independent exact course_name 
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseAttributes/properties/course_name'
+        - name: 'filter[course_name.contains]'
+          in: query
+          description: course_name contains
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_name.icontains]'
+          in: query
+          description: course_name case independent contains
+          required: false
+          style: form
+          schema:
+            type: string
+        # 'subject_area_code': usual_rels,
+        - name: 'filter[subject_area_code]'
+          in: query
+          description: subject_area_code equals
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseAttributes/properties/subject_area_code'
+        - name: 'filter[subject_area_code.gte]'
+          in: query
+          description: subject_area_code greater-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[subject_area_code.lte]'
+          in: query
+          description: subject_area_code less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[subject_area_code.lt]'
+          in: query
+          description: subject_area_code less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[subject_area_code.gt]'
+          in: query
+          description: subject_area_code greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[subject_area_code.in]'
+          in: query
+          description: subject_area_code in list
+          required: false
+          style: form
+          schema:
+            type: string
+        # 'course_description': text_rels + usual_rels,
+        - name: 'filter[course_description]'
+          in: query
+          description: course_description equals
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseAttributes/properties/course_description'
+        - name: 'filter[course_description.gte]'
+          in: query
+          description: course_description greater-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_description.lte]'
+          in: query
+          description: course_description less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_description.lt]'
+          in: query
+          description: course_description less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_description.gt]'
+          in: query
+          description: course_description greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_description.in]'
+          in: query
+          description: course_description in list
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_description.iexact]'
+          in: query
+          description: course_description case independent exact match
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_description.contains]'
+          in: query
+          description: course_description contains
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_description.icontains]'
+          in: query
+          description: course_description case independent contains
+          required: false
+          style: form
+          schema:
+            type: string
+        # 'course_identifier': text_rels + usual_rels,
+        - name: 'filter[course_identifier]'
+          in: query
+          description: course_identifier equals
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseAttributes/properties/course_identifier'
+        - name: 'filter[course_identifier.gte]'
+          in: query
+          description: course_identifier greater-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_identifier.lte]'
+          in: query
+          description: course_identifier less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_identifier.lt]'
+          in: query
+          description: course_identifier less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_identifier.gt]'
+          in: query
+          description: course_identifier greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_identifier.in]'
+          in: query
+          description: course_identifier in list
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_identifier.iexact]'
+          in: query
+          description: course_identifier case independent exact match
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_identifier.contains]'
+          in: query
+          description: course_identifier contains
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_identifier.icontains]'
+          in: query
+          description: course_identifier case independent contains
+          required: false
+          style: form
+          schema:
+            type: string
+        # 'course_number': ('exact', ),
+        - name: 'filter[course_number]'
+          in: query
+          description: course_number
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseAttributes/properties/course_number'
+        # 'course_terms__term_identifier': usual_rels,
+        - name: 'filter[course_terms.term_identifier]'
+          in: query
+          description: course_terms.term_identifier equals
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseTermAttributes/properties/term_identifier'
+        - name: 'filter[course_terms.term_identifier.gte]'
+          in: query
+          description: course_terms.term_identifier greater-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_terms.term_identifier.lte]'
+          in: query
+          description: course_terms.term_identifier less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_terms.term_identifier.lt]'
+          in: query
+          description: course_terms.term_identifier less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_terms.term_identifier.gt]'
+          in: query
+          description: course_terms.term_identifier greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_terms.term_identifier.in]'
+          in: query
+          description: course_terms.term_identifier in list
+          required: false
+          style: form
+          schema:
+            type: string
+        # 'school_bulletin_prefix_code': ('exact', 'regex'),
+        - name: 'filter[school_bulletin_prefix_code]'
+          in: query
+          description: exact school_bulletin_prefix_code
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseAttributes/properties/school_bulletin_prefix_code'
+        - name: 'filter[school_bulletin_prefix_code.regex]'
+          in: query
+          description: >-
+            regex match school_bulletin_prefix_code.
+            Use `filter[school_bulletin_prefix_code.regex]=^$` to find empty codes.
           required: false
           style: form
           schema:
@@ -46,6 +379,24 @@ paths:
             application/vnd.api+json:
               schema:
                 $ref: '#/components/schemas/CourseCollection'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/error'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/error'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/error'
   '/courses/{id}/':
     get:
       description: Returns a single course
@@ -80,7 +431,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/relationships'
+                $ref: './jsonapi.yaml#/components/schemas/relationships'
   /courses_terms/:
     get:
       description: Returns a collection of course terms
@@ -141,7 +492,7 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/relationships'
+                $ref: './jsonapi.yaml#/components/schemas/relationships'
 components:
   securitySchemes:
     basicAuth:
@@ -220,7 +571,7 @@ components:
         $ref: '#/components/schemas/CourseItem'
     CourseItem:
       allOf:
-        - $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/resource'
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
         - type: object
           properties:
             attributes:
@@ -233,7 +584,7 @@ components:
         $ref: '#/components/schemas/CourseTermItem'
     CourseTermItem:
       allOf:
-        - $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/resource'
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
         - type: object
           properties:
             attributes:
@@ -248,7 +599,7 @@ components:
       type: object
       description: data model for Course
       required:
-        - name
+        - course_name
       properties:
         school_bulletin_prefix_code:
           type: string
@@ -276,18 +627,20 @@ components:
       type: object
       properties:
         course_terms:
-          $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/relationships'
+          $ref: './jsonapi.yaml#/components/schemas/relationships'
     CourseTermSchema:
       allOf:
         - $ref: '#/components/schemas/CommonItem'
         - $ref: '#/components/schemas/CourseTermAttributes'
     CourseTermAttributes:
       type: object
-      description: data model for CourseTerm
+      description: data model for CourseTerm. 
       properties:
         term_identifier:
           type: string
-          maxLength: 10
+          maxLength: 14
+          description: "example: 20181ACCT7022B"
+          pattern: "[0-9]{4}[123][A-Z]{4}[0-9]{4}[A-Z]"
         audit_permitted_code:
           type: integer
           minimum: 0
@@ -299,4 +652,4 @@ components:
       type: object
       properties:
         courses:
-          $ref: 'http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml#/components/schemas/relationshipToOne'
+          $ref: './jsonapi.yaml#/components/schemas/relationshipToOne'
