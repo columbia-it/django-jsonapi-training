@@ -4,6 +4,7 @@ info:
   title: "{json:api} Specification"
   description: >
     An include file to define the [{json:api} 1.0 specification](http://jsonapi.org/format).
+    N.B. I've got some confusion going on between a validating a jsonapi schema and defining one!
 
 
     This file also provides a limited demonstration of jsonapi with path items for collections, items
@@ -431,7 +432,7 @@ components:
       additionalProperties: false
     # unfortunately $ref resource and tring to change required doesn't work.
     post_resource:
-      description: A POSTable resource object had an optional id.
+      description: A POSTable resource object has an optional id.
       type: object
       required:
         - type
@@ -444,6 +445,7 @@ components:
           $ref: "#/components/schemas/attributes"
         relationships:
           $ref: "#/components/schemas/relationships"
+        # not clear what it means to try to POST links but the spec says POST a Resource Object...
         links:
           $ref: "#/components/schemas/links"
         meta:
@@ -494,37 +496,43 @@ components:
         Members of the attributes object (`attributes`) represent information
         about the resource object in which it's defined.
       type: object
-      properties:
-        ^(?!relationships$|links$|id$|type$)\w[-\w_]*$:
-          type: object
-          description: Attributes may contain any valid JSON value.
+      # properties:
+      #   ^(?!relationships$|links$|id$|type$)\w[-\w_]*$:
+      #     type: object
+      #     description: Attributes may contain any valid JSON value.
       additionalProperties: false
+    # TODO: This validates rather than defines:
     relationships:
       description: >-
-        Members of the relationships object (`relationships`) represent
+        Members of the relationships object represent
         references from the resource object in which it's defined to other
-        resource objects.
+        resource objects. N.B. this is validation, not useful for inclusion.
+      type: object
+      # properties:
+      #   ^(?!id$|type$)\w[-\w_]*$:
+      #     $ref: "#/components/schemas/relationship"
+      additionalProperties:
+        $ref: "#/components/schemas/relationship"
+    relationship:
+      description: A single relationship description
       type: object
       properties:
-        ^(?!id$|type$)\w[-\w_]*$:
-          properties:
-            links:
-              $ref: "#/components/schemas/relationshipLinks"
-            data:
-              description: Member, whose value represents `resource linkage`.
-              oneOf:
-                - $ref: "#/components/schemas/relationshipToOne"
-                - $ref: "#/components/schemas/relationshipToMany"
-            meta:
-              $ref: "#/components/schemas/meta"
-          anyOf:
-            - required:
-                - data
-            - required:
-                - meta
-            - required:
-                - links
-          additionalProperties: false
+        links:
+          $ref: "#/components/schemas/relationshipLinks"
+        data:
+          description: Member, whose value represents `resource linkage`.
+          oneOf:
+            - $ref: "#/components/schemas/relationshipToOne"
+            - $ref: "#/components/schemas/relationshipToMany"
+        meta:
+          $ref: "#/components/schemas/meta"
+      anyOf:
+        - required:
+            - data
+        - required:
+            - meta
+        - required:
+            - links
       additionalProperties: false
     relationshipToOne:
       description: >-

@@ -189,3 +189,14 @@ swagger-editor$ docker restart heuristic_mirzakhani
 heuristic_mirzakhani
 ```
 
+#### Some issues I have with OAS
+
+It's not a DRY as I want it to be:
+
+* `$ref` can't generally be used to set some values and then extend them.
+* There are no parameterized macros like in
+  [RAML](https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md#resource-type-and-trait-parameters).
+
+As such, OAS is more suited as a machine-generated file format than something a human should be expected to compose.
+To get any kind of reuse out of an OAS document, it will need to be pre-processed with something like
+[m4](https://www.gnu.org/software/m4) to basically add parameter substitutions.

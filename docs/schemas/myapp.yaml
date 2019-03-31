@@ -3,8 +3,19 @@ info:
   version: 1.0.0
   title: 'django-jsonapi-training example'
   description: >-
+    ![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")
+
+
     A sample API that uses courses as an example to demonstrate representing
     [JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.
+
+
+    See [https://columbia-it-django-jsonapi-training.readthedocs.io](https://columbia-it-django-jsonapi-training.readthedocs.io)
+    for more about this.
+
+
+    Copyright &copy; 2019 The Trustees of [Columbia University](https://www.columbia.edu) in the City of New York.
+
 #  To externalize jsonapi.yaml, replace `./jsonapi.yaml` with `http://www.columbia.edu/~alan/schemas/common/jsonapi.yaml`.
 #  But, more likely you'll just want to bundle this with: `swagger-ui-watcher -b myapp.json myapp.yaml`.
   contact:
@@ -12,15 +23,29 @@ info:
     email: alan@columbia.edu
     url: 'http://www.columbia.edu/~alan'
   license:
-    name: Apache 2.0
+    name: Apache 2.0 License
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
+  - url: 'http://localhost:8000/v1'
+    description: backend dev server (default port with Django)
+  - url: 'http://api.company.com:8000/v1/'
+    description: dev API gateway
   - url: 'http://localhost:9123/v1'
+    description: backend dev server when using API gateway
+tags:
+  - name: courses
+    description: Courses of study (really individual classes)
+    externalDocs:
+      url: https://opendataservice.columbia.edu/course-information
+      description: loosely based on this (out of date) information
+  - name: course_terms
+    description: "Instances of a course (really class): year and semester"
 paths:
   /courses/:
     get:
       description: Returns a collection of courses
       operationId: find courses
+      tags: [courses]
       security:
         - basicAuth: []
         - oauth-dev: [auth-columbia, read]
@@ -32,7 +57,7 @@ paths:
         - $ref: './jsonapi.yaml#/components/parameters/sort'
         - $ref: './jsonapi.yaml#/components/parameters/pageSize'
         - $ref: './jsonapi.yaml#/components/parameters/pageNumber'
-        # unable to generically represent filter and fields
+        # unable to generically represent filter and fields so have to enumerate them here.
         - name: 'fields[courses]'
           in: query
           description: 'Sparse Fieldsets: return only the specified course fields'
@@ -374,7 +399,7 @@ paths:
             type: string
       responses:
         '200':
-          description: course response
+          description: GET /courses response
           content:
             application/vnd.api+json:
               schema:
@@ -384,115 +409,341 @@ paths:
           content:
             application/vnd.api+json:
               schema:
-                $ref: './jsonapi.yaml#/components/schemas/error'
+                $ref: './jsonapi.yaml#/components/schemas/failure'
         '403':
           description: not permitted
           content:
             application/vnd.api+json:
               schema:
-                $ref: './jsonapi.yaml#/components/schemas/error'
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
         default:
           description: other response
           content:
             application/vnd.api+json:
               schema:
-                $ref: './jsonapi.yaml#/components/schemas/error'
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    post:
+      description: "[add](https://jsonapi.org/format/#crud-creating) a new course to courses collection"
+      operationId: post course
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [auth-columbia, demo-netphone-admin, create]
+        - oauth-test: [auth-columbia, demo-netphone-admin, create]
+        - oauth: [auth-columbia, demo-netphone-admin, create]
+      requestBody:
+        description: post new course
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: '#/components/schemas/CourseItemPost'
+      responses:
+        '201':
+          description: >-
+            [Created](https://jsonapi.org/format/#crud-creating-responses-201).
+            Assigned `id` and/or any other changes are in this response.
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: '#/components/schemas/CourseItemData'
+          headers:
+            Location:
+              description: Url of newly-created course
+              schema:
+                type: string
+                format: uri-reference
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        # my app does not allow posting the `id`
+        # '204':
+        #   description: >-
+        #     [Created](https://jsonapi.org/format/#crud-creating-responses-204) with the supplied `id`.
+        #     No other changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-creating-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: >-
+            [Related resource does not exist](https://jsonapi.org/format/#crud-creating-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-creating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
   '/courses/{id}/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of course to fetch
+        required: true
+        schema:
+          type: string
     get:
       description: Returns a single course
       operationId: return course by id
-      parameters:
-        - name: id
-          in: path
-          description: ID of course to fetch
-          required: true
-          schema:
-            type: string
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
       responses:
         '200':
           description: course response
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/CourseItem'
-  '/courses/{id}/relationships/course_terms':
-    get:
-      description: Returns a single course's related terms
-      parameters:
-        - name: id
-          in: path
-          description: ID of course to fetch
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: course relationship response
+                $ref: '#/components/schemas/CourseItemData'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
           content:
             application/vnd.api+json:
               schema:
-                $ref: './jsonapi.yaml#/components/schemas/relationships'
-  /courses_terms/:
-    get:
-      description: Returns a collection of course terms
-      operationId: find course terms
-      parameters:
-        - name: sort
-          in: query
-          description: fields to sort by
-          required: false
-          style: form
-          schema:
-            type: string
-        - name: 'fields[course_terms]'
-          in: query
-          description: 'Sparse Fieldsets: return only the specified course fields'
-          required: false
-          style: form
-          schema:
-            type: string
-      responses:
-        '200':
-          description: course term response
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item response
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/CourseTermCollection'
-  '/course_terms/{id}/':
-    get:
-      description: Returns a single course term
-      operationId: return course term by id
-      parameters:
-        - name: id
-          in: path
-          description: ID of course term to fetch
-          required: true
-          schema:
-            type: string
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: "[update](https://jsonapi.org/format/#crud-updating) a course"
+      operationId: patch course
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [auth-columbia, demo-netphone-admin, update]
+        - oauth-test: [auth-columbia, demo-netphone-admin, update]
+        - oauth: [auth-columbia, demo-netphone-admin, update]
+      requestBody:
+        description: course data to patch. Only supply fields you want to change.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: '#/components/schemas/CourseItemPatch'
       responses:
         '200':
-          description: course term response
+          description: "[OK](https://jsonapi.org/format/#crud-updating-responses-200)"
           content:
             application/vnd.api+json:
               schema:
-                $ref: '#/components/schemas/CourseTermItem'
-  '/course_terms/{id}/relationships/course':
-    get:
-      description: Returns a single term's related course
-      parameters:
-        - name: id
-          in: path
-          description: ID of term to fetch
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: course relationship response
+                $ref: '#/components/schemas/CourseItemData'
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [Patched](https://jsonapi.org/format/#crud-updating-responses-204).
+            No other changes from what was PATCHed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: >-
+            [Resource does not exist](https://jsonapi.org/format/#crud-updating-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item response
           content:
             application/vnd.api+json:
               schema:
-                $ref: './jsonapi.yaml#/components/schemas/relationships'
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    delete:
+      description: "[delete](https://jsonapi.org/format/#crud-deleting) an item"
+      operationId: delete item
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [auth-columbia, demo-netphone-admin, delete]
+        - oauth-test: [auth-columbia, demo-netphone-admin, delete]
+        - oauth: [auth-columbia, demo-netphone-admin, delete]
+      responses:
+        '200':
+          description: "[OK](https://jsonapi.org/format/#crud-deleting-responses-200)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/onlymeta'
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+        '204':
+          description: >-
+            [Deleted](https://jsonapi.org/format/#crud-deleting-responses-204).
+        '404':
+          description: >-
+            [Resource does not exist](https://jsonapi.org/format/#crud-deleting-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+  # '/courses/{id}/relationships/{related_field}':
+  #   parameters:
+  #     - name: id
+  #       in: path
+  #       description: ID of course to fetch
+  #       required: true
+  #       schema:
+  #         type: string
+  #     - name: related_field
+  #       in: path
+  #       description: related field to fetch
+  #       required: true
+  #       schema:
+  #         type: string
+  #         enum: ['course_terms']
+  #   get:
+  #     description: Returns a single course's course_term relationships
+  #     responses:
+  #       '200':
+  #         description: course relationship response
+  #         content:
+  #           application/vnd.api+json:
+  #             schema:
+  #               $ref: './jsonapi.yaml#/components/schemas/relationships'
+  # # decide if using {related_field} makes sense here given the response schema will be different.
+  # '/courses/{id}/{related_field}':
+  #   parameters:
+  #     - name: id
+  #       in: path
+  #       description: ID of course to fetch
+  #       required: true
+  #       schema:
+  #         type: string
+  #     - name: related_field
+  #       in: path
+  #       description: related field to fetch
+  #       required: true
+  #       schema:
+  #         type: string
+  #         enum: ['course_terms']
+  #   get:
+  #     description: Return returns the course_terms for this course.
+  #     responses:
+  #       '200':
+  #         description: course relationship response
+  #         content:
+  #           application/vnd.api+json:
+  #             schema:
+  #               $ref: './jsonapi.yaml#/components/schemas/relationships'
+  # /courses_terms/:
+  #   get:
+  #     description: Returns a collection of course terms
+  #     operationId: find course terms
+  #     parameters:
+  #       - name: sort
+  #         in: query
+  #         description: fields to sort by
+  #         required: false
+  #         style: form
+  #         schema:
+  #           type: string
+  #       - name: 'fields[course_terms]'
+  #         in: query
+  #         description: 'Sparse Fieldsets: return only the specified course fields'
+  #         required: false
+  #         style: form
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: course term response
+  #         content:
+  #           application/vnd.api+json:
+  #             schema:
+  #               $ref: '#/components/schemas/CourseTermCollection'
+  # '/course_terms/{id}/':
+  #   get:
+  #     description: Returns a single course term
+  #     operationId: return course term by id
+  #     parameters:
+  #       - name: id
+  #         in: path
+  #         description: ID of course term to fetch
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: course term response
+  #         content:
+  #           application/vnd.api+json:
+  #             schema:
+  #               $ref: '#/components/schemas/CourseTermItem'
+  # '/course_terms/{id}/relationships/course':
+  #   get:
+  #     description: Returns a single term's related course
+  #     parameters:
+  #       - name: id
+  #         in: path
+  #         description: ID of term to fetch
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: course relationship response
+  #         content:
+  #           application/vnd.api+json:
+  #             schema:
+  #               $ref: './jsonapi.yaml#/components/schemas/relationships'
 components:
   securitySchemes:
     basicAuth:
@@ -550,7 +801,54 @@ components:
             https://api.columbia.edu/scope/group: groups you are a member of
             "demo-netphone-admin": Administrative access to netphone resources
   schemas:
-    CommonItem:
+    # basic model defintions
+    Course:
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      allOf:
+        - $ref: '#/components/schemas/CommonAttributes'
+        - $ref: '#/components/schemas/CourseAttributes'
+    CourseNoRequired:
+      description: A course with no required attributes, for PATCHing.
+      allOf:
+        - $ref: '#/components/schemas/CommonAttributes'
+        - $ref: '#/components/schemas/CourseAttributesNoRequired'
+    CourseRelationships:
+      description: The Course's relationships
+      type: object
+      properties:
+        course_terms:
+          description: A given Course can appear in many CourseTerms.
+          type: object
+          properties:
+              links:
+                $ref: "jsonapi.yaml#/components/schemas/relationshipLinks"
+              data:
+                $ref: "jsonapi.yaml#/components/schemas/relationshipToMany"
+              meta:
+                $ref: "jsonapi.yaml#/components/schemas/meta"
+      additionalProperties: false
+    CourseTerm:
+      description: A term (semester) instance of a course of instruction. e.g. 20181COMSW1002
+      allOf:
+        - $ref: '#/components/schemas/CommonAttributes'
+        - $ref: '#/components/schemas/CourseTermAttributes'
+    CourseTermRelationships:
+      description: The CourseTerms's relationships
+      type: object
+      properties:
+        course:
+          description: Only one Course is the parent of this CourseTerm instance
+          type: object
+          properties:
+              links:
+                $ref: "jsonapi.yaml#/components/schemas/relationshipLinks"
+              data:
+                $ref: "jsonapi.yaml#/components/schemas/relationshipToOne"
+              meta:
+                $ref: "jsonapi.yaml#/components/schemas/meta"
+      additionalProperties: false
+    # not strictly necessary to split the common attributes out here just because they are an abstract model...
+    CommonAttributes:
       description: Attributes common to all our schemas.
       type: object
       properties:
@@ -562,44 +860,13 @@ components:
           type: string
         last_mod_date:
           type: string
-      required:
-        - last_mod_user_name
-        - last_mod_date
-    CourseCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/CourseItem'
-    CourseItem:
-      allOf:
-        - $ref: './jsonapi.yaml#/components/schemas/resource'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/CourseSchema'
-            relationships:
-              $ref: '#/components/schemas/CourseRelationships'
-    CourseTermCollection:
-      type: array
-      items:
-        $ref: '#/components/schemas/CourseTermItem'
-    CourseTermItem:
-      allOf:
-        - $ref: './jsonapi.yaml#/components/schemas/resource'
-        - type: object
-          properties:
-            attributes:
-              $ref: '#/components/schemas/CourseTermSchema'
-            relationships:
-              $ref: '#/components/schemas/CourseTermRelationships'
-    CourseSchema:
-      allOf:
-        - $ref: '#/components/schemas/CommonItem'
-        - $ref: '#/components/schemas/CourseAttributes'
+      # these are added by the server so are not required of the client here:
+      # required:
+      #   - last_mod_user_name
+      #   - last_mod_date
     CourseAttributes:
+      description: Course attributes, in addition to the Common attributes, define a `Course`
       type: object
-      description: data model for Course
-      required:
-        - course_name
       properties:
         school_bulletin_prefix_code:
           type: string
@@ -623,18 +890,42 @@ components:
           maxLength: 80
         course_description:
           type: string
-    CourseRelationships:
+      required:
+        - school_bulletin_prefix_code
+        - subject_area_code
+        - suffix_two
+        - course_name
+        - course_number
+        - course_identifier
+    CourseAttributesNoRequired:
+      description: UGH duplicated Course attributes, in addition to the Common attributes, define a `Course`
       type: object
       properties:
-        course_terms:
-          $ref: './jsonapi.yaml#/components/schemas/relationships'
-    CourseTermSchema:
-      allOf:
-        - $ref: '#/components/schemas/CommonItem'
-        - $ref: '#/components/schemas/CourseTermAttributes'
+        school_bulletin_prefix_code:
+          type: string
+          maxLength: 10
+        suffix_two:
+          type: string
+          maxLength: 2
+        subject_area_code:
+          type: string
+          maxLength: 10
+        course_number:
+          type: string
+          maxLength: 10
+        course_identifier:
+          type: string
+          maxLength: 10
+          uniqueItems: true
+          pattern: "[A-Z]{5}[0-9]{5}"
+        course_name:
+          type: string
+          maxLength: 80
+        course_description:
+          type: string
     CourseTermAttributes:
+      description: CourseTerm attributes, in addition to the Common attributes, define a `CourseTerm`
       type: object
-      description: data model for CourseTerm. 
       properties:
         term_identifier:
           type: string
@@ -648,8 +939,131 @@ components:
         exam_credit_flag:
           type: boolean
           default: true
-    CourseTermRelationships:
+    # these are the various request/response schemas that are composed of the above fundamental schemas:
+    # get /courses success response. Do I really have to copy all this stuff vs. $ref success? Probably.
+    CourseCollection:
+      description: "GET /courses response: A collection of Course Items and other optional data."
       type: object
+      required:
+        - data
       properties:
-        courses:
-          $ref: './jsonapi.yaml#/components/schemas/relationshipToOne'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseItem'
+        included:
+          type: array
+          items:
+            $ref: "./jsonapi.yaml#/components/schemas/resource"
+          uniqueItems: true
+        links:
+          description: Link members related to the primary data.
+          allOf:
+            - $ref: "./jsonapi.yaml#/components/schemas/links"
+            - $ref: "./jsonapi.yaml#/components/schemas/pagination"
+        jsonapi:
+          $ref: "./jsonapi.yaml#/components/schemas/jsonapi"
+      additionalProperties: false
+    CourseItem:
+      description: "A Course resource: type, id, attributes, relationships, links, etc."
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/Course'
+            relationships:
+              $ref: '#/components/schemas/CourseRelationships'
+    CourseItemNoID:
+      description: "A CourseItem with no required `id` since it is system-generated."
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/post_resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/Course'
+            relationships:
+              $ref: '#/components/schemas/CourseRelationships'
+    CourseItemNoRequired:
+      description: "A CourseItem with no required attributes, for PATCHing."
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/CourseNoRequired'
+            relationships:
+              $ref: '#/components/schemas/CourseRelationships'
+    CourseItemPost:
+      description: >-
+        singular course being [created](https://jsonapi.org/format/#crud-creating).
+        `id` is ignored if supplied and created by the system.
+      properties:
+        data:
+          $ref: "#/components/schemas/CourseItemNoID"
+    CourseItemPatch:
+      description: >-
+        singular course being [updated](https://jsonapi.org/format/#crud-updating).
+      properties:
+        data:
+          $ref: "#/components/schemas/CourseItemNoRequired"
+    CourseItemData:
+      description: >-
+        singular top-level course item data
+      properties:
+        data:
+          $ref: "#/components/schemas/CourseItem"
+    CourseTermCollection:
+      description: "GET /course_terms response: A collection of CourseTerm items and other optional data."
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseTermItem'
+        included:
+          type: array
+          items:
+            $ref: "./jsonapi.yaml#/components/schemas/resource"
+          uniqueItems: true
+        links:
+          description: Link members related to the primary data.
+          allOf:
+            - $ref: "./jsonapi.yaml#/components/schemas/links"
+            - $ref: "./jsonapi.yaml#/components/schemas/pagination"
+        jsonapi:
+          $ref: "./jsonapi.yaml#/components/schemas/jsonapi"
+      additionalProperties: false
+    CourseTermItem:
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/CourseTerm'
+            relationships:
+              $ref: '#/components/schemas/CourseTermRelationships'
+    CourseTermItemNoID:
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/post_resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/CourseTerm'
+            relationships:
+              $ref: '#/components/schemas/CourseTermRelationships'
+    CourseTermItemPost:
+      description: >-
+        singular course_term being [created](https://jsonapi.org/format/#crud-creating).
+        `id` is ignored if supplied and created by the system.
+      properties:
+        data:
+          $ref: "#/components/schemas/CourseTermItemNoID"
+    CourseTermItemData:
+      description: >-
+        singular top-level course_term item data
+      properties:
+        data:
+          $ref: "#/components/schemas/CourseTermItem"
