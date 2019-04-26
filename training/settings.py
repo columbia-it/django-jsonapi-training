@@ -30,6 +30,12 @@ MYSQL = strtobool(os.environ.get('DJANGO_MYSQL', 'false'))
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
 
+# If the X-Forwarded-Host header is set, then use it. This causes URLs in responses (links) to contain the
+# given host[:port] of the proxy rather than that of the backend.
+USE_X_FORWARDED_HOST = True
+# Use this for the X-Forwarded-Proto header:
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -65,7 +71,7 @@ ROOT_URLCONF = 'training.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -163,6 +169,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/var/www/html'
 
 # DRF and DJA settings
 REST_FRAMEWORK = {
@@ -205,8 +212,8 @@ OAUTH2_PROVIDER = {
     'RESOURCE_SERVER_INTROSPECTION_URL': os.environ.get('OAUTH2_SERVER','https://oauth-test.cc.columbia.edu')
                                             + '/as/introspect.oauth2',
     'RESOURCE_SERVER_INTROSPECTION_CREDENTIALS': (
-        os.environ.get('RESOURCE_SERVER_ID','demo_resource_server'),
-        os.environ.get('RESOURCE_SERVER_SECRET','wL0pgS5RcNOgdOSSmejzZNA605d3MtkoXMVSDaJxmaTU70XnYQPOabBAYtfkWXay')
+        os.environ.get('RESOURCE_SERVER_ID','demo-django-jsonapi-training_validator'),
+        os.environ.get('RESOURCE_SERVER_SECRET','SaulGoodman')
     ),
 }
 

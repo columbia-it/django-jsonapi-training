@@ -189,7 +189,7 @@ swagger-editor$ docker restart heuristic_mirzakhani
 heuristic_mirzakhani
 ```
 
-#### Some issues I have with OAS
+#### Some issues I have with OAS 3.0
 
 It's not a DRY as I want it to be:
 
@@ -197,6 +197,107 @@ It's not a DRY as I want it to be:
 * There are no parameterized macros like in
   [RAML](https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md#resource-type-and-trait-parameters).
 
-As such, OAS is more suited as a machine-generated file format than something a human should be expected to compose.
+As such, OAS 3.0 is more suited as a machine-generated file format than something a human should be expected to compose
+for any kind of sophisticated API framework like {json:api}.
 To get any kind of reuse out of an OAS document, it will need to be pre-processed with something like
 [m4](https://www.gnu.org/software/m4) to basically add parameter substitutions.
+
+There are [proposed improvements in OAS 3.1](https://github.com/OAI/OpenAPI-Specification/issues/1466)
+that may fix this in the future.
+
+### Adding the Swagger UI to my app
+
+See [this article](https://dev.to/matthewhegarty/swaggerui-inside-django-rest-framework-1c2p) which
+outlines the steps to add Swagger UI at the /v1/openapi path.
+
+A bunch of new files are added in `myapp/static/` and `myapp/templates/` to add the Swagger-UI code
+and `myapp.json` which was [bundled above](#swagger-ui-watcher).
+
+```text
+(env) django-training$ tree myapp/static/
+myapp/static/
+├── oauth2-redirect.html
+└── openapi
+    ├── myapp.json
+    └── swagger-dist-ui
+        ├── favicon-16x16.png
+        ├── favicon-32x32.png
+        ├── oauth2-redirect.html
+        ├── swagger-ui-bundle.js
+        ├── swagger-ui-bundle.js.map
+        ├── swagger-ui-standalone-preset.js
+        ├── swagger-ui-standalone-preset.js.map
+        ├── swagger-ui.css
+        ├── swagger-ui.css.map
+        ├── swagger-ui.js
+        └── swagger-ui.js.map
+
+2 directories, 13 files
+
+(env) django-training$ tree myapp/templates/
+myapp/templates/
+└── index.html
+```
+
+You have to edit index.html to add the static templating (`{stuff in brackets}`) and the filename
+for our app's OAS 3.0 spec:
+
+```javascript
+...
+    window.onload = function() {
+      // Begin Swagger UI call region
+      const ui = SwaggerUIBundle({
+        url: "{% static "openapi/myapp.json" %}",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+...
+```
+
+Add a STATIC_ROOT to settings which tells `manage.py collectstatic` where to put them:
+
+```diff
+ STATIC_URL = '/static/'
++STATIC_ROOT = '/var/www/html'
+```
+
+Also add some urlpattern changes in urls.py to bring in the templated index.html added above as well
+as special-handling of `/oauth2-redirect.html` which wants to be top-level rather than below
+the STATIC_URL.
+
+```diff
++from django.contrib.staticfiles.views import serve
++from django.views.generic.base import RedirectView, TemplateView
+@@ -73,6 +74,10 @@ urlpatterns = [
++    # swagger UI
++    path('v1/openapi/', TemplateView.as_view(template_name="index.html")),
++    # The default request_uri is /oauth2-redirect.html (no /static prefix) so just pass it into staticfiles serve():
++    path('oauth2-redirect.html', serve, {'path': 'oauth2-redirect.html'}),
+```
+
+We also have to update setup.py to package the required static and template
+files by adding a MANIFEST.in:
+
+```text
+recursive-include myapp/static *
+recursive-include myapp/templates *
+```
+
+After doing this, open `/v1/openapi` in a browser and you should get the Swagger-UI.
+Note that our OAuth2 client will need to have registered the appropriate `redirect_uri`.
+
+#### Selecting the correct Server in Swagger-UI
+
+N.B. Make sure that when you use the Swagger-UI that you select the correct server from the Servers list at the top
+as I've added several in `myapp.yaml`.
+
+When running under PyCharm or runserver, choose `{serverURL} - provider your server URL` and use the default
+of `http://localhost:8000/v1`. Also make sure when authenticating to use the same OAuth2 server that is being
+introspected (`OAUTH2_SERVER` environment variable).
+
+When running the docker-compose configuration (described in the next section),
+use `https://localhost/v1/ - dev API gateway`.
+
+As you can see, this Swagger-UI document has no real connection with your backend server; It's just convenient
+to hang it off your server, especially when developing.
+
+![alt-text](./media/swagger-server.png "screenshot of selecting the server in Swagger-UI")

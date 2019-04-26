@@ -2,6 +2,8 @@ import uuid
 
 from django.db import models
 
+# TODO: Add validations
+
 
 class CommonModel(models.Model):
     """

@@ -9,3 +9,9 @@ htmlcov/
 *.egg-info/
 .pytest_cache/
 *.sh
+build/
+dist/
+.docker
+myapp-docker.tar
+traefik/
+

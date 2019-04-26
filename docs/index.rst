@@ -36,13 +36,13 @@ Copyright © 2018 The Trustees of Columbia University in the City of New York
    rest.md
    jsonapi.md
    building.md
-   deploying.md
    modifying.md
    another1.md
    database.md
    another2.md
    sphinx.md
    documenting-api.md
+   deploying.md
    oauth2.md
    cli_client.md
    help.md

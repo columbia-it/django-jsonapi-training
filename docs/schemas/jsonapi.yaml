@@ -94,6 +94,20 @@ info:
 externalDocs:
   description: Read more about {json:api} here
   url: https://jsonapi.org/
+servers:
+  - url: "{serverURL}"
+    description: provide your server URL
+    variables:
+      serverURL:
+        default: http://localhost:8000/v1
+        description: path for server
+  # not sure why but swagger-editor only prompts for the variable if there's more than one server listed.
+  - url: "{serverURL}"
+    description: provide your server URL
+    variables:
+      serverURL:
+        default: http://localhost:8000/v1
+        description: path for server
 # Example generic paths and their methods: path parameters are {collection} and {id}
 paths:
   /{collection}/:
@@ -542,6 +556,38 @@ components:
       anyOf:
         - $ref: "#/components/schemas/empty"
         - $ref: "#/components/schemas/linkage"
+    reltoone:
+      description: A singular relationship
+      type: object
+      properties:
+        links:
+          $ref: "#/components/schemas/relationshipLinks"
+        data:
+          $ref: "#/components/schemas/relationshipToOne"
+        meta:
+          $ref: "#/components/schemas/meta"
+    reltomany:
+      description: A multiple relationship
+      type: object
+      properties:
+        links:
+          $ref: "#/components/schemas/relationshipLinks"
+        data:
+          $ref: "#/components/schemas/relationshipToMany"
+        meta:
+          $ref: "#/components/schemas/meta"
+    reltoonedata:
+      description: A singular relationship, data only.
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/relationshipToOne"
+    reltomanydata:
+      description: A multiple relationship, data only.
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/relationshipToMany"
     relationshipToMany:
       description: >-
         An array of objects each containing `type` and `id` members for to-many

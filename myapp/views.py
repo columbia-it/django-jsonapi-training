@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
-from oauth2_provider.contrib.rest_framework import (OAuth2Authentication,
-                                                    TokenMatchesOASRequirements)
+from oauth2_provider.contrib.rest_framework import (
+    OAuth2Authentication, TokenMatchesOASRequirements)
 from rest_condition import And, Or
 from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication)
@@ -126,7 +126,7 @@ class PersonViewSet(CourseBaseViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     filterset_fields = {}
-    search_fields = ('name', 'course_terms__course__course_name')
+    search_fields = ('name', 'instructor__course_terms__course__course_name')
 
     class Meta:
         """
@@ -175,7 +175,7 @@ class InstructorViewSet(CourseBaseViewSet):
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
     filterset_class = InstructorFilterSet
-    search_fields = ('name', 'course_terms__course__course_name')
+    search_fields = ('person__name', 'course_terms__course__course_name')
 
 
 class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):

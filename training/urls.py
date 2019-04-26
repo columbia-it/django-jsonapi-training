@@ -18,8 +18,9 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.staticfiles.views import serve
 from django.urls import include, path
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 
@@ -73,6 +74,10 @@ urlpatterns = [
     path('v1/instructors/<pk>/<related_field>/',
         views.InstructorViewSet.as_view({'get': 'retrieve_related'}), # a toMany relationship
         name='instructor-related'),
+    # swagger UI
+    path('v1/openapi/', TemplateView.as_view(template_name="index.html")),
+    # The default request_uri is /oauth2-redirect.html (no /static prefix) so just pass it into staticfiles serve():
+    path('oauth2-redirect.html', serve, {'path': 'oauth2-redirect.html'}),
     # browseable API and admin stuff. TODO: Consider leaving out except when debugging.
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),

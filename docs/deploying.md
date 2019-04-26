@@ -2,6 +2,84 @@
 
 ### TODO: Document Jenkins CI/CD setup.
 
+### Serving Static Files
+
+When developing (`settings.DEBUG = True`), django serves up static content. If we are only running
+our API service, there are no static files to serve as the only content is JSON, however, with the
+addition of the openapi documentation and
+[Swagger-UI](https://columbia-it-django-jsonapi-training.readthedocs.io#adding-the-swagger-ui-to-my-app)
+we will need to collect and serve up the static files with a web server.
+
+Following are some examples of how to do this with a [Docker setup](#docker) and with
+[Apache httpd](#apache-httpd-mod_wsgi). TODO: Also describe how to do this with, e.g., AWS Elastic Beanstalk,
+Lambda, etc.
+
+### Docker
+
+#### Making a Docker Image
+
+We'll make a Docker image for `myapp` with:
+
+```text
+docker build -t myapp:latest .
+```
+
+But there are a number of extra steps, so I've added them to the tox.ini. Just do a `tox -e docker` and the right
+thing will happen. Here's what I've added which:
+1. bundles myapp.json
+2. builds a new wheel.
+3. builds the docker image.
+4. saves the image as a tar file so it can be `docker image load`ed elsewhere if needed.
+
+```diff
++[testenv:docker]
++deps =
++whitelist_externals =
++    docker
++    npm
++    swagger-ui-watcher
++setenv =
++    DJANGO_SETTINGS_MODULE = training.settings
++commands =
++    npm install swagger-ui-watcher
++    /bin/cp docs/schemas/jsonapi.yaml .
++    swagger-ui-watcher -b myapp/static/openapi/myapp.json docs/schemas/myapp.yaml
++    /bin/rm -f jsonapi.yaml
++    /bin/rm -rf dist
++    python setup.py bdist_wheel
++    docker build -t myapp:latest .
++    docker image save -o myapp-docker.tar myapp:latest
++    /usr/bin/printf '\n\033[0;31m copy the tar to the docker host and do docker image load -i myapp-docker.tar\033[0m\n'
++
+```
+
+#### docker-compose
+
+We'll use `docker-compose` to combine an nginx web server and our django app (served by gunicorn)
+using [traefik](https://traefik.io/)
+as the "edge router" to allow them to both listen on various paths below `https://localhost/` (technically this could
+be done with Apache httpd or nginx too, but traefik does some docker magic).
+
+See `docker-compose.yml` for the gory details.
+
+Just do a `docker-compose up` and away you go (I've used --no-start --force-recreate and start/stop):
+
+```text
+(env) django-training$ docker-compose up --no-start --force-recreate
+Recreating django-training_nginx_1 ... done
+Recreating django-training_demoapp_1 ... done
+Recreating django-training_traefik_1 ... done
+(env) django-training$ docker-compose start
+Starting nginx   ... done
+Starting demoapp ... done
+Starting traefik ... done
+(env) django-training$ docker-compose stop
+Stopping django-training_traefik_1 ... done
+Stopping django-training_demoapp_1 ... done
+Stopping django-training_nginx_1   ... done
+(env) django-training$ 
+```
+
 ### Apache httpd `mod_wsgi`
 
 Our preferred environment for running Django apps is with `mod_wsgi` under Apache httpd. At CUIT,

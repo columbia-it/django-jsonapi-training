@@ -8,7 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased] - YYYY-MM-DD 
 
 ### Added
+
+### Deprecated
+
+### Changed
+
+### Fixed
+
+## [0.2.4] - unreleased
+
+### Added
 - `jsonapi_demo_cli` command-line demonstration client.
+- docker build
+- OAS 3.0 [schema](docs/schemas/myapp.yaml)
+- Added Swagger-UI at /openapi per [this article](https://dev.to/matthewhegarty/swaggerui-inside-django-rest-framework-1c2p)
+
+### Fixed
+- `GET /people/?filter[search]=...` 500 error.
 
 ### Deprecated
 

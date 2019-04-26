@@ -1,0 +1,31 @@
+#!/bin/bash
+# setup traefik certs
+if [ -f traefik/certs/host.cert ]; then
+   exit 0
+fi
+   
+mkdir -p traefik/certs traefik/config
+(
+    cd traefik/certs
+    openssl genrsa -out host.key 2048
+    openssl req -new -key host.key -out host.csr -subj "/C=US/ST=New York/L=New York/O=Columbia University/OU=IT/CN=localhost"
+    openssl x509 -req -days 3650 -in host.csr -signkey host.key -out host.cert
+    openssl x509 -noout -fingerprint -text < host.cert > host.info
+)
+(
+     cd traefik/config
+     cat >traefik.toml <<EOF
+debug = false
+
+logLevel = "ERROR"
+defaultEntryPoints = ["https"]
+
+[entryPoints]
+  [entryPoints.https]
+  address = ":443"
+  [entryPoints.https.tls]
+    [[entryPoints.https.tls.certificates]]
+      certFile = "/certs/host.cert"
+      keyFile = "/certs/host.key"
+EOF
+)

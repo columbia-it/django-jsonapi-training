@@ -11,5 +11,5 @@ There are still quite a few things I want to test and document. Contributions ar
 - Jenkins CI/CD setup for local repo.
 - Travis CI/CD setup for github repo.
 - Client app demos (with Jupyter notebook?)
-  - conventional Python client
-  - Single Page App (SPA) demo (Angular.js)
+  - conventional Python CLI client (in process; see `demo_jsonapi_cli`)
+  - Single Page App (SPA) demo with [angular2-jsonapi](https://github.com/ghidoz/angular2-jsonapi)

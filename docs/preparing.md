@@ -37,7 +37,7 @@ always ask questions on Slack channel `#python-dev`
 
 ### Development Environment Setup
 
-Most all steps on macOS will be doing using the Unix shell. Open the "Terminal" application for this.
+Most all steps on macOS will be performed using the Unix shell. Open the "Terminal" application for this.
 
 #### Homebrew
 

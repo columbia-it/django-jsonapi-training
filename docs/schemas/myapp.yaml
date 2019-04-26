@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: 1.0.0
+  version: 1.0.1
   title: 'django-jsonapi-training example'
   description: >-
     ![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")
@@ -26,21 +26,33 @@ info:
     name: Apache 2.0 License
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - url: 'http://localhost:8000/v1'
-    description: backend dev server (default port with Django)
-  - url: 'http://api.company.com:8000/v1/'
+  - url: 'https://ac45devapp01.cc.columbia.edu/v1'
+    description: demonstration using gravitee.io portal
+  - url: 'http://ac45devapp01.cc.columbia.edu:9123/v1'
+    description: demonstration using direct gunicorn access
+  - url: 'https://localhost/v1/'
     description: dev API gateway
   - url: 'http://localhost:9123/v1'
     description: backend dev server when using API gateway
+  - url: "{serverURL}"
+    description: provide your server URL
+    variables:
+      serverURL:
+        default: http://localhost:8000/v1
+        description: path for server
 tags:
   - name: courses
     description: Courses of study (really individual classes)
-    externalDocs:
-      url: https://opendataservice.columbia.edu/course-information
-      description: loosely based on this (out of date) information
   - name: course_terms
     description: "Instances of a course (really class): year and semester"
+  - name: people
+    description: People have names and other attributes.
+  - name: instructors
+    description: Instructors teach Course_terms (instances of classes) and are People.
 paths:
+  ####
+  # Course
+  ####
   /courses/:
     get:
       description: Returns a collection of courses
@@ -48,7 +60,7 @@ paths:
       tags: [courses]
       security:
         - basicAuth: []
-        - oauth-dev: [auth-columbia, read]
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
         - oauth-test: [auth-columbia, read]
         - oauth: [auth-columbia, read]
       parameters:
@@ -136,14 +148,14 @@ paths:
           required: false
           style: form
           schema:
-            $ref: '#/components/schemas/CourseAttributes/properties/course_name'
+            $ref: '#/components/schemas/Course/properties/course_name'
         - name: 'filter[course_name.iexact]'
           in: query
           description: case independent exact course_name 
           required: false
           style: form
           schema:
-            $ref: '#/components/schemas/CourseAttributes/properties/course_name'
+            $ref: '#/components/schemas/Course/properties/course_name'
         - name: 'filter[course_name.contains]'
           in: query
           description: course_name contains
@@ -165,7 +177,7 @@ paths:
           required: false
           style: form
           schema:
-            $ref: '#/components/schemas/CourseAttributes/properties/subject_area_code'
+            $ref: '#/components/schemas/Course/properties/subject_area_code'
         - name: 'filter[subject_area_code.gte]'
           in: query
           description: subject_area_code greater-than or equal
@@ -208,7 +220,7 @@ paths:
           required: false
           style: form
           schema:
-            $ref: '#/components/schemas/CourseAttributes/properties/course_description'
+            $ref: '#/components/schemas/Course/properties/course_description'
         - name: 'filter[course_description.gte]'
           in: query
           description: course_description greater-than or equal
@@ -272,7 +284,7 @@ paths:
           required: false
           style: form
           schema:
-            $ref: '#/components/schemas/CourseAttributes/properties/course_identifier'
+            $ref: '#/components/schemas/Course/properties/course_identifier'
         - name: 'filter[course_identifier.gte]'
           in: query
           description: course_identifier greater-than or equal
@@ -336,7 +348,7 @@ paths:
           required: false
           style: form
           schema:
-            $ref: '#/components/schemas/CourseAttributes/properties/course_number'
+            $ref: '#/components/schemas/Course/properties/course_number'
         # 'course_terms__term_identifier': usual_rels,
         - name: 'filter[course_terms.term_identifier]'
           in: query
@@ -344,7 +356,7 @@ paths:
           required: false
           style: form
           schema:
-            $ref: '#/components/schemas/CourseTermAttributes/properties/term_identifier'
+            $ref: '#/components/schemas/CourseTerm/properties/term_identifier'
         - name: 'filter[course_terms.term_identifier.gte]'
           in: query
           description: course_terms.term_identifier greater-than or equal
@@ -387,7 +399,7 @@ paths:
           required: false
           style: form
           schema:
-            $ref: '#/components/schemas/CourseAttributes/properties/school_bulletin_prefix_code'
+            $ref: '#/components/schemas/Course/properties/school_bulletin_prefix_code'
         - name: 'filter[school_bulletin_prefix_code.regex]'
           in: query
           description: >-
@@ -434,9 +446,9 @@ paths:
       tags: [courses]
       security:
         - basicAuth: []
-        - oauth-dev: [auth-columbia, demo-netphone-admin, create]
-        - oauth-test: [auth-columbia, demo-netphone-admin, create]
-        - oauth: [auth-columbia, demo-netphone-admin, create]
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, create]
+        - oauth-test: [auth-columbia, create]
+        - oauth: [auth-columbia, create]
       requestBody:
         description: post new course
         content:
@@ -515,7 +527,7 @@ paths:
       tags: [courses]
       security:
         - basicAuth: []
-        - oauth-dev: [auth-columbia, read]
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
         - oauth-test: [auth-columbia, read]
         - oauth: [auth-columbia, read]
       responses:
@@ -543,9 +555,9 @@ paths:
       tags: [courses]
       security:
         - basicAuth: []
-        - oauth-dev: [auth-columbia, demo-netphone-admin, update]
-        - oauth-test: [auth-columbia, demo-netphone-admin, update]
-        - oauth: [auth-columbia, demo-netphone-admin, update]
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
       requestBody:
         description: course data to patch. Only supply fields you want to change.
         content:
@@ -607,9 +619,9 @@ paths:
       tags: [courses]
       security:
         - basicAuth: []
-        - oauth-dev: [auth-columbia, demo-netphone-admin, delete]
-        - oauth-test: [auth-columbia, demo-netphone-admin, delete]
-        - oauth: [auth-columbia, demo-netphone-admin, delete]
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, delete]
+        - oauth-test: [auth-columbia, delete]
+        - oauth: [auth-columbia, delete]
       responses:
         '200':
           description: "[OK](https://jsonapi.org/format/#crud-deleting-responses-200)"
@@ -634,116 +646,2412 @@ paths:
             'application/vnd.api+json':
               schema:
                 $ref: 'jsonapi.yaml#/components/schemas/failure'
-  # '/courses/{id}/relationships/{related_field}':
-  #   parameters:
-  #     - name: id
-  #       in: path
-  #       description: ID of course to fetch
-  #       required: true
-  #       schema:
-  #         type: string
-  #     - name: related_field
-  #       in: path
-  #       description: related field to fetch
-  #       required: true
-  #       schema:
-  #         type: string
-  #         enum: ['course_terms']
-  #   get:
-  #     description: Returns a single course's course_term relationships
-  #     responses:
-  #       '200':
-  #         description: course relationship response
-  #         content:
-  #           application/vnd.api+json:
-  #             schema:
-  #               $ref: './jsonapi.yaml#/components/schemas/relationships'
-  # # decide if using {related_field} makes sense here given the response schema will be different.
-  # '/courses/{id}/{related_field}':
-  #   parameters:
-  #     - name: id
-  #       in: path
-  #       description: ID of course to fetch
-  #       required: true
-  #       schema:
-  #         type: string
-  #     - name: related_field
-  #       in: path
-  #       description: related field to fetch
-  #       required: true
-  #       schema:
-  #         type: string
-  #         enum: ['course_terms']
-  #   get:
-  #     description: Return returns the course_terms for this course.
-  #     responses:
-  #       '200':
-  #         description: course relationship response
-  #         content:
-  #           application/vnd.api+json:
-  #             schema:
-  #               $ref: './jsonapi.yaml#/components/schemas/relationships'
-  # /courses_terms/:
-  #   get:
-  #     description: Returns a collection of course terms
-  #     operationId: find course terms
-  #     parameters:
-  #       - name: sort
-  #         in: query
-  #         description: fields to sort by
-  #         required: false
-  #         style: form
-  #         schema:
-  #           type: string
-  #       - name: 'fields[course_terms]'
-  #         in: query
-  #         description: 'Sparse Fieldsets: return only the specified course fields'
-  #         required: false
-  #         style: form
-  #         schema:
-  #           type: string
-  #     responses:
-  #       '200':
-  #         description: course term response
-  #         content:
-  #           application/vnd.api+json:
-  #             schema:
-  #               $ref: '#/components/schemas/CourseTermCollection'
-  # '/course_terms/{id}/':
-  #   get:
-  #     description: Returns a single course term
-  #     operationId: return course term by id
-  #     parameters:
-  #       - name: id
-  #         in: path
-  #         description: ID of course term to fetch
-  #         required: true
-  #         schema:
-  #           type: string
-  #     responses:
-  #       '200':
-  #         description: course term response
-  #         content:
-  #           application/vnd.api+json:
-  #             schema:
-  #               $ref: '#/components/schemas/CourseTermItem'
-  # '/course_terms/{id}/relationships/course':
-  #   get:
-  #     description: Returns a single term's related course
-  #     parameters:
-  #       - name: id
-  #         in: path
-  #         description: ID of term to fetch
-  #         required: true
-  #         schema:
-  #           type: string
-  #     responses:
-  #       '200':
-  #         description: course relationship response
-  #         content:
-  #           application/vnd.api+json:
-  #             schema:
-  #               $ref: './jsonapi.yaml#/components/schemas/relationships'
+  '/courses/{id}/relationships/course_terms/':
+    description: course_terms related to this course
+    parameters:
+      - name: id
+        in: path
+        description: ID of course
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns a single course's course_term relationships
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      # are there valid query parameters?
+      responses:
+        '200':
+          description: course relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomany'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item relationships response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    post:
+      description: "[add](https://jsonapi.org/format/#crud-updating-to-many-relationships) course_term relationships to course"
+      operationId: post course course_terms
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, create]
+        - oauth-test: [auth-columbia, create]
+        - oauth: [auth-columbia, create]
+      requestBody:
+        description: post new course_terms that are related to this course
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course_terms added. Complete list of course_terms relationships is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: >-
+        [replace](https://jsonapi.org/format/#crud-updating-to-many-relationships) all course_term relationships for course.
+      operationId: patch course course_terms
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: patch all course_terms that are related to this course, empty list to delete them all.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course_terms added. Complete list of course_terms relationships is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    delete:
+      description: >-
+        [remove](https://jsonapi.org/format/#crud-updating-to-many-relationships) given course_term relationships from course.
+      operationId: delete course course_terms
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, delete]
+        - oauth-test: [auth-columbia, delete, demo-netphone-admin]
+        - oauth: [auth-columbia, delete]
+      requestBody:
+        description: remove the given course_terms that are related to this course
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course_terms added. Complete list of course_terms relationships is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/courses/{id}/course_terms/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of course to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: |-
+        `course_terms` for the given `course`.
+
+        GET only: Use the `self` links if you want to update or delate a given `course_term` or the
+        `/courses/<id>/relationships/course_terms/` link if you want to update the relationships.
+      tags: [courses]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: course relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseTermCollection'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  ####
+  # CourseTerm
+  ####
+  /course_terms/:
+    get:
+      description: Returns a collection of course_terms
+      operationId: find course_terms
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      parameters:
+        # I wish I could pull all these in at once...
+        - $ref: './jsonapi.yaml#/components/parameters/include'
+        - $ref: './jsonapi.yaml#/components/parameters/sort'
+        - $ref: './jsonapi.yaml#/components/parameters/pageSize'
+        - $ref: './jsonapi.yaml#/components/parameters/pageNumber'
+        # 'id': usual_rels,
+        - name: 'filter[id]'
+          in: query
+          description: exact id
+          required: false
+          style: form
+          schema:
+            # use an exact schema match here...
+            $ref: './jsonapi.yaml#/components/schemas/id'
+        - name: 'filter[id.gte]'
+          in: query
+          description: id greater-than or equal
+          required: false
+          style: form
+          schema:
+            # ... but here allow a free-form string for relationship matches
+            type: string
+        - name: 'filter[id.lte]'
+          in: query
+          description: id less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.lt]'
+          in: query
+          description: id less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.gt]'
+          in: query
+          description: id greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.in]'
+          in: query
+          description: id in list
+          required: false
+          style: form
+          schema:
+            type: string
+        # keyword search
+        - name: 'filter[search]'
+          in: query
+          description: keyword search term_identifier
+          required: false
+          style: form
+          schema:
+            type: string
+        # 'term_identifier': usual_rels,
+        - name: 'filter[term_identifier]'
+          in: query
+          description: exact id
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseTerm/properties/term_identifier'
+        - name: 'filter[term_identifier.gte]'
+          in: query
+          description: term_identifier greater-than or equal
+          required: false
+          style: form
+          schema:
+            # ... but here allow a free-form string for relationship matches
+            type: string
+        - name: 'filter[term_identifier.lte]'
+          in: query
+          description: term_identifier less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[term_identifier.lt]'
+          in: query
+          description: term_identifier less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[term_identifier.gt]'
+          in: query
+          description: term_identifier greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[term_identifier.in]'
+          in: query
+          description: term_identifier in list
+          required: false
+          style: form
+          schema:
+            type: string
+        # 'audit_permitted_code': ['exact'],
+        - name: 'filter[audit_permitted_code]'
+          in: query
+          description: audit_permitted_code exact match
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseTerm/properties/audit_permitted_code'
+        # 'exam_credit_flag': ['exact'],
+        - name: 'filter[exam_credit_flag]'
+          in: query
+          description: exam_credit_flag exact match
+          required: false
+          style: form
+          schema:
+            $ref: '#/components/schemas/CourseTerm/properties/exam_credit_flag'
+        # 'course__id': usual_rels,
+        - name: 'filter[course.id]'
+          in: query
+          description: related course.id equals
+          required: false
+          style: form
+          schema:
+            $ref: './jsonapi.yaml#/components/schemas/id'
+        - name: 'filter[course.id.gte]'
+          in: query
+          description: related course.id greater-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course.id.lte]'
+          in: query
+          description: related course.id less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course.id.lt]'
+          in: query
+          description: related course.id less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course.id.gt]'
+          in: query
+          description: related course.id greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course.id.in]'
+          in: query
+          description: related course.id in list
+          required: false
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: GET /course_terms response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseTermCollection'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    post:
+      description: "[add](https://jsonapi.org/format/#crud-creating) a new course_term to course_terms collection"
+      operationId: post course_term
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, create]
+        - oauth-test: [auth-columbia, create]
+        - oauth: [auth-columbia, create]
+      requestBody:
+        description: post new course_term
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: '#/components/schemas/CourseTermItemPost'
+      responses:
+        '201':
+          description: >-
+            [Created](https://jsonapi.org/format/#crud-creating-responses-201).
+            Assigned `id` and/or any other changes are in this response.
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: '#/components/schemas/CourseTermItemData'
+          headers:
+            Location:
+              description: Url of newly-created course
+              schema:
+                type: string
+                format: uri-reference
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-creating-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: >-
+            [Related resource does not exist](https://jsonapi.org/format/#crud-creating-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-creating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/course_terms/{id}/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of course_term to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns a single course_term
+      operationId: return course_term by id
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: course_term response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseTermItemData'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: "[update](https://jsonapi.org/format/#crud-updating) a course_term"
+      operationId: patch course_term
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: course data to patch. Only supply fields you want to change.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: '#/components/schemas/CourseTermItemPatch'
+      responses:
+        '200':
+          description: "[OK](https://jsonapi.org/format/#crud-updating-responses-200)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseTermItemData'
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [Patched](https://jsonapi.org/format/#crud-updating-responses-204).
+            No other changes from what was PATCHed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: >-
+            [Resource does not exist](https://jsonapi.org/format/#crud-updating-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    delete:
+      description: "[delete](https://jsonapi.org/format/#crud-deleting) an item"
+      operationId: delete course_term item
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, delete]
+        - oauth-test: [auth-columbia, delete]
+        - oauth: [auth-columbia, delete]
+      responses:
+        '200':
+          description: "[OK](https://jsonapi.org/format/#crud-deleting-responses-200)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/onlymeta'
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+        '204':
+          description: >-
+            [Deleted](https://jsonapi.org/format/#crud-deleting-responses-204).
+        '404':
+          description: >-
+            [Resource does not exist](https://jsonapi.org/format/#crud-deleting-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+  '/course_terms/{id}/relationships/course/':
+    description: course related to this course_term
+    parameters:
+      - name: id
+        in: path
+        description: ID of course_term
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns a single course_terms's course relationship
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      # are there valid query parameters?
+      responses:
+        '200':
+          description: course_term relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltoone'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item relationships response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: |-
+        [replace](https://jsonapi.org/format/#crud-updating-to-many-relationships) all course relationship for course_term.
+
+        If you want to remove the relationship, PATCH a null relationship object.
+      operationId: patch course_term course
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: patch course that is related to this course_term, empty list to delete.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltoonedata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course added.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltoonedata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was PATCHed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/course_terms/{id}/relationships/instructors/':
+    description: instructors related to this course_term
+    parameters:
+      - name: id
+        in: path
+        description: ID of course_term
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns a single course_terms's instructors relationships
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      # are there valid query parameters?
+      responses:
+        '200':
+          description: instructors relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomany'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item relationships response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    post:
+      description: "[add](https://jsonapi.org/format/#crud-updating-to-many-relationships) instructors relationship to course_term"
+      operationId: post course_term instructors
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, create]
+        - oauth-test: [auth-columbia, create]
+        - oauth: [auth-columbia, create]
+      requestBody:
+        description: post new instructor(s) that are related to this course_term
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            instructors added. Complete list of instructors relationships is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: >-
+        [replace](https://jsonapi.org/format/#crud-updating-to-many-relationships) all instructor relationships for course_term.
+      operationId: patch course_term instructors
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: patch all instructors that are related to this course_term, empty list to delete them all.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            instructors added. Complete list of instructors relationship is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    delete:
+      description: >-
+        [remove](https://jsonapi.org/format/#crud-updating-to-many-relationships) given instructor relationships from course_term.
+      operationId: delete course_term instructors
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, delete]
+        - oauth-test: [auth-columbia, delete, demo-netphone-admin]
+        - oauth: [auth-columbia, delete]
+      requestBody:
+        description: remove the given instructorss that are related to this course_term
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            instructors deleted. Complete list of instructor relationships is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/course_terms/{id}/course/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of course_term to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: |-
+        `course` for the given `course_term`.
+
+        GET only: Use the `self` links if you want to update or delete a given `course` or the
+        `/course_terms/<id>/relationships/course/` link if you want to update the relationship.
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: course relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseItem'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  ##### /course_terms/{id}/instructors/
+  '/course_terms/{id}/instructors/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of course_term to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: |-
+        `instructors` for the given `course`.
+
+        GET only: Use the `self` links if you want to update or delate `instructor(s)` or the
+        `/course_terms/<id>/relationships/instructors/` link if you want to update the relationships.
+      tags: [course_terms]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: instructors relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/InstructorCollection'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  ####
+  # Person
+  ####
+  /people/:
+    get:
+      description: Returns a collection of people
+      operationId: find people
+      tags: [people]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      parameters:
+        # I wish I could pull all these in at once...
+        - $ref: './jsonapi.yaml#/components/parameters/include'
+        - $ref: './jsonapi.yaml#/components/parameters/sort'
+        - $ref: './jsonapi.yaml#/components/parameters/pageSize'
+        - $ref: './jsonapi.yaml#/components/parameters/pageNumber'
+        # 'id': usual_rels,
+        - name: 'filter[id]'
+          in: query
+          description: exact id
+          required: false
+          style: form
+          schema:
+            # use an exact schema match here...
+            $ref: './jsonapi.yaml#/components/schemas/id'
+        - name: 'filter[id.gte]'
+          in: query
+          description: id greater-than or equal
+          required: false
+          style: form
+          schema:
+            # ... but here allow a free-form string for relationship matches
+            type: string
+        - name: 'filter[id.lte]'
+          in: query
+          description: id less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.lt]'
+          in: query
+          description: id less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.gt]'
+          in: query
+          description: id greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.in]'
+          in: query
+          description: id in list
+          required: false
+          style: form
+          schema:
+            type: string
+        # name: usual_rels
+        - name: 'filter[name]'
+          in: query
+          description: exact id
+          required: false
+          style: form
+          schema:
+            # use an exact schema match here...
+            $ref: '#/components/schemas/Person/properties/name'
+        - name: 'filter[name.gte]'
+          in: query
+          description: id greater-than or equal
+          required: false
+          style: form
+          schema:
+            # ... but here allow a free-form string for relationship matches
+            type: string
+        - name: 'filter[name.lte]'
+          in: query
+          description: id less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[name.lt]'
+          in: query
+          description: id less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[name.gt]'
+          in: query
+          description: id greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[name.in]'
+          in: query
+          description: id in list
+          required: false
+          style: form
+          schema:
+            type: string
+        # keyword search fields = ('name', 'instructor__course_terms__course__course_name')
+        - name: 'filter[search]'
+          in: query
+          description: |-
+            keyword search `name`, `instructor.course_terms.course.course_name`
+
+            For example: `/people/?filter[search]=johnson+accounting` to find people named Johnson who teach accounting.
+          required: false
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: GET /people response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/PersonCollection'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    post:
+      description: "[add](https://jsonapi.org/format/#crud-creating) a new person to people collection"
+      operationId: post person
+      tags: [people]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, create]
+        - oauth-test: [auth-columbia, create]
+        - oauth: [auth-columbia, create]
+      requestBody:
+        description: post new person
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: '#/components/schemas/PersonItemPost'
+      responses:
+        '201':
+          description: >-
+            [Created](https://jsonapi.org/format/#crud-creating-responses-201).
+            Assigned `id` and/or any other changes are in this response.
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: '#/components/schemas/PersonItemData'
+          headers:
+            Location:
+              description: Url of newly-created course
+              schema:
+                type: string
+                format: uri-reference
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-creating-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: >-
+            [Related resource does not exist](https://jsonapi.org/format/#crud-creating-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-creating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/people/{id}/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of person to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns a single person
+      operationId: return person by id
+      tags: [people]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: person response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/PersonItemData'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: "[update](https://jsonapi.org/format/#crud-updating) a person"
+      operationId: patch person
+      tags: [people]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: course data to patch. Only supply fields you want to change.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: '#/components/schemas/PersonItemPatch'
+      responses:
+        '200':
+          description: "[OK](https://jsonapi.org/format/#crud-updating-responses-200)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/PersonItemData'
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [Patched](https://jsonapi.org/format/#crud-updating-responses-204).
+            No other changes from what was PATCHed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: >-
+            [Resource does not exist](https://jsonapi.org/format/#crud-updating-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    delete:
+      description: "[delete](https://jsonapi.org/format/#crud-deleting) an item"
+      operationId: delete person item
+      tags: [people]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, delete]
+        - oauth-test: [auth-columbia, delete]
+        - oauth: [auth-columbia, delete]
+      responses:
+        '200':
+          description: "[OK](https://jsonapi.org/format/#crud-deleting-responses-200)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/onlymeta'
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+        '204':
+          description: >-
+            [Deleted](https://jsonapi.org/format/#crud-deleting-responses-204).
+        '404':
+          description: >-
+            [Resource does not exist](https://jsonapi.org/format/#crud-deleting-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+  '/people/{id}/relationships/instructor/':
+    description: instructor related to this person
+    parameters:
+      - name: id
+        in: path
+        description: ID of person
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns an instructor relationship
+      tags: [people]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      # are there valid query parameters?
+      responses:
+        '200':
+          description: instructor relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltoone'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item relationships response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: |-
+        [replace](https://jsonapi.org/format/#crud-updating-to-many-relationships) all course relationship for person.
+
+        If you want to remove the relationship, PATCH a null relationship object.
+      operationId: patch person instructor
+      tags: [people]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: patch instructor that is related to this person, empty list to delete.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltoonedata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course added.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltoonedata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was PATCHed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/people/{id}/instructor/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of person to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: |-
+        `instructor` for the given `person`.
+
+        GET only: Use the `self` links if you want to update or delete a given `instructor` or the
+        `/people/<id>/relationships/instructor/` link if you want to update the relationship.
+      tags: [people]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: instructor relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseItem'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  ####
+  # Instructor
+  ####
+  /instructors/:
+    get:
+      description: Returns a collection of instructors
+      operationId: find instructors
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      parameters:
+        # I wish I could pull all these in at once...
+        - $ref: './jsonapi.yaml#/components/parameters/include'
+        - $ref: './jsonapi.yaml#/components/parameters/sort'
+        - $ref: './jsonapi.yaml#/components/parameters/pageSize'
+        - $ref: './jsonapi.yaml#/components/parameters/pageNumber'
+        # 'id': usual_rels,
+        - name: 'filter[id]'
+          in: query
+          description: exact id
+          required: false
+          style: form
+          schema:
+            # use an exact schema match here...
+            $ref: './jsonapi.yaml#/components/schemas/id'
+        - name: 'filter[id.gte]'
+          in: query
+          description: id greater-than or equal
+          required: false
+          style: form
+          schema:
+            # ... but here allow a free-form string for relationship matches
+            type: string
+        - name: 'filter[id.lte]'
+          in: query
+          description: id less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.lt]'
+          in: query
+          description: id less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.gt]'
+          in: query
+          description: id greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[id.in]'
+          in: query
+          description: id in list
+          required: false
+          style: form
+          schema:
+            type: string
+        # course_name custom filter: course_terms__course__course_name
+        - name: 'filter[course_name]'
+          in: query
+          description: caseless exact match on name of course taught by instructor
+          required: false
+          style: form
+          schema:
+            # use an exact schema match here...
+            $ref: '#/components/schemas/Course/properties/course_name'
+        - name: 'filter[course_name.gte]'
+          in: query
+          description: course_name greater-than or equal
+          required: false
+          style: form
+          schema:
+            # ... but here allow a free-form string for relationship matches
+            type: string
+        - name: 'filter[course_name.lte]'
+          in: query
+          description: course_name less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_name.lt]'
+          in: query
+          description: course_name less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[course_name.gt]'
+          in: query
+          description: course_name greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        # name: course_terms__instructor__person__name
+        - name: 'filter[name]'
+          in: query
+          description: caseless exact match on instructor name
+          required: false
+          style: form
+          schema:
+            # use an exact schema match here...
+            $ref: '#/components/schemas/Person/properties/name'
+        - name: 'filter[name.gte]'
+          in: query
+          description: instructor name greater-than or equal
+          required: false
+          style: form
+          schema:
+            # ... but here allow a free-form string for relationship matches
+            type: string
+        - name: 'filter[name.lte]'
+          in: query
+          description: instructor name less-than or equal
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[name.lt]'
+          in: query
+          description: instructor name less-than
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: 'filter[name.gt]'
+          in: query
+          description: instructor name greater-than
+          required: false
+          style: form
+          schema:
+            type: string
+        # keyword search fields = ('name', 'course_terms__course__course_name')
+        - name: 'filter[search]'
+          in: query
+          description: |-
+            keyword search `name`, `course_terms.course.course_name`
+
+            For example: `/instructors/?filter[search]=johnson+accounting` to find instructors named Johnson who teach accounting.
+          required: false
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: GET /instructors response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/InstructorCollection'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    post:
+      description: "[add](https://jsonapi.org/format/#crud-creating) a new instructor to instructors collection"
+      operationId: post instructor
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, create]
+        - oauth-test: [auth-columbia, create]
+        - oauth: [auth-columbia, create]
+      requestBody:
+        description: post new insctuctor
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: '#/components/schemas/InstructorItemPost'
+      responses:
+        '201':
+          description: >-
+            [Created](https://jsonapi.org/format/#crud-creating-responses-201).
+            Assigned `id` and/or any other changes are in this response.
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: '#/components/schemas/InstructorItemData'
+          headers:
+            Location:
+              description: Url of newly-created course
+              schema:
+                type: string
+                format: uri-reference
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-creating-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: >-
+            [Related resource does not exist](https://jsonapi.org/format/#crud-creating-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-creating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/instructors/{id}/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of instructor to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns a single instructor
+      operationId: return instructor by id
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: instructor response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/InstructorItemData'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: "[update](https://jsonapi.org/format/#crud-updating) a instructor"
+      operationId: patch instructor
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: course data to patch. Only supply fields you want to change.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: '#/components/schemas/InstructorItemPatch'
+      responses:
+        '200':
+          description: "[OK](https://jsonapi.org/format/#crud-updating-responses-200)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/InstructorItemData'
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [Patched](https://jsonapi.org/format/#crud-updating-responses-204).
+            No other changes from what was PATCHed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: >-
+            [Resource does not exist](https://jsonapi.org/format/#crud-updating-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    delete:
+      description: "[delete](https://jsonapi.org/format/#crud-deleting) an item"
+      operationId: delete instructor item
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, delete]
+        - oauth-test: [auth-columbia, delete]
+        - oauth: [auth-columbia, delete]
+      responses:
+        '200':
+          description: "[OK](https://jsonapi.org/format/#crud-deleting-responses-200)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/onlymeta'
+        '202':
+          description: >-
+            Accepted for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+        '204':
+          description: >-
+            [Deleted](https://jsonapi.org/format/#crud-deleting-responses-204).
+        '404':
+          description: >-
+            [Resource does not exist](https://jsonapi.org/format/#crud-deleting-responses-404).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+  '/instructors/{id}/relationships/person/':
+    description: person
+    parameters:
+      - name: id
+        in: path
+        description: ID of instructor
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns a person relationship
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      # are there valid query parameters?
+      responses:
+        '200':
+          description: instructor relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltoone'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item relationships response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: |-
+        [replace](https://jsonapi.org/format/#crud-updating-to-many-relationships) all course relationship for person.
+
+        If you want to remove the relationship, PATCH a null relationship object.
+      operationId: patch instructor person
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: patch person that is related to this instructor, empty list to delete.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltoonedata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course added.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltoonedata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was PATCHed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/instructors/{id}/relationships/course_terms/':
+    description: course_terms related to this instructor
+    parameters:
+      - name: id
+        in: path
+        description: ID of instructor
+        required: true
+        schema:
+          type: string
+    get:
+      description: Returns a single instructor's course_term relationships
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      # are there valid query parameters?
+      responses:
+        '200':
+          description: instructor relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomany'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: get item relationships response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    post:
+      description: "[add](https://jsonapi.org/format/#crud-updating-to-many-relationships) course_term relationships to instructor"
+      operationId: post instructor course_terms
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, create]
+        - oauth-test: [auth-columbia, create]
+        - oauth: [auth-columbia, create]
+      requestBody:
+        description: post new course_terms that are related to this instructor
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course_terms added. Complete list of course_terms relationships is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    patch:
+      description: >-
+        [replace](https://jsonapi.org/format/#crud-updating-to-many-relationships) all course_term relationships for instructor.
+      operationId: patch instructor course_terms
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, update]
+        - oauth-test: [auth-columbia, update]
+        - oauth: [auth-columbia, update]
+      requestBody:
+        description: patch all course_terms that are related to this instructor, empty list to delete them all.
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course_terms added. Complete list of course_terms relationships is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+    delete:
+      description: >-
+        [remove](https://jsonapi.org/format/#crud-updating-to-many-relationships) given course_term relationships from instructor.
+      operationId: delete instructor course_terms
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-update, auth-columbia, delete]
+        - oauth-test: [auth-columbia, delete, demo-netphone-admin]
+        - oauth: [auth-columbia, delete]
+      requestBody:
+        description: remove the given course_terms that are related to this instructor
+        content:
+          'application/vnd.api+json':
+            schema:
+              $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+      responses:
+        '200':
+          description: >-
+            [OK](https://jsonapi.org/format/#crud-updating-relationship-responses-200),
+            course_terms added. Complete list of course_terms relationships is returned.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/reltomanydata'
+        '202':
+          description: >-
+            [Accepted](https://jsonapi.org/format/#crud-updating-relationship-responses-202)
+            for [asynchronous processing](https://jsonapi.org/recommendations/#asynchronous-processing).
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/datum'
+          headers:
+            Content-Location:
+              description: URL for status of processing
+              schema:
+                type: string
+                format: uri-reference
+        '204':
+          description: >-
+            [No Content](https://jsonapi.org/format/#crud-updating-relationship-responses-204)
+            No changes from what was POSTed.
+        '403':
+          description: "[Forbidden](https://jsonapi.org/format/#crud-updating-relationship-responses-403)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        '409':
+          description: "[Conflict](https://jsonapi.org/format/#crud-updating-responses-409)"
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other post response
+          content:
+            'application/vnd.api+json':
+              schema:
+                $ref: 'jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/instructors/{id}/person/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of instructor to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: |-
+        `person` for the given `instructor`.
+
+        GET only: Use the `self` links if you want to update or delete a given `instructor` or the
+        `/instructors/<id>/relationships/person/` link if you want to update the relationship.
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: person relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/PersonItem'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
+  '/instructors/{id}/course_terms/':
+    parameters:
+      - name: id
+        in: path
+        description: ID of instructor to fetch
+        required: true
+        schema:
+          type: string
+    get:
+      description: |-
+        `course_terms` for the given `instructor`.
+
+        GET only: Use the `self` links if you want to update or delate a given `course_term` or the
+        `/instructors/<id>/relationships/course_terms/` link if you want to update the relationships.
+      tags: [instructors]
+      security:
+        - basicAuth: []
+        - oauth-dev: [demo-django-jsonapi-training-sla-bronze, auth-columbia, read]
+        - oauth-test: [auth-columbia, read]
+        - oauth: [auth-columbia, read]
+      responses:
+        '200':
+          description: course_terms relationship response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CourseTermCollection'
+        '401':
+          description: not authorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '403':
+          description: not permitted
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        '404':
+          description: "[Not found](https://jsonapi.org/format/#fetching-resources-responses-404)"
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/failure'
+        default:
+          description: other response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './jsonapi.yaml#/components/schemas/JSONAPIresponse'
 components:
   securitySchemes:
     basicAuth:
@@ -751,12 +3059,13 @@ components:
       scheme: basic
     oauth-test:
       type: oauth2
+      description: test OAuth2 service
       flows:
         authorizationCode:
           authorizationUrl: https://oauth-test.cc.columbia.edu/as/authorization.oauth2
           tokenUrl: https://oauth-test.cc.columbia.edu/as/token.oauth2
           scopes:
-            "auth-columbia": Columbia UNI login
+            auth-columbia: Columbia UNI login
             create: create
             read: read
             update: update
@@ -765,15 +3074,18 @@ components:
             profile: your user profile
             email: your email address
             https://api.columbia.edu/scope/group: groups you are a member of
-            "demo-netphone-admin": Administrative access to netphone resources
+            demo-django-jsonapi-training-sla-bronze: "permitted to access the django-jsonapi-training demo: 1 request per second"
+            demo-django-jsonapi-training-sla-update: "permitted to update the django-jsonapi-training resources"
+            demo-netphone-admin: lame
     oauth-dev:
       type: oauth2
+      description: dev OAuth2 service
       flows:
         authorizationCode:
           authorizationUrl: https://oauth-dev.cuit.columbia.edu:8443/as/authorization.oauth2
           tokenUrl: https://oauth-dev.cuit.columbia.edu:8443/as/token.oauth2
           scopes:
-            "auth-columbia": Columbia UNI login
+            auth-columbia: Columbia UNI login
             create: create
             read: read
             update: update
@@ -782,15 +3094,17 @@ components:
             profile: your user profile
             email: your email address
             https://api.columbia.edu/scope/group: groups you are a member of
-            "demo-netphone-admin": Administrative access to netphone resources
+            demo-django-jsonapi-training-sla-bronze: "permitted to access the django-jsonapi-training demo: 1 request per second"
+            demo-django-jsonapi-training-sla-update: "permitted to update the django-jsonapi-training resources"
     oauth:
       type: oauth2
+      description: Columbia OAuth2 service
       flows:
         authorizationCode:
           authorizationUrl: https://oauth.cc.columbia.edu/as/authorization.oauth2
           tokenUrl: https://oauth.cc.columbia.edu/as/token.oauth2
           scopes:
-            "auth-columbia": Columbia UNI login
+            auth-columbia: Columbia UNI login
             create: create
             read: read
             update: update
@@ -799,75 +3113,27 @@ components:
             profile: your user profile
             email: your email address
             https://api.columbia.edu/scope/group: groups you are a member of
-            "demo-netphone-admin": Administrative access to netphone resources
+            demo-django-jsonapi-training-sla-bronze: "permitted to access the django-jsonapi-training demo: 1 request per second"
+            demo-django-jsonapi-training-sla-update: "permitted to update the django-jsonapi-training resources"
   schemas:
-    # basic model defintions
+    ####
+    # Course model
+    ####
     Course:
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
-      allOf:
-        - $ref: '#/components/schemas/CommonAttributes'
-        - $ref: '#/components/schemas/CourseAttributes'
-    CourseNoRequired:
-      description: A course with no required attributes, for PATCHing.
-      allOf:
-        - $ref: '#/components/schemas/CommonAttributes'
-        - $ref: '#/components/schemas/CourseAttributesNoRequired'
-    CourseRelationships:
-      description: The Course's relationships
-      type: object
-      properties:
-        course_terms:
-          description: A given Course can appear in many CourseTerms.
-          type: object
-          properties:
-              links:
-                $ref: "jsonapi.yaml#/components/schemas/relationshipLinks"
-              data:
-                $ref: "jsonapi.yaml#/components/schemas/relationshipToMany"
-              meta:
-                $ref: "jsonapi.yaml#/components/schemas/meta"
-      additionalProperties: false
-    CourseTerm:
-      description: A term (semester) instance of a course of instruction. e.g. 20181COMSW1002
-      allOf:
-        - $ref: '#/components/schemas/CommonAttributes'
-        - $ref: '#/components/schemas/CourseTermAttributes'
-    CourseTermRelationships:
-      description: The CourseTerms's relationships
-      type: object
-      properties:
-        course:
-          description: Only one Course is the parent of this CourseTerm instance
-          type: object
-          properties:
-              links:
-                $ref: "jsonapi.yaml#/components/schemas/relationshipLinks"
-              data:
-                $ref: "jsonapi.yaml#/components/schemas/relationshipToOne"
-              meta:
-                $ref: "jsonapi.yaml#/components/schemas/meta"
-      additionalProperties: false
-    # not strictly necessary to split the common attributes out here just because they are an abstract model...
-    CommonAttributes:
-      description: Attributes common to all our schemas.
+      description: Course attributes
       type: object
       properties:
         effective_start_date:
           type: string
+          format: date-time
         effective_end_date:
           type: string
+          format: date-time
         last_mod_user_name:
           type: string
         last_mod_date:
           type: string
-      # these are added by the server so are not required of the client here:
-      # required:
-      #   - last_mod_user_name
-      #   - last_mod_date
-    CourseAttributes:
-      description: Course attributes, in addition to the Common attributes, define a `Course`
-      type: object
-      properties:
+          format: date-time
         school_bulletin_prefix_code:
           type: string
           maxLength: 10
@@ -891,16 +3157,134 @@ components:
         course_description:
           type: string
       required:
+        - last_mod_user_name
+        - last_mod_date
         - school_bulletin_prefix_code
         - subject_area_code
         - suffix_two
         - course_name
         - course_number
         - course_identifier
-    CourseAttributesNoRequired:
-      description: UGH duplicated Course attributes, in addition to the Common attributes, define a `Course`
+    CourseRelationships:
+      description: The Course's relationships
       type: object
       properties:
+        course_terms:
+          $ref: "./jsonapi.yaml#/components/schemas/reltomany"
+    ####
+    # CourseTerm model
+    ####
+    CourseTerm:
+      description: CourseTerm attributes
+      type: object
+      properties:
+        effective_start_date:
+          type: string
+          format: date-time
+        effective_end_date:
+          type: string
+          format: date-time
+        last_mod_user_name:
+          type: string
+        last_mod_date:
+          type: string
+          format: date-time
+        term_identifier:
+          type: string
+          maxLength: 14
+          description: "example: 20181ACCT7022B"
+          pattern: "[0-9]{4}[123][A-Z]{4}[0-9]{4}[A-Z]"
+        audit_permitted_code:
+          type: integer
+          minimum: 0
+          # default: 0
+        exam_credit_flag:
+          type: boolean
+          # default: true
+      required:
+        - term_identifier
+    CourseTermRelationships:
+      description: The CourseTerms's relationships
+      type: object
+      properties:
+        course:
+          $ref: "./jsonapi.yaml#/components/schemas/reltoone"
+        instructors:
+          $ref: "./jsonapi.yaml#/components/schemas/reltomany"
+    ####
+    # Person model
+    ####
+    Person:
+      description: Person attributes
+      type: object
+      properties:
+        effective_start_date:
+          type: string
+          format: date-time
+        effective_end_date:
+          type: string
+          format: date-time
+        last_mod_user_name:
+          type: string
+        last_mod_date:
+          type: string
+          format: date-time
+        name:
+          type: string
+          maxLength: 100
+      required:
+        - name
+    PersonRelationships:
+      description: The Person's relationships
+      type: object
+      properties:
+        instrutor:
+          $ref: "./jsonapi.yaml#/components/schemas/reltoone"
+    ####
+    # Instructor model
+    ####
+    Instructor:
+      description: Instructor attributes
+      type: object
+      properties:
+        effective_start_date:
+          type: string
+          format: date-time
+        effective_end_date:
+          type: string
+          format: date-time
+        last_mod_user_name:
+          type: string
+        last_mod_date:
+          type: string
+          format: date-time
+        # no other attributes; just used for relationship glue.
+    InstructorRelationships:
+      description: The Instructor's relationships
+      type: object
+      properties:
+        person:
+          $ref: "./jsonapi.yaml#/components/schemas/reltoone"
+        course_terms:
+          $ref: "./jsonapi.yaml#/components/schemas/reltomany"
+    ####
+    # variations on the above:
+    ####
+    CourseNoRequired:
+      description: UGH duplicated Course attributes
+      type: object
+      properties:
+        effective_start_date:
+          type: string
+          format: date-time
+        effective_end_date:
+          type: string
+          format: date-time
+        last_mod_user_name:
+          type: string
+        last_mod_date:
+          type: string
+          format: date-time
         school_bulletin_prefix_code:
           type: string
           maxLength: 10
@@ -923,10 +3307,21 @@ components:
           maxLength: 80
         course_description:
           type: string
-    CourseTermAttributes:
-      description: CourseTerm attributes, in addition to the Common attributes, define a `CourseTerm`
+    CourseTermNoRequired:
+      description: CourseTerm attributes
       type: object
       properties:
+        effective_start_date:
+          type: string
+          format: date-time
+        effective_end_date:
+          type: string
+          format: date-time
+        last_mod_user_name:
+          type: string
+        last_mod_date:
+          type: string
+          format: date-time
         term_identifier:
           type: string
           maxLength: 14
@@ -935,11 +3330,49 @@ components:
         audit_permitted_code:
           type: integer
           minimum: 0
-          default: 0
+          # default: 0
         exam_credit_flag:
           type: boolean
-          default: true
+          # default: true
+    PersonNoRequired:
+      description: Person attributes
+      type: object
+      properties:
+        effective_start_date:
+          type: string
+          format: date-time
+        effective_end_date:
+          type: string
+          format: date-time
+        last_mod_user_name:
+          type: string
+        last_mod_date:
+          type: string
+          format: date-time
+        name:
+          type: string
+          maxLength: 100
+    InstructorNoRequired:
+      description: Instructor attributes
+      type: object
+      properties:
+        effective_start_date:
+          type: string
+          format: date-time
+        effective_end_date:
+          type: string
+          format: date-time
+        last_mod_user_name:
+          type: string
+        last_mod_date:
+          type: string
+          format: date-time
+    ####
     # these are the various request/response schemas that are composed of the above fundamental schemas:
+    ####
+    ####
+    # Course
+    ####
     # get /courses success response. Do I really have to copy all this stuff vs. $ref success? Probably.
     CourseCollection:
       description: "GET /courses response: A collection of Course Items and other optional data."
@@ -1013,6 +3446,9 @@ components:
       properties:
         data:
           $ref: "#/components/schemas/CourseItem"
+    ####
+    # CourseTerm
+    ####
     CourseTermCollection:
       description: "GET /course_terms response: A collection of CourseTerm items and other optional data."
       type: object
@@ -1054,6 +3490,16 @@ components:
               $ref: '#/components/schemas/CourseTerm'
             relationships:
               $ref: '#/components/schemas/CourseTermRelationships'
+    CourseTermItemNoRequired:
+      description: "A CourseTermItem with no required attributes, for PATCHing."
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/CourseTermNoRequired'
+            relationships:
+              $ref: '#/components/schemas/CourseTermRelationships'
     CourseTermItemPost:
       description: >-
         singular course_term being [created](https://jsonapi.org/format/#crud-creating).
@@ -1067,3 +3513,155 @@ components:
       properties:
         data:
           $ref: "#/components/schemas/CourseTermItem"
+    CourseTermItemPatch:
+      description: >-
+        singular course being [updated](https://jsonapi.org/format/#crud-updating).
+      properties:
+        data:
+          $ref: "#/components/schemas/CourseTermItemNoRequired"
+    ####
+    # Person
+    ####
+    PersonCollection:
+      description: "GET /people response: A collection of Person items and other optional data."
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonItem'
+        included:
+          type: array
+          items:
+            $ref: "./jsonapi.yaml#/components/schemas/resource"
+          uniqueItems: true
+        links:
+          description: Link members related to the primary data.
+          allOf:
+            - $ref: "./jsonapi.yaml#/components/schemas/links"
+            - $ref: "./jsonapi.yaml#/components/schemas/pagination"
+        jsonapi:
+          $ref: "./jsonapi.yaml#/components/schemas/jsonapi"
+      additionalProperties: false
+    PersonItem:
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/Person'
+            relationships:
+              $ref: '#/components/schemas/PersonRelationships'
+    PersonItemNoID:
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/post_resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/Person'
+            relationships:
+              $ref: '#/components/schemas/PersonRelationships'
+    PersonItemNoRequired:
+      description: "A PersonItem with no required attributes, for PATCHing."
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/PersonNoRequired'
+            relationships:
+              $ref: '#/components/schemas/PersonRelationships'
+    PersonItemPost:
+      description: >-
+        singular Person being [created](https://jsonapi.org/format/#crud-creating).
+        `id` is ignored if supplied and created by the system.
+      properties:
+        data:
+          $ref: "#/components/schemas/PersonItemNoID"
+    PersonItemData:
+      description: >-
+        singular top-level Person item data
+      properties:
+        data:
+          $ref: "#/components/schemas/PersonItem"
+    PersonItemPatch:
+      description: >-
+        singular Person being [updated](https://jsonapi.org/format/#crud-updating).
+      properties:
+        data:
+          $ref: "#/components/schemas/PersonItemNoRequired"
+    ####
+    # Instructor
+    ####
+    InstructorCollection:
+      description: "GET /people response: A collection of Instructor items and other optional data."
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstructorItem'
+        included:
+          type: array
+          items:
+            $ref: "./jsonapi.yaml#/components/schemas/resource"
+          uniqueItems: true
+        links:
+          description: Link members related to the primary data.
+          allOf:
+            - $ref: "./jsonapi.yaml#/components/schemas/links"
+            - $ref: "./jsonapi.yaml#/components/schemas/pagination"
+        jsonapi:
+          $ref: "./jsonapi.yaml#/components/schemas/jsonapi"
+      additionalProperties: false
+    InstructorItem:
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/Instructor'
+            relationships:
+              $ref: '#/components/schemas/InstructorRelationships'
+    InstructorItemNoID:
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/post_resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/Instructor'
+            relationships:
+              $ref: '#/components/schemas/InstructorRelationships'
+    InstructorItemNoRequired:
+      description: "A InstructorItem with no required attributes, for PATCHing."
+      allOf:
+        - $ref: './jsonapi.yaml#/components/schemas/resource'
+        - type: object
+          properties:
+            attributes:
+              $ref: '#/components/schemas/InstructorNoRequired'
+            relationships:
+              $ref: '#/components/schemas/InstructorRelationships'
+    InstructorItemPost:
+      description: >-
+        singular Instructor being [created](https://jsonapi.org/format/#crud-creating).
+        `id` is ignored if supplied and created by the system.
+      properties:
+        data:
+          $ref: "#/components/schemas/InstructorItemNoID"
+    InstructorItemData:
+      description: >-
+        singular top-level Instructor item data
+      properties:
+        data:
+          $ref: "#/components/schemas/InstructorItem"
+    InstructorItemPatch:
+      description: >-
+        singular Instructor being [updated](https://jsonapi.org/format/#crud-updating).
+      properties:
+        data:
+          $ref: "#/components/schemas/InstructorItemNoRequired"

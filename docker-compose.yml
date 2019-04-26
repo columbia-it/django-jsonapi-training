@@ -1,0 +1,58 @@
+# Simple Dockerfile example that deploys our app server and a web server for static files
+# using the traefik reverse proxy.
+version: '3.1'
+
+volumes:
+  # initialize nginx's static www files from the demoapp's `manage.py collectstatic`
+  staticfiles: {}
+
+services:
+  traefik:
+    image: traefik
+    command: --api --docker
+    ports:
+      # only expose https to outside world
+      - "443:443"   # SSL
+      - "8080:8080" # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "$PWD/traefik/config/traefik.toml:/etc/traefik/traefik.toml"
+      - "$PWD/traefik/certs/:/certs/"
+    labels:
+      - "traefik.enable=true"
+    depends_on:
+      - demoapp
+      - nginx
+
+  demoapp:
+    image: myapp:latest
+    hostname: demoapp
+    extra_hosts:
+      # alias to host.docker.internal
+      - "oauth-dev.cuit.columbia.edu:192.168.65.2"
+    environment:
+      - DJANGO_DEBUG=false
+      - OAUTH2_SERVER=https://oauth-dev.cuit.columbia.edu:8443
+    labels:
+      - "traefik.frontend.rule=Host:localhost;PathPrefix:/v1"
+      - "traefik.port=9123"
+    ports:
+      - "9123:9123"
+    volumes:
+      - staticfiles:/var/www/html
+    depends_on:
+      - nginx
+
+  nginx:
+    image: nginx:latest
+    hostname: webserver
+    volumes:
+      - staticfiles:/usr/share/nginx/html/static
+    labels:
+      # look for /openapi/* and /oauth2-redirect.html
+      - "traefik.frontend.rule=Host:localhost;PathPrefix:/static,/openapi/,/oauth2-redirect.html"
+      - "traefik.port=80"
+    # If I try to mount staticfiles at /usr/share/nginx/html, nginx clobbers my files, so
+    # mount at .../static and then symlink
+    command: /bin/bash -c "cd /usr/share/nginx/html && ln -sf static/* . && exec nginx -g 'daemon off;'"
+
