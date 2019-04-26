@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.2.4] - unreleased
+## [0.2.4] - 2018-04-26
 
 ### Added
 - `jsonapi_demo_cli` command-line demonstration client.
