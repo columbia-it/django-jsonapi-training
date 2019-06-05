@@ -1288,7 +1288,7 @@ index 3fbc325..57897c8 100644
 +    }
 +
 +
-+class AuthnAuthzMixIn(object):
++class AuthnAuthzSchemaMixIn(object):
 +    """
 +    Common Authn/Authz stuff for all View and ViewSet-derived classes:
 +    - authentication_classes: in production: Oauth2 preferred; Basic and Session for testing purposes.
@@ -1303,7 +1303,7 @@ index 3fbc325..57897c8 100644
 +    required_alternate_scopes = REQUIRED_SCOPES_ALTS
 +
 +
-+class CourseBaseViewSet(AuthnAuthzMixIn, ModelViewSet):
++class CourseBaseViewSet(AuthnAuthzSchemaMixIn, ModelViewSet):
 +    """
 +    Base ViewSet for all our ViewSets:
 +    - Adds Authn/Authz
@@ -1329,7 +1329,7 @@ index 3fbc325..57897c8 100644
  
  
 -class CourseRelationshipView(RelationshipView):
-+class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
++class CourseRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
      """
      view for relationships.course
      """
@@ -1338,7 +1338,7 @@ index 3fbc325..57897c8 100644
  
  
 -class CourseTermRelationshipView(RelationshipView):
-+class CourseTermRelationshipView(AuthnAuthzMixIn, RelationshipView):
++class CourseTermRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
      """
      view for relationships.course_terms
      """

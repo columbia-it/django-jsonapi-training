@@ -45,12 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'myapp',  # must appear before rest_framework in order to override the generateschema command
+    'rest_framework_json_api',  # TODO: move generateschema command from myapp to DJA
     'rest_framework',
     'debug_toolbar',
     'corsheaders',
     'oauth2_provider',
     'django_filters',
-    'myapp',
     'django_extensions',
 ]
 
@@ -186,6 +187,7 @@ REST_FRAMEWORK = {
         'rest_framework_json_api.renderers.JSONRenderer',  # application/vnd.api+json
         'rest_framework.renderers.BrowsableAPIRenderer',  # text/html: ?format=api
     ),
+    #'DEFAULT_SCHEMA_CLASS': 'myapp.schemas.jsonapi.JSONAPIAutoSchema',
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_json_api.filters.QueryParameterValidationFilter',  # for query parameter validation
         'rest_framework_json_api.filters.OrderingFilter',  # for sort
@@ -207,15 +209,55 @@ JSON_API_PLURALIZE_TYPES = True
 # django-oauth-toolkit settings
 CORS_ORIGIN_ALLOW_ALL = True
 
+OAUTH2_SERVER = os.environ.get('OAUTH2_SERVER','https://oauth-test.cc.columbia.edu')
+
 OAUTH2_PROVIDER = {
     # here's where we add the external introspection endpoint:
-    'RESOURCE_SERVER_INTROSPECTION_URL': os.environ.get('OAUTH2_SERVER','https://oauth-test.cc.columbia.edu')
-                                            + '/as/introspect.oauth2',
+    'RESOURCE_SERVER_INTROSPECTION_URL': OAUTH2_SERVER + '/as/introspect.oauth2',
     'RESOURCE_SERVER_INTROSPECTION_CREDENTIALS': (
         os.environ.get('RESOURCE_SERVER_ID','demo-django-jsonapi-training_validator'),
         os.environ.get('RESOURCE_SERVER_SECRET','SaulGoodman')
     ),
 }
+
+# TODO: Use this for configuring openapi securitySchemes. Do OIDC discovery to fill it in.
+OAUTH2_CONFIG = {
+    "authorization_endpoint": OAUTH2_SERVER + "/as/authorization.oauth2",
+    "token_endpoint": OAUTH2_SERVER + "/as/token.oauth2",
+    "revocation_endpoint": OAUTH2_SERVER + "/as/revoke_token.oauth2",
+    "userinfo_endpoint": OAUTH2_SERVER + "/idp/userinfo.openid",
+    "introspection_endpoint": OAUTH2_SERVER + "/as/introspect.oauth2",
+    "scopes_supported": [
+        "address",
+        "read",
+        "openid",
+        "profile",
+        "update",
+        "demo-netphone-admin",
+        "auth-columbia",
+        "delete",
+        "auth-none",
+        "auth-windowslive",
+        "auth-columbia-mfa",
+        "https://api.columbia.edu/scope/group",
+        "create",
+        "auth-facebook",
+        "email",
+        "auth-google"
+    ],
+    "grant_types_supported": [
+        "implicit",
+        "authorization_code",
+        "refresh_token",
+        "password",
+        "client_credentials",
+        "urn:pingidentity.com:oauth2:grant_type:validate_bearer",
+        "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        "urn:ietf:params:oauth:grant-type:saml2-bearer"
+    ],
+} 
+
+
 
 # debug logging
 LOGGING = {

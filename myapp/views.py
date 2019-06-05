@@ -7,7 +7,10 @@ from rest_framework.authentication import (BasicAuthentication,
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
+from myapp import (__author__, __copyright__, __license__, __license_url__,
+                   __title__, __version__)
 from myapp.models import Course, CourseTerm, Instructor, Person
+from myapp.schemas.jsonapi import JSONAPIAutoSchema
 from myapp.serializers import (CourseSerializer, CourseTermSerializer,
                                InstructorSerializer, PersonSerializer)
 
@@ -57,7 +60,7 @@ class MyDjangoModelPermissions(DjangoModelPermissions):
     }
 
 
-class AuthnAuthzMixIn(object):
+class AuthnAuthzSchemaMixIn(object):
     """
     Common Authn/Authz mixin for all View and ViewSet-derived classes:
     """
@@ -70,15 +73,50 @@ class AuthnAuthzMixIn(object):
     ]
     #: list of alternatives for required scopes
     required_alternate_scopes = REQUIRED_SCOPES_ALTS
+    description = '>-\n'\
+                  '![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")\n'\
+                  '\n'\
+                  '\n'\
+                  'A sample API that uses courses as an example to demonstrate representing\n'\
+                  '[JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.\n'\
+                  '\n'\
+                  '\n'\
+                  'See [https://columbia-it-django-jsonapi-training.readthedocs.io]'\
+                  '(https://columbia-it-django-jsonapi-training.readthedocs.io)\n'\
+                  'for more about this.\n'\
+                  '\n'\
+                  '\n' + __copyright__
+    #: fill in some of the openapi schema
+    openapi_schema = {
+        'info': {
+            'version': __version__,
+            'title': __title__,
+            'description': description,
+            'contact': {
+                'name': __author__
+            },
+            'license': {
+                'name': __license__,
+                'url': __license_url__
+            }
+        },
+        'servers': [
+            {'url': 'https://localhost/v1', 'description': 'local docker'},
+            {'url': 'http://localhost:8000/v1', 'description': 'local dev'},
+            {'url': 'https://ac45devapp01.cc.columbia.edu/v1', 'description': 'demo'},
+            {'url': '{serverURL}', 'description': 'provide your server URL',
+             'variables': {'serverURL': {'default': 'http://localhost:8000/v1'}}}
+        ]
+    }
+    schema = JSONAPIAutoSchema(openapi_schema=openapi_schema)
 
 
-class CourseBaseViewSet(AuthnAuthzMixIn, ModelViewSet):
+class CourseBaseViewSet(AuthnAuthzSchemaMixIn, ModelViewSet):
     """
     Base ViewSet for all our ViewSets:
 
     - Adds Authn/Authz
     """
-    pass
 
 
 usual_rels = ('exact', 'lt', 'gt', 'gte', 'lte', 'in')
@@ -178,7 +216,7 @@ class InstructorViewSet(CourseBaseViewSet):
     search_fields = ('person__name', 'course_terms__course__course_name')
 
 
-class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
+class CourseRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
     """
     View for courses.relationships
     """
@@ -186,7 +224,7 @@ class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
     self_link_view_name = 'course-relationships'
 
 
-class CourseTermRelationshipView(AuthnAuthzMixIn, RelationshipView):
+class CourseTermRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
     """
     View for course_terms.relationships
     """
@@ -194,7 +232,7 @@ class CourseTermRelationshipView(AuthnAuthzMixIn, RelationshipView):
     self_link_view_name = 'course_term-relationships'
 
 
-class InstructorRelationshipView(AuthnAuthzMixIn, RelationshipView):
+class InstructorRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
     """
     View for instructors.relationships
     """
@@ -202,7 +240,7 @@ class InstructorRelationshipView(AuthnAuthzMixIn, RelationshipView):
     self_link_view_name = 'instructor-relationships'
 
 
-class PersonRelationshipView(AuthnAuthzMixIn, RelationshipView):
+class PersonRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
     """
     View for people.relationships
     """

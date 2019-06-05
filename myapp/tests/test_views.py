@@ -66,7 +66,7 @@ COURSE_TERM_POST = {
         "type": "course_terms",
         # "id": "e724c43c-f443-4246-8947-a8bb8953699c",
         "attributes": {
-            "term_identifier": "20181",
+            "term_identifier": "20181FILM3119X",
             "audit_permitted_code": 0,
             "exam_credit_flag": False,
             "effective_start_date": None,
