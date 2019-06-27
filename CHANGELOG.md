@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.2.5] - 2019-06-27
+
+### Added
+- Automated OAS 3.0 schema document generation
+- Added some model field validators
+
 ## [0.2.4] - 2018-04-26
 
 ### Added
