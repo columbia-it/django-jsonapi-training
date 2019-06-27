@@ -27,6 +27,47 @@ and to provide developer documentation and the familiar swagger "Try it!" functi
 While "waiting" on automated OAS schema generation, I've been experimenting with manually coding a schema
 to get a feeling for the value of eventually having automated schema generation.
 
+#### Automatic Schema Generation
+
+**NEW!**
+
+I've prototyped automatic openapi schema generation and expect to submit a PR to the DJA project to adopt it soon.
+To generate a YAML schema document:
+```text
+./manage.py generateschema >openapi.yaml
+```
+
+If you want a JSON schema document:
+```text
+./manage.py generateschema  --format openapi-json >openapi.json
+```
+
+I've added a few commands to `tox.ini` to generate a schema or update the docker image with it, respectively:
+```
+[testenv:openapi]
+deps =
+     -rrequirements.txt
+setenv =
+    DJANGO_SETTINGS_MODULE = training.settings
+commands =
+    /bin/sh -c "python manage.py generateschema --format openapi-json >docs/schemas/openapi.json"
+
+[testenv:docker]
+deps =
+     -rrequirements.txt
+whitelist_externals =
+    docker
+setenv =
+    DJANGO_SETTINGS_MODULE = training.settings
+commands =
+    /bin/sh -c "python manage.py generateschema --format openapi-json >docs/schemas/openapi.json"
+    /bin/cp docs/schemas/openapi.json myapp/static/openapi/myapp.json
+    /bin/rm -rf dist
+    python setup.py bdist_wheel
+    docker build -t myapp:latest .
+    docker image save -o myapp-docker.tar myapp:latest
+```
+
 #### Composing the OAS Schema with external references.
 
 To make things DRYer, the OAS schema can be decomposed into shareable pieces that are referenced via the `$ref` tag.

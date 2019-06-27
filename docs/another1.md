@@ -182,7 +182,7 @@ class InstructorViewSet(CourseBaseViewSet):
     serializer_class = InstructorSerializer
     
 
-class InstructorRelationshipView(AuthnAuthzMixIn, RelationshipView):
+class InstructorRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
     """
     view for instructors.relationships
     """

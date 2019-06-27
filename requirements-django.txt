@@ -1,25 +1,34 @@
 # requirements for our django app
-Django==2.1.7
-django-filter==2.0.0
+Django>=2.1,<2.2
+# my unmerged PR for django-filter
+git+https://github.com/n2ygk/django-filter.git@issue-1083/BaseFilterBackend
+#django-filter==2.1.0
 django-cors-middleware==1.3.1
 django-debug-toolbar==1.11
 # just grab the master branch of DOT for now
 # django-oauth-toolkit==1.2.0
 git+https://github.com/jazzband/django-oauth-toolkit.git@32bba99bb6bd39f05981430ec3381ad66b096f15
-djangorestframework==3.9.0
+#djangorestframework==3.9.0
+#pre-3.10 w/openapi schema generation
+git+https://github.com/encode/django-rest-framework.git
+uritemplate==3.0.0
+# still requires coreapi
+coreapi==2.3.3
 ###
 # djangorestframework-jsonapi (DJA) has a bunch of errata fixed post-2.6.0 release
 ###
-# use more recent master branch:
-git+https://github.com/django-json-api/django-rest-framework-json-api.git@8c2b5af95ed8e630c61ef5b10c8e2807a24ff7e7
-# djangorestframework-jsonapi==2.6.0
+#djangorestframework-jsonapi==2.7.0
+# use most recent master branch:
+#git+https://github.com/django-json-api/django-rest-framework-json-api.git
+# my openapi branch that implements generateschema
+git+https://github.com/n2ygk/django-rest-framework-json-api.git@openapi
 requests==2.21.0
 rest-condition==1.0.3
 # venv-update (used by tox-pip-extensions) limits our pip version
 pip==18.1
 tox==3.9.0
 tox-pip-extensions==1.6.0
-PyYAML==4.2b4
+PyYAML==5.1
 # graph_models:
 django-extensions==2.1.4
 pygraphviz==1.5
