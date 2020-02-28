@@ -1,5 +1,5 @@
 # requirements for our django app
-Django>=2.1,<2.2
+Django>=2.2.10,<2.3
 # my unmerged PR for django-filter
 git+https://github.com/n2ygk/django-filter.git@issue-1083/BaseFilterBackend
 #django-filter==2.1.0
