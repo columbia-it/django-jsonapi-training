@@ -1,7 +1,7 @@
 # requirements for our app:
 -rrequirements-django.txt
 # optional sqlserver requirements:
--rrequirements-sqlserver.txt
+#-rrequirements-sqlserver.txt
 # optional mysql requirements:
--rrequirements-mysql.txt
+#-rrequirements-mysql.txt
 
