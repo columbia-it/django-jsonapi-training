@@ -147,15 +147,6 @@ Collecting certifi>=2017.4.17 (from requests>=2.13.0->django-oauth-toolkit)
 Requirement already satisfied: pytz in ./env/lib/python3.6/site-packages (from django>=2.0->django-oauth-toolkit) (2018.6)
 Installing collected packages: oauthlib, urllib3, chardet, idna, certifi, requests, django-oauth-toolkit
 Successfully installed certifi-2018.10.15 chardet-3.0.4 django-oauth-toolkit-1.2.0 idna-2.7 oauthlib-2.1.0 requests-2.20.0 urllib3-1.24
-(env) django-jsonapi-training$ pip install rest-condition
-Collecting rest-condition
-  Downloading https://files.pythonhosted.org/packages/f2/e8/9f46207275f33df32a36d3755d5da8b551de053c61ec4cad8f71fe6e411f/rest_condition-1.0.3.tar.gz
-Requirement already satisfied: django>=1.3 in ./env/lib/python3.6/site-packages (from rest-condition) (2.1.2)
-Requirement already satisfied: djangorestframework in ./env/lib/python3.6/site-packages (from rest-condition) (3.9.0)
-Requirement already satisfied: pytz in ./env/lib/python3.6/site-packages (from django>=1.3->rest-condition) (2018.6)
-Installing collected packages: rest-condition
-  Running setup.py install for rest-condition ... done
-Successfully installed rest-condition-1.0.3
 (env) django-jsonapi-training$ pip install django-cors-middleware
 Collecting django-cors-middleware
   Downloading https://files.pythonhosted.org/packages/33/d8/23f4b1249021f0192a3d6f263c29b46637c1f03ab41608ed8477d992550d/django-cors-middleware-1.3.1.tar.gz
@@ -1220,12 +1211,12 @@ Let's add them in to `views.py`:
    as well as app-specific scopes such as `demo-netphone-admin`. (TODO: change this to a meaningful name!)
    _N.B. These are all Columbia-specific scope configurations._
 
-1. As an **alternative** to OAuth 2.0 scopes for permissions, using `rest_condition.Or()` and `.And()`, 
+1. As an **alternative** to OAuth 2.0 scopes for permissions, using DRF's bitwise operators, 
    we'll also take advantage of the Django authorization framework's
    [`DjangoModelPermissions`](https://www.django-rest-framework.org/api-guide/permissions/#djangomodelpermissions)
    for known users. The key thing we do here is disallow blanket GET by just anyone, which is the Django default.
    Again, for this sample app, DjangoModelPermissions don't apply; it's all about OAuth 2.0 scopes. A real app
-   will likely do the `Or`s and `And`s differently.
+   will likely do the `or`s and `and`s differently.
    
 Lot's more can be done with Django's permission system such as adding object and/or field-level permissions.
 
@@ -1237,7 +1228,6 @@ index 3fbc325..57897c8 100644
 @@ -1,9 +1,79 @@
 +from oauth2_provider.contrib.rest_framework import (OAuth2Authentication,
 +                                                    TokenMatchesOASRequirements)
-+from rest_condition import And, Or
 +from rest_framework.authentication import (BasicAuthentication,
 +                                           SessionAuthentication)
 +from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
@@ -1296,10 +1286,7 @@ index 3fbc325..57897c8 100644
 +      OR authenticated user w/Model Permissions.
 +    """
 +    authentication_classes = (BasicAuthentication, SessionAuthentication, OAuth2Authentication, )
-+    permission_classes = [
-+        Or(TokenMatchesOASRequirements,
-+           And(IsAuthenticated, MyDjangoModelPermissions))
-+    ]
++    permission_classes = [TokenMatchesOASRequirements | (IsAuthenticated & MyDjangoModelPermissions)]
 +    required_alternate_scopes = REQUIRED_SCOPES_ALTS
 +
 +

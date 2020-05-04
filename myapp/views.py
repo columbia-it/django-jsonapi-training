@@ -1,7 +1,6 @@
 from django_filters import rest_framework as filters
 from oauth2_provider.contrib.rest_framework import (
     OAuth2Authentication, TokenMatchesOASRequirements)
-from rest_condition import And, Or
 from rest_framework.authentication import (BasicAuthentication,
                                            SessionAuthentication)
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
@@ -68,10 +67,7 @@ class AuthnAuthzSchemaMixIn(object):
     #: In production Oauth2 is preferred; Allow Basic and Session for testing and browseable API.
     authentication_classes = (BasicAuthentication, SessionAuthentication, OAuth2Authentication, )
     #: Either use Scope-based OAuth 2.0 token checking OR authenticated user w/Model Permissions.
-    permission_classes = [
-        Or(TokenMatchesOASRequirements,
-           And(IsAuthenticated, MyDjangoModelPermissions))
-    ]
+    permission_classes = [TokenMatchesOASRequirements | (IsAuthenticated & MyDjangoModelPermissions)]
     #: list of alternatives for required scopes
     required_alternate_scopes = REQUIRED_SCOPES_ALTS
     description = '![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")\n'\
