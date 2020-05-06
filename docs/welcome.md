@@ -47,6 +47,6 @@ of the
 ---
 ### License
 
-![alt-text](./media/CCbyncsa4.0.png "CC BY-NC-SA 4.0") [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+![CC BY-NC-SA 4.0](./media/CCbyncsa4.0.png "CC BY-NC-SA 4.0") [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 

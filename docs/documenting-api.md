@@ -20,7 +20,7 @@ Having a standardized schema document enables API consumer and producer develope
 API details in an automated way, providing tools for developers to perform basic data input validation
 and to provide developer documentation and the familiar swagger "Try it!" functionality.
 
-![alt-text](./media/swagger-ui.png "screenshot of Swagger UI")
+![Swagger UI](./media/swagger-ui.png "screenshot of Swagger UI")
 
 ### Experiments with OpenAPI Schema documentation, validation and mocking tools
 
@@ -341,4 +341,4 @@ use `https://localhost/v1/ - dev API gateway`.
 As you can see, this Swagger-UI document has no real connection with your backend server; It's just convenient
 to hang it off your server, especially when developing.
 
-![alt-text](./media/swagger-server.png "screenshot of selecting the server in Swagger-UI")
+![Swagger UI](./media/swagger-server.png "screenshot of selecting the server in Swagger-UI")

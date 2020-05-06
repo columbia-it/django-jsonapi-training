@@ -122,7 +122,7 @@ For the record, here's an example of a GET of the first page of the `courses` co
 courses per page and with the referenced `course_terms` related data included in the compound document, avoiding
 the need for subsequent HTTP requests to get that information.
 
-![alt-text](./media/postman.png "postman screenshot response is included following")
+![Postman](./media/postman.png "postman screenshot response is included following")
 
 GET
 [http://127.0.0.1:8000/v1/courses/?include=course_terms&page[size]=2](http://127.0.0.1:8000/v1/courses/?include=course_terms&page[size]=2)

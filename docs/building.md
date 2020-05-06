@@ -604,7 +604,7 @@ and then pretend you designed them first using the `django-extensions` package. 
 
 Here's our model with the CommonModel off to the side to make things more readable:
 
-![alt-text](./media/initial-uml.png "UML diagram of data model")
+![UML diagram of data model](./media/initial-uml.png "UML diagram of data model")
 
 `django-admin startapp` created a starter `myapp/models.py`. Now add some actual model definitions to it.
 These are just like in "vanilla" Django.
@@ -1180,7 +1180,7 @@ Quit the server with CONTROL-C.
 Now do a few experiments with Postman, using it to simulate a client
 application.
 
-![alt-text](./media/postman1.png "screenshot of GET /v1/courses/")
+![Postman GET /v1/courses](./media/postman1.png "screenshot of GET /v1/courses/")
 
 ### Adding Authentication and Authorization
 
@@ -1333,7 +1333,7 @@ index 3fbc325..57897c8 100644
 
 Let's give these changes a try with Postman:
 
-![alt-text](./media/postman-auth-denied.png "Authentication credentials were not provided.")
+![Postman auth error](./media/postman-auth-denied.png "Authentication credentials were not provided.")
 
 We get denied with a `401 Unauthorized`:
 ```json
@@ -1353,7 +1353,7 @@ We get denied with a `401 Unauthorized`:
 Since we're just testing and Oauth 2.0 is pretty complicated, let's just use Basic Auth with our
 previously-added `admin` superuser:
 
-![alt-text](./media/postman-auth-basic.png "Using basic auth user 'admin' and password 'admin123'")
+![Postman basic auth](./media/postman-auth-basic.png "Using basic auth user 'admin' and password 'admin123'")
  
 
 ### Pagination, Sorting and Sparse Fieldsets
@@ -1894,94 +1894,6 @@ function and store it in thread local storage so it can be retrieved in the Mode
 at the [Django Signals](https://docs.djangoproject.com/en/2.1/ref/signals/#django.db.models.signals.pre_save)
 documentation for some alternative ideas.
 
-### Using OAuth 2.0
-
-Our example use of OAuth 2.0 uses an external OAuth 2.0 Authorization Server (AS). It's also possible to
-add an AS using Django's auth models and the [`django-oauth-toolkit`](http://dot.evonove.it/) (DOT).
-
-#### Get an OAuth 2.0 token
-
-You'll need to configure Postman for OAuth 2.0. 
-
-**N.B.** The example Client Credentials below may cease
-to work some day. If you are not affiliated with Columbia University, consider running your own
-OAuth 2.0 provider using DOT, since the `auth-columbia` scope will not work for you.
-
-Select the Authorization tab, select OAuth 2.0 and click on Get New
-Access Token:
-
-![alt-text](./media/image5.png "get an access token")
-
-You can cut-n-paste the above from here:
-
-```text
-Token Name: *pick a name*
-Grant Type: Authorization Code
-Callback URL: http://localhost:5432/oauth2client
-Auth URL: https://oauth-test.cc.columbia.edu/as/authorization.oauth2
-Access Token URL: https://oauth-test.cc.columbia.edu/as/token.oauth2
-Client ID: demo_client
-Client Secret: b322573a7176A49FCBEF46554d3381d5
-Scope: auth-columbia read
-Client Authentication: Send as Basic Auth header
-```
-
-and then click Request Token.
-
-You'll see a Columbia Login screen popup:
-
-![alt-text](./media/image11.png "Columbia CAS login")
-
-Followed by a multifactor authentication:
-
-![alt-text](./media/image12.png "Columbia DUO login")
-
-You'll then see a Request for Approval that looks like this:
-
-![alt-text](./media/image4.png "Request for Approval")
-
-This is an *optional* user approval popup that is configured as part of
-registering your client app with the OAuth service. As you can see, the
-user is allowed to uncheck the scopes, effectively giving your client
-app less permission than it asked for. You need to scroll it down to
-click Allow:
-
-![alt-text](./media/image7.png "Allow the checked scopes")
-
-Now you are logged in and have an Access Token which Postman shows you:
-
-![alt-text](./media/image6.png "Granted Access and Refresh tokens")
-
-#### Issue HTTP requests using the token
-
-Click on Use Token and then fill in the URL and do the
-GET by clicking SEND:
-
-![alt-text](./media/image10.png "Postman OAuth 2.0 Authorization")
-
-There's lots more to Postman, but this should get you started. You'll
-want to explore selecting different methods (GET, POST, PATCH, DELETE),
-understanding which scopes are required for those methods (see
-views.py), and perhaps adding the `Accept` or `Content-Type` headers to
-contain `application/vnd.api+json`.
-
-If you don't set an appropriate header you'll sometimes see an error
-like this:
-
-```json
-{
-  "errors": [
-    {
-      "detail": "Could not satisfy the request Accept header.",
-      "source": {
-        "pointer": "/data"
-      },
-      "status": "406"
-    }
-  ]
-}
-```
-
 ### Tests
 
 #### Always write unit tests
@@ -2287,11 +2199,11 @@ to `./manage.py test`. We will:
 2. Set a breakpoint on line 87 of `test_models.py` and start the debugger.
 4. Take a look at values and/or use the expression evaluator to evaluate any expression in the current context.
 
-![alt-text](./media/PyCharm1.png "configure PyCharm run/debug test")
+![PyCharm configuration](./media/PyCharm1.png "configure PyCharm run/debug test")
 
-![alt-text](./media/PyCharm2.png "PyCharm debug breakpoint")
+![PyCharm debug breakpoint](./media/PyCharm2.png "PyCharm debug breakpoint")
 
-![alt-text](./media/PyCharm3.png "PyCharm debug evaluate")
+![PyCharm debug evaluate](./media/PyCharm3.png "PyCharm debug evaluate")
 
 I find this a really powerful way to develop new tests as I can have a look at a result
 before writing the test assertion code.
@@ -2302,7 +2214,7 @@ You can also set up the equivalent of `./manage.py runserver` which I've found i
 handy for settting various environment variables. For example, I have both a sqlite3 and a sqlserver
 "flavor" for running this project.
 
-![alt-text](./media/PyCharm4.png "configure PyCharm run/debug with environment variables")
+![PyCharm configuration](./media/PyCharm4.png "configure PyCharm run/debug with environment variables")
 
 
 #### Check for Python Warnings
@@ -2682,12 +2594,12 @@ report. After running tox, open `htmlcov/index.html` in your browser and
 check out the coverage reports on which lines of code that
 have been tested by the unit tests and which have been missed:
 
-![alt-text](./media/image9.png "htmlcov/index.html")
+![Coverage index.html](./media/image9.png "htmlcov/index.html")
 
 From this report we see that we could perhaps focus on improving
 `myapp/serializers.py`. Let's take a look:
 
-![alt-text](./media/image8.png "htmlcov/myapp_serializers_py.html")
+![Coverage of myapp_serializers](./media/image8.png "htmlcov/myapp_serializers_py.html")
 
 This highlights the fact that our tests are entirely missing any tests
 involving the `HyperlinkedModelSerializer.update()` function, so perhaps

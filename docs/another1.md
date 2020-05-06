@@ -18,7 +18,7 @@ This model is ManyToMany with CourseTerm.
 
 `GIT TAG: instructor`
 
-![alt-text](./media/instructor-uml.png "UML diagram of data model")
+![UML diagram of data model](./media/instructor-uml.png "UML diagram of data model")
 
 ```python
 class Instructor(CommonModel):

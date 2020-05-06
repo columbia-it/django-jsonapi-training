@@ -35,6 +35,8 @@ Copyright © 2018 The Trustees of Columbia University in the City of New York
    review.md
    rest.md
    jsonapi.md
+   using_oauth2.md
+   oauth2.md
    building.md
    modifying.md
    another1.md
@@ -43,9 +45,9 @@ Copyright © 2018 The Trustees of Columbia University in the City of New York
    sphinx.md
    documenting-api.md
    deploying.md
-   oauth2.md
    cli_client.md
    help.md
+   changelog.md
 
    api.rst
 

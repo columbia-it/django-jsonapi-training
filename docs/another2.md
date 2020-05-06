@@ -27,7 +27,7 @@ mv docs/media/current-uml.png docs/media/person-uml.png
 
 Here's the model:
 
-![alt-text](./media/person-uml.png "UML diagram of data model")
+![UML diagram of data model](./media/person-uml.png "UML diagram of data model")
 
 ### Custom Person migration
 

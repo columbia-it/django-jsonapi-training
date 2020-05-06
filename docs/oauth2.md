@@ -3,7 +3,7 @@
 Review the [CU-STD-INTR-001: OAuth 2.0 Scope
 Standard](https://docs.google.com/document/d/13XW4-L_j9CCeB6jAPjPHK6V5-rMpcBUiF90RIAK0f6Y/edit#heading=h.tlbkpm4wjg60):
 
-![alt-text](./media/image2.png "OAuth 2.0 flows diagram")
+![Flows diagram](./media/image2.png "OAuth 2.0 flows diagram")
 
 
 N.B. OAuth 2.0 is largely *unrelated* to OAuth 1.0; it's not just an upgrade, but a totally
@@ -22,11 +22,12 @@ as just the "client", it is sometimes confused with the user, but it isn't. It i
 that the user is authorizing to act on her behalf, sometimes even when the user is no longer present.
 
 **Resource Server (RS):** The resource server is the "backend" (in our cast RESTful Django) server.
-It uses information passed by the client (described below) to see if the resources it manages are
-permitted to be manipulated using the HTTP methods.
+It uses information passed by the client (an Access Token) to see if the resources it manages are
+permitted to be manipulated using the HTTP methods. This information is usually validated using
+Access Token *introspection*, described below.
 
 **Authorization Server (AS):** This is the central control point. All clients and RS's talk to the
-AS to get and validated a *Token*. Clients and RS's are registered in advance with the AS.
+AS to get and validate a *Token*. Clients and RS's are registered in advance with the AS.
 
 More on these roles below.
 
@@ -46,12 +47,13 @@ behalf of the initial authorizing user without them having to be present at the 
 *ID tokens* contain information that identifies the user to the client app
 and are only made available if using the Open ID Connect (OIDC) profile (with
 `openid` scope, described below). In general, the client app does not know
-who their user is, since the *Access Token* is an opaque object.
+who their user is, since the *Access Token* is an opaque object; the ID Token (or Userinfo endpoint)
+discloses that information. (As such, one should be careful when provisioning a client app in the AS
+to be allowed to request the **openid** scope.)
 
 ### Scopes
 
-Scopes are *requested* by a registered Client app. They are *granted*
-(and possibly *down-scoped* for so-called Enterprise Scopes) by the
+Scopes are *requested* by a registered Client app. They are *granted* by the
 OAuth 2.0 Authorization Server (AS). Scopes are then validated by the
 Resource Server based on the `access_token` provided in the Authorization
 Bearer header of the HTTP request. The set of scopes "in" the
@@ -59,7 +61,24 @@ access_token must match the scopes *required* by the Resource Server.
 Beyond the required scopes, additional scopes might be useful for
 optional capabilities.
 
-Our implementation of scopes includes several flavors:
+How scopes are used can vary greatly. Our implementation of scopes includes several flavors:
+
+#### Resource Server SLA Scopes
+
+Resource Server Service Level Agreement scopes are used to indicate that a registered Client is:
+- permitted to access a given Resource Server, and
+- optionally, at a specified (set of) service level(s).
+
+Examples of Service Levels might indicate an allowable number of API calls per second, such that
+casual users ("Bronze" SLA) might be rate limited to a farily low number while a fully-vetted service-to-service
+integration might perform an unlimited number of calls per second ("Gold" SLA).
+
+Use of SLA scopes is our primary means of *binding* a particular Client to a specific Resource Server;
+the Client is registered in the AS with permission to request the given RS SLA Scope. This further
+requires that the RS confirm that scope is present in the Access Token when it
+[introspects](#register-resource-server-for-token-introspection) it. (This is comparable and an
+alternative to the use of an [API key](https://en.wikipedia.org/wiki/Application_programming_interface_key).)
+
 
 #### Authentication Selector Scopes
 
@@ -74,39 +93,11 @@ below.
 **auth-none**: Do not perform a user login. This scope is used for backend server-to-server relationships.
 See [Client is a trusted server](#client-is-a-trusted-server), below.
 
-#### Scope for Client to Learn the User's Identity
+#### User Data Generic Scopes
 
-In normal OAuth 2.0 operations, there may be no need for the client app
-to know who the end user is. If the client does need to know this, then
-use the **openid** scope. This results in an
-[id_token](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)
-being returned to the requesting client, in addition to the usual
-*access_token* -- only if the client app has been
-[registered](#_c6p5zshh92vf) with permission to request
-the openid scope. id_tokens only return the "sub" claim
-([uni@columbia.edu](mailto:uni@columbia.edu)) unless
-additional scopes are added:
-
-**openid**: Return an id_token to the Client app.
-
-**profile:** Added to openid, includes user's name, etc.
-
-**email:** Added to openid, includes user's email address
-
-There's a complementary
-[userinfo](http://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
-endpoint that returns similar information, called *claims*.
-It is authorized using the access_token.
-
-TODO: Update documentation for group claim.
-
-#### End-user Generic Scopes
-
-A series of generic scopes are generally used for end-user data. If
-requested, these scopes are **always** granted if requested, so they are
-not appropriate to limit access to enterprise-owned data that the
-end-user might need special permissions for 
-(see [Enterprise Scopes](#enterprise-scopes)):
+A series of generic scopes are generally used for end-user data. Remember that the Client app is
+delegated rights by virtue of the end-user's login and authorization to act on the end-user's behalf.
+Scopes we use are:
 
 **create**: Permission to create new resources (POST) on my behalf.
 
@@ -116,28 +107,50 @@ end-user might need special permissions for
 
 **delete**: Permission to delete a resource (DELETE) of mine.
 
-#### Enterprise Scopes
+#### OpenID Connect (OIDC) 1.0 Scopes
 
-Enterprise scopes confirm (in near real-time) end-user membership in a
-Grouper-managed 
-"[OAUTH Group](https://docs.google.com/document/d/13XW4-L_j9CCeB6jAPjPHK6V5-rMpcBUiF90RIAK0f6Y/edit#heading=h.rn3atn9b4l3y)"
-and are only applicable when combined with **auth-columbia** scope.
-There are currently no real enterprise scopes defined. There is one
-named **demo-netphone-admin** for demonstration purposes. Also,
-**auth-columbia** is both a scope selector and an enterprise scope; one
-can be effectively blocked from access via Grouper removing a user's
-membership from the **auth-columbia** OAUTH Group.
+In normal OAuth 2.0 operations, there may be no need for the client app
+to know who the end user is. If the client does need to know this, then
+use the **openid** scope. This results in an
+[id_token](http://openid.net/specs/openid-connect-core-1_0.html#IDToken)
+being returned to the requesting client, in addition to the usual
+*access_token* -- only if the client app has been
+[registered](#registering-with-the-as) with permission to request
+the **openid** scope. *id_tokens* only return the "sub" claim
+(*uni*@columbia.edu) unless additional scopes are added:
 
-Enterprise Scopes may also be used with **auth-none** scope as a means
-of defining access for [trusted servers](#client-is-a-trusted-server).
-In this case, both the trusted server's client credentials must be
-configured to allow auth-none and the enterprise scope, for example,
-`auth-none sas-coursemgt-create`.
+**profile:** includes user's name, etc.
+
+**email:** includes user's email address.
+
+OIDC defines several
+[claims](https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims)
+that we don't currently implement (e.g. picture, phone number, birthdate, etc.)
+
+##### Grouper Claim Group Membership
+
+We've implemented a custom
+[additional claim](https://openid.net/specs/openid-connect-core-1_0.html#AdditionalClaims)
+using a [Collision-Resistant Name](https://tools.ietf.org/html/rfc7519#section-2)
+of `https://api.columbia.edu/claim/group` that represents the list of "Claim Groups"
+that an end-user is a member of. These groups are managed by the
+[Grouper](https://grouper.columbia.edu) group management system.
+
+To request this claim, add this scope: `https://api.columbia.edu/scope/group`.
+
+##### Userinfo Endpoint
+
+There's a complementary
+[userinfo](http://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
+endpoint that also returns Claims.
+It is authorized using the *access_token* meaning anybody that has the *access_token*
+can retrieve this information. This can be used in the event that an **id_token**
+was not returned to the Client, for example.
 
 ### What kind of client is it?
 
-No matter the OAuth "style", the Resource Server (RS) is always
-presented with basically the same thing: an opaque *Access Token*
+No matter the OAuth 2.0 "style", the Resource Server (RS) is always
+presented with basically the same information: an opaque *Access Token*
 in the `Authorization: Bearer <token>` header.
 The RS (backend Django app in this context) must
 validate the *Access Token* to grant or deny appropriate permission
@@ -170,11 +183,12 @@ implemented by the client using HTTP Basic Auth with the AS to get back
 an Access Token. Validation of (introspecting) the access token
 is done by the server using
 HTTP Basic Auth to identify itself and then introspecting the token. No
-user identity or permissions are provided because there is no user. In
+user identity Claims are provided because there is no user. In
 addition to using the scopes associated with the access token, the
-server app can always keep a list of client IDs if necessary. However,
+server app can always keep a list of Client IDs if necessary. However,
 the cleanest design approach is to base the authorization decision
-entirely on the access token's granted scopes.
+entirely on the access token's granted scopes, in this case using the Resource Server
+SLA scope rather than tracking Cliend IDs.
 
 ### Determining Resource Server Authorization Requirements
 
@@ -184,7 +198,7 @@ are authorized based on the scopes associated with the token, which it
 learns from token introspection. It can also make decisions based on the
 identity of the user, in the cases where a user was identified
 (Authorization Code or Implicit grants) as this is exposed by the
-introspection.
+introspection (and userinfo).
 
 Resource server designers need to decide:
 
@@ -200,7 +214,6 @@ language like OAS 3.0 can help. See
 [Documenting the API in OAS 3.0](documenting-api.html), and the
 equivalent Django
 [permission_classes](building.html#adding-authentication-and-authorization).
-above.
 
 ### Registering with the AS
 #### Register Resource Server for Token Introspection
@@ -227,8 +240,8 @@ about when registering a client are:
 
 ##### Client is operating on behalf of an end user
 
-1.  Is it a fully in-browser (javascript) app? If so, it will be using
-    the Implicit grant type and will be requiring a user to log in,
+1.  Is it a fully in-browser (javascript) app? If so, it will likely be using
+    the Implicit grant type and will require a user to log in,
     using the auth-columbia scope selector.
 2.  What scopes should the app be allowed to request on behalf of the
     user and what scopes are required by its Resource Server?
@@ -238,4 +251,4 @@ about when registering a client are:
 ##### Client is a server
 
 In this case, the app should be registered with permission to request
-the auth-none and additional scopes.
+the **auth-none** and additional scopes.
