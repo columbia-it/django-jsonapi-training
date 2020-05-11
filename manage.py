@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 import os
 import sys
+# kludge to use pymysql instead of mysqlclient:
+import pymysql
+pymysql.version_info = (1, 4, 6, 'final', 0)  # change mysqlclient version
+pymysql.install_as_MySQLdb()
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "training.settings")

@@ -14,3 +14,4 @@ dist/
 myapp-docker.tar
 traefik/
 
+*.sh

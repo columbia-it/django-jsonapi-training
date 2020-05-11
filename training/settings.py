@@ -24,8 +24,6 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'c3pz+#@g%crl=bihc347a5)+l@cp==
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = strtobool(os.environ.get('DJANGO_DEBUG', 'true'))
-SQLSERVER = strtobool(os.environ.get('DJANGO_SQLSERVER', 'false'))
-MYSQL = strtobool(os.environ.get('DJANGO_MYSQL', 'false'))
 
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
@@ -92,35 +90,28 @@ WSGI_APPLICATION = 'training.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-if SQLSERVER:
-    # Use the following if using with MS SQL:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'sql_server.pyodbc',
-            'NAME': os.environ['DJANGO_SQLSERVER_DB'],
-            'USER': os.environ['DJANGO_SQLSERVER_USER'],
-            'PASSWORD': os.environ['DJANGO_SQLSERVER_PASS'],
-            'HOST': os.environ['DJANGO_SQLSERVER_HOST'],
-            'PORT': '1433',
-            'OPTIONS': {
-                'driver': 'ODBC Driver 17 for SQL Server',
-            },
-        },
-    }
-
-    # override the standard migrations because they break due to SQL Server deficiences.
-    # MIGRATION_MODULES = {
-    #     'oauth2_provider': 'myapp.migration_overrides.oauth2_provider',
-    # }
-elif MYSQL:
+if os.environ.get('MYSQL_HOST', None):
+    password = os.environ.get('MYSQL_PASSWORD', None)
+    # unable to pass None/null value in environment
+    if password and password.lower() == 'none':
+        password = None
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('MYSQL_DB','tsc'),
+            'USER': os.environ.get('MYSQL_USER','admin'),
+            'PASSWORD': password,
+            'HOST': os.environ['MYSQL_HOST'],
+            'PORT': os.environ.get('MYSQL_PORT','3306'),
             'OPTIONS': {
-                'read_default_file': '/Users/alan/my.cnf',
-            },
+                # make mysql 5.6 work sort of right
+                'init_command': 'SET default_storage_engine=INNODB,character_set_connection=utf8mb4,'
+                                'collation_connection=utf8mb4_unicode_ci,'
+                                'sql_mode="STRICT_TRANS_TABLES"'
+            }
         }
     }
+# otherwise, using local sqlite3:
 else:
     DATABASES = {
         'default': {
@@ -188,7 +179,6 @@ REST_FRAMEWORK = {
         'rest_framework_json_api.renderers.JSONRenderer',  # application/vnd.api+json
         'rest_framework.renderers.BrowsableAPIRenderer',  # text/html: ?format=api
     ),
-    #'DEFAULT_SCHEMA_CLASS': 'myapp.schemas.jsonapi.JSONAPIAutoSchema',
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_json_api.filters.QueryParameterValidationFilter',  # for query parameter validation
         'rest_framework_json_api.filters.OrderingFilter',  # for sort
@@ -197,7 +187,8 @@ REST_FRAMEWORK = {
     ),
     'SEARCH_PARAM': 'filter[search]',
     'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework_json_api.schemas.openapi.AutoSchema',
+    # 'DEFAULT_SCHEMA_CLASS': 'rest_framework_json_api.schemas.openapi.AutoSchema',
+    #'DEFAULT_SCHEMA_CLASS': 'myapp.schemas.jsonapi.JSONAPIAutoSchema',
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json',
     'TEST_REQUEST_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',
