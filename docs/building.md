@@ -164,7 +164,7 @@ Successfully installed Pyyaml-3.13
 
 #### Freeze Python package requirements
 
-To make sure your code is working against a consistent known set of package versions, it's sometimes a good
+To make sure your code is working against a consistent known set of package versions, it's a good
 idea to "pin" or "freeze" your installed package versions.  You will want to upgrade these from time to time though.
 Next time you or someone else works on a clone of your project, all the preceding steps can be replaced by
 `pip install -r requirements.txt`.

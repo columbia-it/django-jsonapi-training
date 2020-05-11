@@ -1,5 +1,8 @@
 ## Documenting the API in OAS 3.0
 
+**N.B. OAS 3.0 schema generation is currently not working** while we wait on updated versions of DJA to use
+the updated DRF `generateschema` command.
+
 The [Open API Specification](https://github.com/OAI/OpenAPI-Specification/versions/3.0.0.md)
 (OAS 3.0), a follow-on to Swagger 2.0 which merges in many of the
 modeling features of
@@ -342,3 +345,7 @@ As you can see, this Swagger-UI document has no real connection with your backen
 to hang it off your server, especially when developing.
 
 ![Swagger UI](./media/swagger-server.png "screenshot of selecting the server in Swagger-UI")
+
+
+#### TODO: Document AWS Lambda deployment
+

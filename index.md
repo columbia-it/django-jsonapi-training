@@ -13,6 +13,7 @@ Otherwise, you can just view these documentation source files:
 
 
 - [welcome.md](docs/welcome.md)
+- [changelog.md](docs/changelog.md)
 - [preparing.md](docs/preparing.md)
 - [motivation.md](docs/motivation.md)
 - [review.md](docs/review.md)
@@ -30,5 +31,4 @@ Otherwise, you can just view these documentation source files:
 - [deploying.md](docs/deploying.md)
 - [cli_client.md](docs/cli_client.md)
 - [help.md](docs/help.md)
-- [changelog.md](docs/changelog.md)
 - [api.rst](docs/api.rst)

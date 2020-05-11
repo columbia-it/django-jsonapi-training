@@ -27,24 +27,6 @@ of the
 
 ---
 
-### Document Revision History
-
-| **Date**   | **Change**                                              |
-| :--------- | :------------------------------------------------------ |
-| 2018-12-01 | Switch documentation over to Sphinx                     |
-| 2018-11-20 | Kludges required when using sqlserver                   |
-| 2018-11-15 | Add Instructor model.                                   |
-| 2018-11-08 | Convert from google doc (to docx) to markdown with pandoc.|
-|            | Changes for DJA 2.6.0 for related_serializers.          |
-|            | Miscellaneous cleanup and expansion of examples.        | 
-|            | prepare for initial github.com release                  |
-| 2018-07-19 | Updates for added openid scopes and claims              |
-| 2018-06-14 | Improved documentation of Relationship & Related views. |
-|            | Tox, code coverage.                                     |
-|            | More About Using OAuth 2.0                              |
-|            | refresh code examples                                   |
-
----
 ### License
 
 ![CC BY-NC-SA 4.0](./media/CCbyncsa4.0.png "CC BY-NC-SA 4.0") [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE](https://creativecommons.org/licenses/by-nc-sa/4.0/)

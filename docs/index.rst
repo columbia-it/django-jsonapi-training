@@ -30,6 +30,7 @@ Copyright © 2018 The Trustees of Columbia University in the City of New York
    :caption: Contents:
 
    welcome.md
+   changelog.md
    preparing.md
    motivation.md
    review.md
@@ -47,7 +48,6 @@ Copyright © 2018 The Trustees of Columbia University in the City of New York
    deploying.md
    cli_client.md
    help.md
-   changelog.md
 
    api.rst
 

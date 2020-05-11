@@ -10,5 +10,5 @@ or, How are we (would we like to be) doing this?
 -   API content ([jsonapi.org 1.0](https://jsonapi.org/format))
 -   JSON Schema ([json-schema.org](https://json-schema.org)) -
     [example](https://spacetelescope.github.io/understanding-json-schema/structuring.html)
--   API naming
--   OAuth 2.0 authorization
+-   [API naming](https://confluence.columbia.edu/confluence/display/CUITEA/API+-+Integration+Domain+Names)
+-   [OAuth 2.0 authorization](https://confluence.columbia.edu/confluence/display/CUITEA/OAuth+2.0+Protection+Standard)

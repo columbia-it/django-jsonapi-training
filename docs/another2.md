@@ -25,7 +25,7 @@ Let's rename that to reflect our current person model:
 mv docs/media/current-uml.png docs/media/person-uml.png
 ```
 
-Here's the model:
+Here's the new model:
 
 ![UML diagram of data model](./media/person-uml.png "UML diagram of data model")
 

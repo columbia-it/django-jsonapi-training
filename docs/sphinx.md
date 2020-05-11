@@ -361,7 +361,7 @@ After adding an appropriate `.htaccess` you can see these, if you are a CUIT sta
 
 ### Publishing to RTD
 
-[https://readthedocs.io](https://readthedocs.io) (RTD)
+[readthedocs.io](https://readthedocs.io) (RTD or [rtfd.io](https://rtfd.io))
 is where most open-source projects host their documentation. While your project is probably internal,
 here's how to do it if you are open-sourcing it.
 
@@ -378,26 +378,14 @@ and make sure to:
 3. In advanced settings configure the PIP requirements file: `docs/requirements.txt` and
    make sure to select `CPython 3.x` as the Python interpreter.
 
-#### Fine print: pyodbc breakage
+#### Separating deployment from documentation generation requirements
 
 I did have to split up the project `requirements.txt` into multiple pieces since I import Django and myapp into
-`conf.py` to enable `autoapi` and `autodoc`. Since I had the SQL Server packages (django-pyodbc-azure and pyodbc)
-in `requirements.txt`, pyodbc failed to install on RTD since it wants to compile some C source code
-using headers that are installed with an ODBC OS package. In fact, this stuff is all optional as the
-default database used in the project is sqlite3, so I restructured the requirements into `requirements.txt`:
+`conf.py` to enable `autoapi` and `autodoc`.
 
-```text
-# requirements for our app:
--rrequirements-django.txt
-# optional sqlserver requirements:
--rrequirements-sqlserver.txt
+Then, in `docs/requirements.txt` we bring in the necessary django and sphinx pieces:
 ```
-
-with the main stuff in `requirements-django.txt` and the additional SQL Server stuff in `requirements-sqlserver.txt`.
-
-Finally, in `docs/requirements.txt` we bring in the necessary django and sphinx pieces:
-```
-# bring in requirements for my app (excepting the optional database):
+# bring in requirements for my app
 -r../requirements-django.txt
 # stuff needed for sphinx documentation:
 Sphinx==1.8.2
@@ -412,3 +400,9 @@ recommonmark==0.4.0
 
 In anticipation of adding travis support on github,
 I also changed `tox.ini` to have a separate section for local sphinx builds: `tox -e sphinx`.
+Use this to build the local `docs/build/html/` tree:
+```
+(env) django-training$ tox -e sphinx
+...
+(env) django-training$ open docs/build/html/index.html
+```

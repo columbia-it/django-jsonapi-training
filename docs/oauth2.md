@@ -51,7 +51,7 @@ who their user is, since the *Access Token* is an opaque object; the ID Token (o
 discloses that information. (As such, one should be careful when provisioning a client app in the AS
 to be allowed to request the **openid** scope.)
 
-### Scopes
+### Scopes, and how we use them
 
 Scopes are *requested* by a registered Client app. They are *granted* by the
 OAuth 2.0 Authorization Server (AS). Scopes are then validated by the

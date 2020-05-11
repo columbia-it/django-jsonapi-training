@@ -1,5 +1,8 @@
 #!/bin/sh
 # make sphinx docs
+if [ -z `pip freeze | grep pygraphviz` ]; then
+    pip install -r requirements-dev.txt
+fi
 ./manage.py graph_models -g -S --disable-abstract-fields -E -o docs/media/current-uml.png myapp
 cd docs
 make html
