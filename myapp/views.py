@@ -66,11 +66,12 @@ class AuthnAuthzMixIn(object):
     authentication_classes = (OAuth2Authentication, BasicAuthentication, SessionAuthentication,)
     #: permissions are any one of:
     #: 1. auth-columbia scope, which means there's an authenticated user, plus required claim, or
-    #: 2. auth-none scope (a server-to-server integration)
+    #: 2. auth-none scope (a server-to-server integration) where there's no authenticated user, or
     #: 3. an authenticated user (session or basic auth) using user-based model permissions.
+    # which only support & and |.
     permission_classes = [
         (TokenMatchesOASRequirements & IsAuthenticated & MyClaimPermission)
-        | (TokenMatchesOASRequirements)
+        | (TokenMatchesOASRequirements & ~IsAuthenticated)
         | (IsAuthenticated & MyDjangoModelPermissions)
     ]
     # TODO: replace cas-tsc-sla-gold scope with demo-djt-sla-bronze once available in oauth-test

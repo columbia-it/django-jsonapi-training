@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 -->
 
+## [1.0.1] - 2020-05-14
+
+### Fixed
+- Properly prevent a non-authenticated user from doing a write
+
 ## [1.0.0] - 2020-05-14
 
 ### Added
