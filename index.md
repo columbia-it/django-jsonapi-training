@@ -26,6 +26,7 @@ Otherwise, you can just view these documentation source files:
 - [another1.md](docs/another1.md)
 - [database.md](docs/database.md)
 - [another2.md](docs/another2.md)
+- [oidc.md](docs/oidc.md)
 - [sphinx.md](docs/sphinx.md)
 - [documenting-api.md](docs/documenting-api.md)
 - [deploying.md](docs/deploying.md)

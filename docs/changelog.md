@@ -3,7 +3,7 @@
 Since this project is primarily documentation for training purposes, this Changelog
 documents the changes to the docs. See the project CHANGELOG for changes to the demo app.
 
-### 2020-05-11
+### 2020-05-14
 - Reorganized material to introduce OAuth 2.0 prior to diving in to building the app.
 - Removed enterprise down-scoping which is replaced with OIDC Claims.
 - Purge references to third party Microsoft SQL Server since it is poorly supported and not a core

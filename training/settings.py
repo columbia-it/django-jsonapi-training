@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'corsheaders',
     'oauth2_provider',
+    'oauth',
     'django_filters',
     'django_extensions',
 ]
@@ -250,7 +251,10 @@ OAUTH2_CONFIG = {
     ],
 } 
 
-
+OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.MyApplication"
+OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = "oauth.MyAccessToken"
+OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "oauth.MyRefreshToken"
+OAUTH2_PROVIDER_GRANT_MODEL = "oauth2_provider.Grant"
 
 # debug logging
 LOGGING = {

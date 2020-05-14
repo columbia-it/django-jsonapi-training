@@ -7,37 +7,36 @@ from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 # from rest_framework_json_api.schemas.openapi import AutoSchema as JSONAPIAutoSchema
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
-# from myapp import (__author__, __copyright__, __license__, __license_url__,
-#                    __title__, __version__)
+from myapp import (__author__, __copyright__, __license__, __license_url__,
+                   __title__, __version__)
 from myapp.models import Course, CourseTerm, Instructor, Person
 from myapp.serializers import (CourseSerializer, CourseTermSerializer,
                                InstructorSerializer, PersonSerializer)
+from oauth.oauth2_introspection import HasClaim
 
-# TODO: simplify the following
-#: For a given HTTP method, a list of valid alternative required scopes.
-#: For instance, GET will be allowed if "auth-columbia read" OR "auth-none read" scopes are provided.
-#: Note that even HEAD and OPTIONS require the client to be authorized with at least "read" scope.
-REQUIRED_SCOPES_ALTS = {
-    'GET': [['auth-columbia', 'read'], ['auth-none', 'read']],
-    'HEAD': [['read']],
-    'OPTIONS': [['read']],
-    'POST': [
-        ['auth-columbia', 'demo-netphone-admin', 'create'],
-        ['auth-none', 'demo-netphone-admin', 'create'],
-    ],
-    # 'PUT': [
-    #     ['auth-columbia', 'demo-netphone-admin', 'update'],
-    #     ['auth-none', 'demo-netphone-admin', 'update'],
-    # ],
-    'PATCH': [
-        ['auth-columbia', 'demo-netphone-admin', 'update'],
-        ['auth-none', 'demo-netphone-admin', 'update'],
-    ],
-    'DELETE': [
-        ['auth-columbia', 'demo-netphone-admin', 'delete'],
-        ['auth-none', 'demo-netphone-admin', 'delete'],
-    ],
-}
+
+# TODO: define claims for demo_djt_view & _upd:
+class MyClaimPermission(HasClaim):
+    """
+    Use OIDC claim 'https://api.columbia.edu/claim/group' to determine permission
+    to create/update/delete stuff: If the user has the claim `demo_d_demo2`, then
+    they can do writes. Read access doesn't require a claim.
+    """
+    #: in order to be able to do a write, the user must have claim `demo_d_demo2`
+    WRITE_CLAIM = 'demo_d_demo2'
+    #: any user can do a read (empty string indicates so vs. None which means deny).
+    READ_CLAIM = ''
+    #: the name of our custom claim group
+    claim = 'https://api.columbia.edu/claim/group'
+    #: mapping of HTTP methods to required claim group values
+    claims_map = {
+        'GET': READ_CLAIM,
+        'HEAD': READ_CLAIM,
+        'OPTIONS': READ_CLAIM,
+        'POST': WRITE_CLAIM,
+        'PATCH': WRITE_CLAIM,
+        'DELETE': WRITE_CLAIM,
+        }
 
 
 class MyDjangoModelPermissions(DjangoModelPermissions):
@@ -45,7 +44,6 @@ class MyDjangoModelPermissions(DjangoModelPermissions):
     Override `DjangoModelPermissions <https://docs.djangoproject.com/en/dev/topics/auth/#permissions>`_
     to require view permission as well: The default allows view by anybody.
     """
-    # TODO: refactor to just add the GET key to super().perms_map
     #: the usual permissions map plus GET. Also, we omit PUT since we only use PATCH with {json:api}.
     perms_map = {
         'GET': ['%(app_label)s.view_%(model_name)s'],
@@ -59,56 +57,81 @@ class MyDjangoModelPermissions(DjangoModelPermissions):
     }
 
 
-class AuthnAuthzSchemaMixIn(object):
+class AuthnAuthzMixIn(object):
     """
     Common Authn/Authz mixin for all View and ViewSet-derived classes:
     """
     #: In production Oauth2 is preferred; Allow Basic and Session for testing and browseable API.
-    authentication_classes = (BasicAuthentication, SessionAuthentication, OAuth2Authentication, )
-    #: Either use Scope-based OAuth 2.0 token checking OR authenticated user w/Model Permissions.
-    permission_classes = [TokenMatchesOASRequirements | (IsAuthenticated & MyDjangoModelPermissions)]
-    #: list of alternatives for required scopes
-    required_alternate_scopes = REQUIRED_SCOPES_ALTS
-    # description = '![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")'
-    #               '\n'\
-    #               '\n'\
-    #               '\n'\
-    #               'A sample API that uses courses as an example to demonstrate representing\n'\
-    #               '[JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.\n'\
-    #               '\n'\
-    #               '\n'\
-    #               'See [https://columbia-it-django-jsonapi-training.readthedocs.io]'\
-    #               '(https://columbia-it-django-jsonapi-training.readthedocs.io)\n'\
-    #               'for more about this.\n'\
-    #               '\n'\
-    #               '\n' + __copyright__
-    #
-    # #: fill in some of the openapi schema
-    # openapi_schema = {
-    #     'info': {
-    #         'version': __version__,
-    #         'title': __title__,
-    #         'description': description,
-    #         'contact': {
-    #             'name': __author__
-    #         },
-    #         'license': {
-    #             'name': __license__,
-    #             'url': __license_url__
-    #         }
-    #     },
-    #     'servers': [
-    #         {'url': 'https://localhost/v1', 'description': 'local docker'},
-    #         {'url': 'http://localhost:8000/v1', 'description': 'local dev'},
-    #         {'url': 'https://ac45devapp01.cc.columbia.edu/v1', 'description': 'demo'},
-    #         {'url': '{serverURL}', 'description': 'provide your server URL',
-    #          'variables': {'serverURL': {'default': 'http://localhost:8000/v1'}}}
-    #     ]
-    # }
+    #: (authentication_classes is an implied OR list)
+    authentication_classes = (OAuth2Authentication, BasicAuthentication, SessionAuthentication,)
+    #: permissions are any one of:
+    #: 1. auth-columbia scope, which means there's an authenticated user, plus required claim, or
+    #: 2. auth-none scope (a server-to-server integration)
+    #: 3. an authenticated user (session or basic auth) using user-based model permissions.
+    permission_classes = [
+        (TokenMatchesOASRequirements & IsAuthenticated & MyClaimPermission)
+        | (TokenMatchesOASRequirements)
+        | (IsAuthenticated & MyDjangoModelPermissions)
+    ]
+    # TODO: replace cas-tsc-sla-gold scope with demo-djt-sla-bronze once available in oauth-test
+    #: Implicit/Authorization code scopes
+    CU_SCOPES = ['auth-columbia', 'cas-tsc-sla-gold', 'openid', 'https://api.columbia.edu/scope/group']
+    #: Client Credentials scopes
+    NONE_SCOPES = ['auth-none', 'cas-tsc-sla-gold']
+    #: allow either CU_SCOPES or NONE_SCOPES
+    required_alternate_scopes = {
+        'OPTIONS': [['read']],
+        'HEAD': [CU_SCOPES + ['read'], NONE_SCOPES + ['read']],
+        'GET': [CU_SCOPES + ['read'], NONE_SCOPES + ['read']],
+        'POST': [CU_SCOPES + ['create'], NONE_SCOPES + ['create']],
+        'PATCH': [CU_SCOPES + ['update'], NONE_SCOPES + ['update']],
+        'DELETE': [CU_SCOPES + ['delete'], NONE_SCOPES + ['delete']],
+    }
+
+
+class SchemaMixin(object):
+    """
+    (temporarily deprecated) OAS 3.0 schema stuff pending updates to DJA to support it officially.
+    """
+    #: fill in some of the openapi schema
+    openapi_schema = {
+        'info': {
+            'version': __version__,
+            'title': __title__,
+            'description':
+                '![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")'
+                '\n'
+                '\n'
+                '\n'
+                'A sample API that uses courses as an example to demonstrate representing\n'
+                '[JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.\n'
+                '\n'
+                '\n'
+                'See [https://columbia-it-django-jsonapi-training.readthedocs.io]'
+                '(https://columbia-it-django-jsonapi-training.readthedocs.io)\n'
+                'for more about this.\n'
+                '\n'
+                '\n' + __copyright__,
+            'contact': {
+                'name': __author__
+            },
+            'license': {
+                'name': __license__,
+                'url': __license_url__
+            }
+        },
+        'servers': [
+            {'url': 'https://localhost/v1', 'description': 'local docker'},
+            {'url': 'http://localhost:8000/v1', 'description': 'local dev'},
+            {'url': 'https://ac45devapp01.cc.columbia.edu/v1', 'description': 'demo'},
+            {'url': '{serverURL}', 'description': 'provide your server URL',
+             'variables': {'serverURL': {'default': 'http://localhost:8000/v1'}}}
+        ]
+    }
     # schema = JSONAPIAutoSchema(openapi_schema=openapi_schema)
 
 
-class CourseBaseViewSet(AuthnAuthzSchemaMixIn, ModelViewSet):
+class CourseBaseViewSet(AuthnAuthzMixIn, ModelViewSet):
     """
     Base ViewSet for all our ViewSets:
 
@@ -213,7 +236,7 @@ class InstructorViewSet(CourseBaseViewSet):
     search_fields = ('person__name', 'course_terms__course__course_name')
 
 
-class CourseRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
+class CourseRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
     View for courses.relationships
     """
@@ -221,7 +244,7 @@ class CourseRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
     self_link_view_name = 'course-relationships'
 
 
-class CourseTermRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
+class CourseTermRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
     View for course_terms.relationships
     """
@@ -229,7 +252,7 @@ class CourseTermRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
     self_link_view_name = 'course_term-relationships'
 
 
-class InstructorRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
+class InstructorRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
     View for instructors.relationships
     """
@@ -237,7 +260,7 @@ class InstructorRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
     self_link_view_name = 'instructor-relationships'
 
 
-class PersonRelationshipView(AuthnAuthzSchemaMixIn, RelationshipView):
+class PersonRelationshipView(AuthnAuthzMixIn, RelationshipView):
     """
     View for people.relationships
     """

@@ -17,17 +17,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 -->
 
-## [0.2.6] - 2020-05-11
+## [1.0.0] - 2020-05-14
 
 ### Added
+- Use of OIDC 2.0 Claims for view permission
+
+### Changed
+- Updated required scopes to include an SLA scope.
+
+## [0.2.6] - 2020-05-11
 
 ### Deprecated
 - Use of Microsoft SQL Server.
+- (temporarily) removed OAS 3.0 schema document generation
 
 ### Changed
 - Switched to all-python PyMySQL library.
-
-### Fixed
 
 ## [0.2.5] - 2019-06-27
 
