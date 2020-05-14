@@ -1,0 +1,2 @@
+# stuff used only on my dev laptop
+pygraphviz==1.5
