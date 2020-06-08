@@ -76,9 +76,9 @@ class AuthnAuthzMixIn(object):
     ]
     # TODO: replace cas-tsc-sla-gold scope with demo-djt-sla-bronze once available in oauth-test
     #: Implicit/Authorization code scopes
-    CU_SCOPES = ['auth-columbia', 'cas-tsc-sla-gold', 'openid', 'https://api.columbia.edu/scope/group']
+    CU_SCOPES = ['auth-columbia', 'demo-djt-sla-bronze', 'openid', 'https://api.columbia.edu/scope/group']
     #: Client Credentials scopes
-    NONE_SCOPES = ['auth-none', 'cas-tsc-sla-gold']
+    NONE_SCOPES = ['auth-none', 'demo-djt-sla-bronze']
     #: allow either CU_SCOPES or NONE_SCOPES
     required_alternate_scopes = {
         'OPTIONS': [['read']],
