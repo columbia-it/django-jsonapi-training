@@ -28,6 +28,9 @@ DEBUG = strtobool(os.environ.get('DJANGO_DEBUG', 'true'))
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
 
+# cause an error if trailing slash is missing rather than a 301 redirect.
+APPEND_SLASH = False
+
 # If the X-Forwarded-Host header is set, then use it. This causes URLs in responses (links) to contain the
 # given host[:port] of the proxy rather than that of the backend.
 USE_X_FORWARDED_HOST = True
