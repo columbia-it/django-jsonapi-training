@@ -1,17 +1,12 @@
 from django_filters import rest_framework as filters
-from oauth2_provider.contrib.rest_framework import (
-    OAuth2Authentication, TokenMatchesOASRequirements)
-from rest_framework.authentication import (BasicAuthentication,
-                                           SessionAuthentication)
+from oauth2_provider.contrib.rest_framework import TokenMatchesOASRequirements
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
-# from rest_framework_json_api.schemas.openapi import AutoSchema as JSONAPIAutoSchema
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
-from myapp import (__author__, __copyright__, __license__, __license_url__,
-                   __title__, __version__)
 from myapp.models import Course, CourseTerm, Instructor, Person
-from myapp.serializers import (CourseSerializer, CourseTermSerializer,
-                               InstructorSerializer, PersonSerializer)
+from myapp.schemas import MyBasicAuth, MyOAuth2Auth
+from myapp.serializers import CourseSerializer, CourseTermSerializer, InstructorSerializer, PersonSerializer
 from oauth.oauth2_introspection import HasClaim
 
 
@@ -63,7 +58,7 @@ class AuthnAuthzMixIn(object):
     """
     #: In production Oauth2 is preferred; Allow Basic and Session for testing and browseable API.
     #: (authentication_classes is an implied OR list)
-    authentication_classes = (OAuth2Authentication, BasicAuthentication, SessionAuthentication,)
+    authentication_classes = (MyOAuth2Auth, MyBasicAuth, SessionAuthentication,)
     #: permissions are any one of:
     #: 1. auth-columbia scope, which means there's an authenticated user, plus required claim, or
     #: 2. auth-none scope (a server-to-server integration) where there's no authenticated user, or
@@ -88,48 +83,6 @@ class AuthnAuthzMixIn(object):
         'PATCH': [CU_SCOPES + ['update'], NONE_SCOPES + ['update']],
         'DELETE': [CU_SCOPES + ['delete'], NONE_SCOPES + ['delete']],
     }
-
-
-class SchemaMixin(object):
-    """
-    (temporarily deprecated) OAS 3.0 schema stuff pending updates to DJA to support it officially.
-    """
-    #: fill in some of the openapi schema
-    openapi_schema = {
-        'info': {
-            'version': __version__,
-            'title': __title__,
-            'description':
-                '![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")'
-                '\n'
-                '\n'
-                '\n'
-                'A sample API that uses courses as an example to demonstrate representing\n'
-                '[JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.\n'
-                '\n'
-                '\n'
-                'See [https://columbia-it-django-jsonapi-training.readthedocs.io]'
-                '(https://columbia-it-django-jsonapi-training.readthedocs.io)\n'
-                'for more about this.\n'
-                '\n'
-                '\n' + __copyright__,
-            'contact': {
-                'name': __author__
-            },
-            'license': {
-                'name': __license__,
-                'url': __license_url__
-            }
-        },
-        'servers': [
-            {'url': 'https://localhost/v1', 'description': 'local docker'},
-            {'url': 'http://localhost:8000/v1', 'description': 'local dev'},
-            {'url': 'https://ac45devapp01.cc.columbia.edu/v1', 'description': 'demo'},
-            {'url': '{serverURL}', 'description': 'provide your server URL',
-             'variables': {'serverURL': {'default': 'http://localhost:8000/v1'}}}
-        ]
-    }
-    # schema = JSONAPIAutoSchema(openapi_schema=openapi_schema)
 
 
 class CourseBaseViewSet(AuthnAuthzMixIn, ModelViewSet):

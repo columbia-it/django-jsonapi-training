@@ -3,6 +3,9 @@
 Since this project is primarily documentation for training purposes, this Changelog
 documents the changes to the docs. See the project CHANGELOG for changes to the demo app.
 
+### 2020-11-05
+- Added automated OpenAPI schema generation now that it is supported by DJA.
+
 ### 2020-05-14
 - Reorganized material to introduce OAuth 2.0 prior to diving in to building the app.
 - Removed enterprise down-scoping which is replaced with OIDC Claims.

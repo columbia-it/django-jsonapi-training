@@ -19,7 +19,7 @@ Author(s):
 .. include:: ../AUTHORS
     :literal:
 
-Copyright © 2018 The Trustees of Columbia University in the City of New York
+Copyright © 2018-2020 The Trustees of Columbia University in the City of New York
 
 .. image:: ./media/CCbyncsa4.0.png
    :alt: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE

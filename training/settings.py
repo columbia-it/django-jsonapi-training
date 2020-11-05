@@ -47,9 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
-    # DJA must appear before DRF in order to override the generateschema command
-    'rest_framework_json_api',
     'rest_framework',
+    'rest_framework_json_api',
     'debug_toolbar',
     'corsheaders',
     'oauth2_provider',
@@ -191,8 +190,7 @@ REST_FRAMEWORK = {
     ),
     'SEARCH_PARAM': 'filter[search]',
     'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
-    # 'DEFAULT_SCHEMA_CLASS': 'rest_framework_json_api.schemas.openapi.AutoSchema',
-    #'DEFAULT_SCHEMA_CLASS': 'myapp.schemas.jsonapi.JSONAPIAutoSchema',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework_json_api.schemas.openapi.AutoSchema',
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json',
     'TEST_REQUEST_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',

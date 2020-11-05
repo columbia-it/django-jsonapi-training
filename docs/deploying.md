@@ -11,8 +11,7 @@ addition of the openapi documentation and
 we will need to collect and serve up the static files with a web server.
 
 Following are some examples of how to do this with a [Docker setup](#docker) and with
-[Apache httpd](#apache-httpd-mod_wsgi). TODO: Also describe how to do this with, e.g., AWS Elastic Beanstalk,
-Lambda, etc.
+[Apache httpd](#apache-httpd-mod_wsgi). 
 
 ### Docker
 
@@ -26,7 +25,7 @@ docker build -t myapp:latest .
 
 But there are a number of extra steps, so I've added them to the tox.ini. Just do a `tox -e docker` and the right
 thing will happen. Here's what I've added which:
-1. bundles myapp.json
+1. bundles openapi.json
 2. builds a new wheel.
 3. builds the docker image.
 4. saves the image as a tar file so it can be `docker image load`ed elsewhere if needed.
@@ -42,9 +41,7 @@ thing will happen. Here's what I've added which:
 +    DJANGO_SETTINGS_MODULE = training.settings
 +commands =
 +    npm install swagger-ui-watcher
-+    /bin/cp docs/schemas/jsonapi.yaml .
-+    swagger-ui-watcher -b myapp/static/openapi/myapp.json docs/schemas/myapp.yaml
-+    /bin/rm -f jsonapi.yaml
++    /bin/cp docs/schemas/openapi.json .
 +    /bin/rm -rf dist
 +    python setup.py bdist_wheel
 +    docker build -t myapp:latest .
@@ -188,3 +185,6 @@ Make careful note to have **`WSGIPassAuthorization On`** or the `Authorization` 
 passed through to the Django app. Alternatively, look into
 [`mod_auth_openidc`](https://github.com/zmartzone/mod_auth_openidc) and use the `REMOTE_USER`. I have not
 tested this approach. It depends on whether your backend server needs to introspect the Bearer token.
+
+
+### TODO: Document AWS Lambda deployment

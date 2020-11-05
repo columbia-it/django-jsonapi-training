@@ -78,7 +78,7 @@ index 55c2351..dc4c7a4 100644
  project = 'Django {json:api} training'
 -copyright = '2018, Alan Crosswell'
 +year = datetime.date.today().year
-+copyright = '{}, The Trustees of Columbia University in the City of New York'.format(year)
++copyright = '2018-{}, The Trustees of Columbia University in the City of New York'.format(year)
  author = 'Alan Crosswell'
  
  # The short X.Y version
