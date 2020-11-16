@@ -26,9 +26,19 @@ class CommonModel(models.Model):
 class Course(CommonModel):
     """
     A course of instruction. e.g. COMSW1002 Computing in Context
+
+    testing [mkdocstrings](https://pawamoy.github.io/mkdocstrings):
+
+    Changes from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):
+
+    * Uses markdown in docstring rather than RsT. Will require lots of changes to docstrings.
+    * Must have a docstring under each member in order for it to show up in the docs:
+        * `#:` does not implement apidoc-style comments for members.
     """
     school_bulletin_prefix_code = models.CharField(max_length=10)
+    """ School bulleting prefix_code """
     suffix_two = models.CharField(max_length=2, help_text='two-character identifier suffix')
+    """ subject area code """
     subject_area_code = models.CharField(max_length=10, help_text='Subject')
     course_number = models.CharField(max_length=10,
                                      help_text='"Shortcut" identifier (formerly for touch-tone registration)')

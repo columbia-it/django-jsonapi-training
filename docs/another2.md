@@ -1,4 +1,4 @@
-## Split Instructor model to be OneToOne with new Person model
+# Split Instructor model to be OneToOne with new Person model
 
 Just as a thought experiment, let's decide that we want a generic Person model.
 For the time being, this model will be one-to-one with an Instructor.
@@ -14,7 +14,7 @@ We want to:
    migrating forward and [backward](#make-sure-reverse-migrations-work).
 4. Finally, be fairly confident that this will run on our production database. 
 
-### New Person models, serializers, views
+## New Person models, serializers, views
 
 As we did previously when we added Instructor, let's create the new stuff
 and check it all in as one git commit. We'll see why in a second.
@@ -29,7 +29,7 @@ Here's the new model:
 
 ![UML diagram of data model](./media/person-uml.png "UML diagram of data model")
 
-### Custom Person migration
+## Custom Person migration
 
 We customize the migration:
 1. Rename it from the auto name.
@@ -147,7 +147,7 @@ Changes to be committed:
 (env) django-training$ git commit -m "add person model"
 ```
 
-### Update fixtures
+## Update fixtures
 
 Our test fixtures currently only work with an older version of our app's models, so let's:
 1. Checkout that older version.
@@ -392,7 +392,7 @@ Run tox to make sure our test cases still work.
 ```
 It's probably a good idea to update the test cases for the changed models.... Volunteers, anyone?
 
-### Make sure reverse migrations work
+## Make sure reverse migrations work
 
 Let's also test the reverse migration to make sure we got that right.
 This works fine if there's no data loaded, but fails if there is data to migrate:

@@ -1,4 +1,4 @@
-## Welcome and Caveat
+# Welcome and Caveat
 
 [Columbia Universtiy IT](https://cuit.columbia.edu) is developing new
 applications with a microservices REST API architecture using the
@@ -17,7 +17,7 @@ at this time. In general, these are not something you need access to benefit fro
 
 ["Sharing is caring!"](http://barney.wikia.com/wiki/Sharing_Is_Caring!)
 
-### Acknowledgements
+## Acknowledgements
 
 I would like to acknowledge many of my CUIT colleagues who have helped me develop this tutorial
 through their experience and great examples of Django-based development, especially members
@@ -27,7 +27,7 @@ of the
 
 ---
 
-### License
+## License
 
 ![CC BY-NC-SA 4.0](./media/CCbyncsa4.0.png "CC BY-NC-SA 4.0") [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 

@@ -1,4 +1,4 @@
-## More About Using OAuth 2.0
+# More About Using OAuth 2.0
 
 Review the [CU-STD-INTR-001: OAuth 2.0 Scope
 Standard](https://docs.google.com/document/d/13XW4-L_j9CCeB6jAPjPHK6V5-rMpcBUiF90RIAK0f6Y/edit#heading=h.tlbkpm4wjg60):
@@ -10,7 +10,7 @@ N.B. OAuth 2.0 is largely *unrelated* to OAuth 1.0; it's not just an upgrade, bu
 new protocol.  Many [LTI](https://andyfmiller.com/2013/02/10/does-lti-use-oauth/)
 APIs are based on OAuth 1.0. Different thing entirely.
 
-### Dramatis Personae
+## Dramatis Personae
 
 The players in the world of OAuth 2.0 are:
 
@@ -31,7 +31,7 @@ AS to get and validate a *Token*. Clients and RS's are registered in advance wit
 
 More on these roles below.
 
-### Tokens
+## Tokens
 
 *Access Tokens* are used for all authorization decisions. An *Access Token*
 is usually an opaque object that has no intrinsic meaning to the client app that received
@@ -51,7 +51,7 @@ who their user is, since the *Access Token* is an opaque object; the ID Token (o
 discloses that information. (As such, one should be careful when provisioning a client app in the AS
 to be allowed to request the **openid** scope.)
 
-### Scopes, and how we use them
+## Scopes, and how we use them
 
 Scopes are *requested* by a registered Client app. They are *granted* by the
 OAuth 2.0 Authorization Server (AS). Scopes are then validated by the
@@ -63,7 +63,7 @@ optional capabilities.
 
 How scopes are used can vary greatly. Our implementation of scopes includes several flavors:
 
-#### Resource Server SLA Scopes
+### Resource Server SLA Scopes
 
 Resource Server Service Level Agreement scopes are used to indicate that a registered Client is:
 - permitted to access a given Resource Server, and
@@ -80,7 +80,7 @@ requires that the RS confirm that scope is present in the Access Token when it
 alternative to the use of an [API key](https://en.wikipedia.org/wiki/Application_programming_interface_key).)
 
 
-#### Authentication Selector Scopes
+### Authentication Selector Scopes
 
 Authentication selector scopes specify what method of user
 authentication the client app is requesting the AS to use. The two we
@@ -93,7 +93,7 @@ below.
 **auth-none**: Do not perform a user login. This scope is used for backend server-to-server relationships.
 See [Client is a trusted server](#client-is-a-trusted-server), below.
 
-#### User Data Generic Scopes
+### User Data Generic Scopes
 
 A series of generic scopes are generally used for end-user data. Remember that the Client app is
 delegated rights by virtue of the end-user's login and authorization to act on the end-user's behalf.
@@ -107,7 +107,7 @@ Scopes we use are:
 
 **delete**: Permission to delete a resource (DELETE) of mine.
 
-#### OpenID Connect (OIDC) 1.0 Scopes
+### OpenID Connect (OIDC) 1.0 Scopes
 
 In normal OAuth 2.0 operations, there may be no need for the client app
 to know who the end user is. If the client does need to know this, then
@@ -127,7 +127,7 @@ OIDC defines several
 [claims](https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims)
 that we don't currently implement (e.g. picture, phone number, birthdate, etc.)
 
-##### Grouper Claim Group Membership
+#### Grouper Claim Group Membership
 
 We've implemented a custom
 [additional claim](https://openid.net/specs/openid-connect-core-1_0.html#AdditionalClaims)
@@ -138,7 +138,7 @@ that an end-user is a member of. These groups are managed by the
 
 To request this claim, add this scope: `https://api.columbia.edu/scope/group`.
 
-##### Userinfo Endpoint
+#### Userinfo Endpoint
 
 There's a complementary
 [userinfo](http://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
@@ -147,7 +147,7 @@ It is authorized using the *access_token* meaning anybody that has the *access_t
 can retrieve this information. This can be used in the event that an **id_token**
 was not returned to the Client, for example.
 
-### What kind of client is it?
+## What kind of client is it?
 
 No matter the OAuth 2.0 "style", the Resource Server (RS) is always
 presented with basically the same information: an opaque *Access Token*
@@ -156,7 +156,7 @@ The RS (backend Django app in this context) must
 validate the *Access Token* to grant or deny appropriate permission
 for a given HTTP request.
 
-#### Client is operating with an end user present
+### Client is operating with an end user present
 
 This use case is similar to the typical front-end client app connecting
 to a back-end resource server in which the user must log in (via a
@@ -164,7 +164,7 @@ browser redirect to Shibboleth/CAS/Duo). The result is, as above, an
 access token. In a fully browser-based client, the access token would be
 persisted in a cookie, analogously to the way a session cookie is used.
 
-#### Client is pre-authorized by the end user who is no longer present
+### Client is pre-authorized by the end user who is no longer present
 
 What OAuth 2.0 adds is the ability for a user to delegate permission
 once to your "third party" app. In this use case, the client app
@@ -174,7 +174,7 @@ offline activity with the user's data. This case is powerful but not
 likely to be one we use -- at least initially. Refresh Tokens are only
 available with the Authorization Code grant type.
 
-#### Client is a trusted server
+### Client is a trusted server
 
 This use case is the example of backend server-to-server trust that
 would traditionally use IP addresses or HTTP Basic Auth to determine
@@ -190,7 +190,7 @@ the cleanest design approach is to base the authorization decision
 entirely on the access token's granted scopes, in this case using the Resource Server
 SLA scope rather than tracking Cliend IDs.
 
-### Determining Resource Server Authorization Requirements
+## Determining Resource Server Authorization Requirements
 
 In all use cases, the Resource Server is presented with an access token
 in the Authorization header. The resource server decides what actions
@@ -211,12 +211,12 @@ Resource server designers need to decide:
 One should attempt to be "RESTful" in designing application security:
 Base permissions on HTTP methods and resources. Using a modeling
 language like OAS 3.0 can help. See
-[Documenting the API in OAS 3.0](documenting-api.html), and the
+[Documenting the API in OAS 3.0](documenting-api.md), and the
 equivalent Django
-[permission_classes](building.html#adding-authentication-and-authorization).
+[permission_classes](building.md#adding-authentication-and-authorization).
 
-### Registering with the AS
-#### Register Resource Server for Token Introspection
+## Registering with the AS
+### Register Resource Server for Token Introspection
 
 The Resource Server must be a registered client with the OAuth 2.0
 Authorization Server before it is allowed to perform token
@@ -230,15 +230,15 @@ You need to provide:
     server)
 
 You'll be given a *client_id* and *client_secret*. Configure these in
-[settings.OAUTH2_PROVIDER](building.html#edit-settings-to-add-drf-dja-oauth-debug-etc)
+[settings.OAUTH2_PROVIDER](building.md#edit-settings-to-add-drf-dja-oauth-debug-etc)
 using environment variables or some other method to protect the credentials (e.g. not in the source code!).
 
-#### Register Client App(s)
+### Register Client App(s)
 
 Every client app must be a registered OAuth 2.0 client. Things to think
 about when registering a client are:
 
-##### Client is operating on behalf of an end user
+#### Client is operating on behalf of an end user
 
 1.  Is it a fully in-browser (javascript) app? If so, it will likely be using
     the Implicit grant type and will require a user to log in,
@@ -248,7 +248,7 @@ about when registering a client are:
 3.  Should the end-user scope-approval page be presented or bypassed? In
     most cases, this will be bypassed.
 
-##### Client is a server
+#### Client is a server
 
 In this case, the app should be registered with permission to request
 the **auth-none** and additional scopes.

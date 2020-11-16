@@ -1,4 +1,4 @@
-## Motivation: Strategy and Architectural Standards
+# Motivation: Strategy and Architectural Standards
 
 [Columbia University API Strategy](https://cuit.columbia.edu/sites/default/files/content/ColumbiaUniversityAPIStrategy_0.pdf)
 or, Why are we doing this?

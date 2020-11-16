@@ -1,4 +1,4 @@
-## A Command Line Client
+# A Command Line Client
 
 **UNDER CONSTRUCTION**
 
@@ -19,7 +19,7 @@ of the key stuff you will likely actually need to do if you are writing a "headl
 probably to implement some sort of "batch" activities where the client backend is trusted (rather than needing
 an end-user to login).
 
-### Oauth 2.0 Login
+## Oauth 2.0 Login
 
 The first step is to end up with a "bearer" Access Token that gets put into the `Authorization` header.
 Using [oauthlib](https://github.com/oauthlib/oauthlib) you first initialize the library, which differs
@@ -32,7 +32,7 @@ to base this example on [oauthlib](https://github.com/oauthlib/oauthlib).
 TODO: There's also integrated OAuth client support in [requests-oauthlib](https://requests-oauthlib.readthedocs.io)
 including automated token refresh.
 
-#### OAuth 2.0 Service Endpoints
+### OAuth 2.0 Service Endpoints
 
 You need to know the various endpoints of the OAuth2 server. You can hard code them or query the
 server itself via the `/.well-known/openid-configuration` URL.
@@ -48,7 +48,7 @@ if r.status_code == 200:
 
 ```
 
-#### Oauth 2.0 Client Basic Auth
+### Oauth 2.0 Client Basic Auth
 
 In most all cases you need to use HTTP Basic Auth to authenticate your client to the OAuth 2.0 Authorization Server
 using pre-registered client credentials (`client_id` and `client_secret`). This creates an HTTP header
@@ -63,7 +63,7 @@ client_secret = 's9ht0XNvHEkvXfUhVD1Ka9DtXFxRHfTm'
 oauth_auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
 ```
 
-#### A Backend (Client Credentials) Client
+### A Backend (Client Credentials) Client
 
 A "backend" client uses a very simple OAuth 2.0 grant: Client Credentials -- which uses the
 OAuth 2.0 `token` endpoint.
@@ -82,11 +82,12 @@ oauth_client = BackendApplicationClient(client_id)
 token_response = requests.post(token_url, headers=headers, data=body, auth=oauth_auth)
 ``` 
 A successful token response will look like this:
+
 ```json
 {
-    'access_token': 'jAjCraG0uJ7YGXvIDWaCgl3eRDEm',
-    'expires_in': 7199,
-    'token_type': 'Bearer',
+    "access_token": "jAjCraG0uJ7YGXvIDWaCgl3eRDEm",
+    "expires_in": 7199,
+    "token_type": "Bearer",
 }
 ```
 
@@ -96,7 +97,7 @@ if token_response.status_code == 200:
     
 ```
 
-### JSONAPI client
+## JSONAPI client
 
 There are a number of
 [JSONAPI client libraries](https://jsonapi.org/implementations/#client-libraries)
@@ -107,7 +108,7 @@ The examples use [jsonapi-requests](https://github.com/socialwifi/jsonapi-reques
 an ORM and raw (non-ORM) style. Let's start with the ORM style. You'll have to define your classes but then operations
 are really easy, looking similar to Django's model managers.
 
-#### ORM Style
+### ORM Style
 
 ```python
 import jsonapi_requests
@@ -245,7 +246,7 @@ Course 016659e9-e29f-49b4-b85d-d25da0724dbb: ACCT7022B Accounting for Value
 
 N.B. Each RelationField you create must have a corresponding class definition or you'll get a key error.
 
-#### Raw (non-ORM) Style
+### Raw (non-ORM) Style
 ```python
 import jsonapi_requests
 from pprint import pprint, pformat
@@ -364,7 +365,7 @@ d7db932c-daf2-426a-8e5b-8df1a4f9ecdb
   'term_identifier': '20181DNCE3592X'}
 >>> 
 ```
-### Installing and running the demo client
+## Installing and running the demo client
 
 Make sure you have a local pypi repo that has this package installed and:
 
@@ -406,7 +407,7 @@ optional arguments:
                         login with an existing refresh token
 ```
 
-### Example
+## Example
 
 ```text
 jsonapi-demo-cli -i demo_trusted_client -s s9ht0XNvHEkvXfUhVD1Ka9DtXFxRHfTm -r http://localhost:5432/oauth2client -o https://oauth-test.cc.columbia.edu -g client_credentials -S "auth-none read"
@@ -588,7 +589,7 @@ links:
   'self': 'http://localhost:8000/v1/courses/02e2e004-326e-4be8-aecc-aa67ece50fdf/relationships/course_terms/'}
 ```
 
-### TODO
+## TODO
 
 - Mash up [`jsonapi_requests`](https://github.com/socialwifi/jsonapi-requests/)
   with [`requests_oauthlib`](https://requests-oauthlib.readthedocs.io) 

@@ -1,4 +1,4 @@
-## Modifying our DJA Project
+# Modifying our DJA Project
 
 Let's say we've decided that a change needs to be made to our project:
 We found a mistake in the CourseTerm Model: The `term_identifier` is supposed to look like `20183COMSW1002`
@@ -9,7 +9,7 @@ which is 14 characters (not 10) and unique. What will this involve:
 3. Fix the data loader client
 4. Fix our test and sample fixtures.
 
-### Update CourseTerm
+## Update CourseTerm
 
 `GIT TAG: courseterm-unique-term_id`
 
@@ -30,7 +30,7 @@ index 524ae40..49ed0d1 100644
      course = models.ForeignKey('myapp.Course', related_name='course_terms', on_delete=models.CASCADE, null=True,
 ```
 
-### Make a new migration
+## Make a new migration
 
 1. Make the new migration.
 2. Show the current status of migrations.
@@ -115,7 +115,7 @@ Traceback (most recent call last):
   ... lots of stack trace here ...
 ```
 
-### Customizing the migration
+## Customizing the migration
 
 This migration doesn't "just work" because our test data has a repeated non-unique field
 which we have to fix to be unique. We can describe this pretty easily as "Concatentate old non-unique term_identifier
@@ -132,7 +132,7 @@ Let's try it:
 2. Run some custom code to fix the `term_identifier`.
 3. Alter it to unique now.
 
-#### Write a custom migration script
+### Write a custom migration script
 
 Start by renaming the auto migration to a name that makes it clear this is a custom migration:
 ```console
@@ -191,7 +191,7 @@ class Migration(migrations.Migration):
     ]
 ```
 
-#### Confirm the current database schema and non-unique content 
+### Confirm the current database schema and non-unique content 
 
 Let's first take a look at our current database before the migration (noting that `term_identifier` is `text NOT NULL`).
 ```console
@@ -238,7 +238,7 @@ term_identifier
 sqlite> 
 ```
 
-#### Run the custom migration
+### Run the custom migration
 
 ```console
 (env) django-training$ ./manage.py showmigrations
@@ -279,7 +279,7 @@ Running migrations:
   Applying myapp.0003_unique_term_identifier... OK
 ```
 
-#### Confirm the custom migration did what was expected
+### Confirm the custom migration did what was expected
 
 `term_identifier` is now `text NOT NULL UNIQUE` and the values are the concatentation of the
 prior `term_identifer` and `course_identifier`.
@@ -328,7 +328,7 @@ term_identifier
 sqlite> 
 ```
 
-#### Reverse the migration
+### Reverse the migration
 
 And, here's the coolest part: You can reverse a migration to go back to a previous state, assuming
 you included a`reverse_code` migration script:
@@ -345,12 +345,12 @@ Running migrations:
 Make migrations reversible allows you to revert to a prior production release of your code just in case
 you discover an issue.
 
-#### Do another migration
+### Do another migration
 
 Finally, as an optional exercise, notice that I inadvertently made `term_identifier = models.TextField`
 when it should have been `term_identifier = models.CharField`. Fix that.
 
-### Fix the test fixtures.
+## Fix the test fixtures.
 
 Assuming the only data in the sqlite3 database was what's in the `myapp/fixtures/testcases.yaml`, dump
 out an updated version of those fixtures.

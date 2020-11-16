@@ -1,4 +1,4 @@
-## Another Modification: Add an Instructor Model and additional relationship
+# Another Modification: Add an Instructor Model and additional relationship
 
 Let's further enhance our model such that any given instance of a Course (a CourseTerm) can have zero
 or more Instructors. We'll:
@@ -13,7 +13,7 @@ or more Instructors. We'll:
    Or keyword search the Course and Instructor names:
    http://localhost:8000/v1/instructors/?filter[search]=accounting%20morris
 
-### Instructor model
+## Instructor model
 This model is ManyToMany with CourseTerm.
 
 `GIT TAG: instructor`
@@ -39,7 +39,7 @@ class Instructor(CommonModel):
 See `myapp/migrations/0004_instructor.py` for the migration
 and some updates to the test case fixture(`myapp/fixtures/testcases.yaml`).
 
-### Instructor serializer 
+## Instructor serializer 
 
 We define a new `InstructorSerializer` but also add an _instructors_ `ResourceRelatedField` to the
 `CourseTermSerializer`. This demonstrates a second relationship for CourseTerm such that GET
@@ -170,7 +170,7 @@ index cabd404..f60741f 100644
      }
 ```
 
-### Instructor views
+## Instructor views
 
 Here's the new InstructorViewSet and InstructorRelationshipView:
 ```python
@@ -221,7 +221,7 @@ index d186cf0..f29c44f 100644
      path('admin/', admin.site.urls),
 ```
 
-## Filters
+# Filters
 
 Let's further make the InstructorViewSet more useful by adding a few filters. In this case,
 we'll use the [django-filter](https://django-filter.readthedocs.io/en/master/guide/rest_framework.html)
@@ -268,7 +268,7 @@ class InstructorViewSet(CourseBaseViewSet):
     search_fields = ('name', 'course_terms__course__course_name')
 ```
 
-### Challenge Question: A Through Model
+## Challenge Question: A Through Model
 
 Using a filter we can see which named Courses have CourseTerm and Instructor instances associated with them,
 but wouldn't it be cool to GET `/courses/<id>` and get back an `instructors` relationship? This means drilling

@@ -1,8 +1,8 @@
-## Deploying to Production
+# Deploying to Production
 
-### TODO: Document Jenkins CI/CD setup.
+## TODO: Document Jenkins CI/CD setup.
 
-### Serving Static Files
+## Serving Static Files
 
 When developing (`settings.DEBUG = True`), django serves up static content. If we are only running
 our API service, there are no static files to serve as the only content is JSON, however, with the
@@ -13,9 +13,9 @@ we will need to collect and serve up the static files with a web server.
 Following are some examples of how to do this with a [Docker setup](#docker) and with
 [Apache httpd](#apache-httpd-mod_wsgi). 
 
-### Docker
+## Docker
 
-#### Making a Docker Image
+### Making a Docker Image
 
 We'll make a Docker image for `myapp` with:
 
@@ -50,7 +50,7 @@ thing will happen. Here's what I've added which:
 +
 ```
 
-#### docker-compose
+### docker-compose
 
 We'll use `docker-compose` to combine an nginx web server and our django app (served by gunicorn)
 using [traefik](https://traefik.io/)
@@ -77,7 +77,7 @@ Stopping django-training_nginx_1   ... done
 (env) django-training$ 
 ```
 
-### Apache httpd `mod_wsgi`
+## Apache httpd `mod_wsgi`
 
 Our preferred environment for running Django apps is with `mod_wsgi` under Apache httpd. At CUIT,
 this is generally done with Puppet. For simplicity, I'll just show some sample files:
@@ -187,4 +187,4 @@ passed through to the Django app. Alternatively, look into
 tested this approach. It depends on whether your backend server needs to introspect the Bearer token.
 
 
-### TODO: Document AWS Lambda deployment
+## TODO: Document AWS Lambda deployment

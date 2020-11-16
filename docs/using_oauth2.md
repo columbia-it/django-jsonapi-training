@@ -1,9 +1,9 @@
-### Using OAuth 2.0
+# Using OAuth 2.0
 
 Our example use of OAuth 2.0 uses an external OAuth 2.0 Authorization Server (AS). It's also possible to
 add an AS using Django's auth models and the [`django-oauth-toolkit`](http://dot.evonove.it/) (DOT).
 
-#### Get an OAuth 2.0 token
+## Get an OAuth 2.0 token
 
 You'll need to configure Postman for OAuth 2.0. 
 
@@ -56,7 +56,7 @@ Now you are logged in and have an Access Token which Postman shows you:
 
 ![Postman Manage Access Token display](./media/image6.png "Granted Access and Refresh tokens")
 
-#### Issue HTTP requests using the token
+## Issue HTTP requests using the token
 
 Click on Use Token and then fill in the URL and do the
 GET by clicking SEND:

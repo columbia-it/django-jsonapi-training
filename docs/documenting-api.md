@@ -1,4 +1,4 @@
-## Documenting the API in OAS 3.0
+# Documenting the API in OAS 3.0
 
 The [Open API Specification](https://github.com/OAI/OpenAPI-Specification/versions/3.0.0.md)
 (OAS 3.0), a follow-on to Swagger 2.0 which merges in many of the
@@ -13,7 +13,7 @@ and DJA release [4.0](https://django-rest-framework-json-api.readthedocs.io/en/s
 now have fairly comprehensive
 [OAS 3.0](https://www.django-rest-framework.org/community/3.9-announcement/#built-in-openapi-schema-support) support.
 
-### Why an OAS 3.0 Schema?
+## Why an OAS 3.0 Schema?
 
 Having a standardized schema document enables API consumer and producer developers to formally agree on the
 API details in an automated way, providing tools for developers to perform basic data input validation
@@ -21,7 +21,7 @@ and to provide developer documentation and the familiar swagger "Try it out" fun
 
 ![Swagger UI](./media/swagger-ui.png "screenshot of Swagger UI")
 
-### Generating a static schema document
+## Generating a static schema document
 
 To generate a YAML schema document:
 ```text
@@ -45,13 +45,13 @@ commands =
     /bin/sh -c "python manage.py generateschema  --generator_class myapp.schemas.SchemaGenerator --format openapi-json >docs/schemas/openapi.json"
 ```
 
-#### Use the schema with swagger-ui
+### Use the schema with swagger-ui
 
 You can try out your static schema document with `swagger-ui-watcher`:
 Install it with `npm install swagger-ui-watcher -g` and then use
 `swagger-ui-watcher -p 8080 docs/openapi.yaml` to open the schema document in your browser.
 
-##### Working around a missing oauth2-redirect.html in swagger-ui-watcher
+#### Working around a missing oauth2-redirect.html in swagger-ui-watcher
 
 The (hopefully temporary) [workaround](https://github.com/moon0326/swagger-ui-watcher/issues/31#issuecomment-476799840)
 for swagger-ui-watcher is to grab a copy of
@@ -60,7 +60,7 @@ and:
 ```text
 cp oauth2-redirect.html /usr/local/lib/node_modules/swagger-ui-watcher/node_modules/swagger-editor-dist/
 ```
-#### Use the schema with Postman
+### Use the schema with Postman
 
 Postman can import an openapi schema document and create a [collection](https://www.postman.com/collection/) 
 or API(?). However there are a few caveats:
@@ -72,7 +72,7 @@ or API(?). However there are a few caveats:
 ![Postman openapi imported collection](./media/postman-openapi.png "postman screenshot of imported openapi collection")
 
 
-### Dynamic schema view
+## Dynamic schema view
 
 Our demo app has views defined for the openapi schema document and the swagger user interface. Use `get_schema_view()`
 for the openapi document and the `swagger-ui.html` template in the `TemplateView` class:
@@ -94,7 +94,7 @@ urlpatterns = [
 
 Open http://127.0.0.1:8000/swagger-ui to get the swagger UI.
 
-### Adding what's missing to the generated schema
+## Adding what's missing to the generated schema
 
 DRF's openapi schema support still lacks `securitySchemes` and `security` requirement objects. This 
 [feature](https://github.com/encode/django-rest-framework/pull/7516) is expected to be added in 
@@ -201,7 +201,7 @@ class SchemaGenerator(JSONAPISchemaGenerator):
         return schema
 ```  
 
-### OAuth2 Client Configuration
+## OAuth2 Client Configuration
 
 Furthermore, in order to use OAuth2, clients need to be configured in the Authorization Server to include these
 request_uris:

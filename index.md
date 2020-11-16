@@ -30,6 +30,7 @@ Otherwise, you can just view these documentation source files:
 - [sphinx.md](docs/sphinx.md)
 - [documenting-api.md](docs/documenting-api.md)
 - [deploying.md](docs/deploying.md)
+- [aws_api_gw.md](docs/aws_api_gw.md)
 - [cli_client.md](docs/cli_client.md)
 - [help.md](docs/help.md)
 - [api.rst](docs/api.rst)

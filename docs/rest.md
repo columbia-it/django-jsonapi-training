@@ -1,6 +1,6 @@
-## HTTP and REpresentational State Transfer (REST)
+# HTTP and REpresentational State Transfer (REST)
 
-### HTTP Requests and Responses
+## HTTP Requests and Responses
 
 An HTTP request consists of a verb (HTTP method), scheme (http/https), server, port and
 resource (noun), and query parameters.
@@ -35,13 +35,13 @@ Common methods are:
 | OPTIONS               | obtain metadata about a resource collection or item | 200                   |
 
 
-#### Request Body
+### Request Body
 
 Usually where longer form parameters or content is POSTed. The `Content-Type`
 header specifies what kind of content is being POSTed, PATCHed or PUT.
 For our purposes this will be `application/json` or a variant such as `application/vnd.api+json`.
 
-#### Response Body
+### Response Body
 
 The response to the request, which can be empty (204 No Content) and
 looks like this, for example for a 200 response:
@@ -59,13 +59,13 @@ Content-Length: 74
 {"data":{"type":"widgets","id": "123","attributes":{"name":"can opener"}}}
 ```
 
-#### Query Parameters
+### Query Parameters
 
 These are usually short parameters that somehow modify a request
 
 Example: `GET /api/v1/widgets?sort=-name,+qty`
 
-#### Headers
+### Headers
 
 The HTTP `Accept` header lists what (prioritized) content types the
 requestor will accept. We'll keep it simple and only
@@ -74,7 +74,7 @@ accept one response type: `Accept: application/json`
 The HTTP Content-Type header specifies the format of the response:
 `Content-type: application/json`
 
-#### Authentication and Authorization
+### Authentication and Authorization
 
 The HTTP `Authorization` header is commonly used for access control. There
 are 3 main styles:
@@ -91,7 +91,7 @@ Our "real" apps will use Bearer tokens. For testing in Django, it can be
 more convenient to use Basic auth as Bearer tokens have to be refreshed
 from time-to-time. We'll see how to configure these soon.
 
-### Characteristics of RESTful APIs
+## Characteristics of RESTful APIs
 
 [Representational State Transfer (REST)](https://en.wikipedia.org/wiki/Representational_state_transfer)
 is a core component of an HTTP-based object model style.
@@ -125,13 +125,13 @@ a request body containing a JSON document with other information like the identi
 results in a new registration object identified as:
 `/v1/registrations/<id>`.
 
-#### HATEOAS: Hypermedia As The Engine Of Application State.
+### HATEOAS: Hypermedia As The Engine Of Application State.
 
 Given a starting URL, a client app *should* be able to discover everything it needs
 without any separate external documentation of the interface.
 
 
-#### Avoid REST anti-patterns
+### Avoid REST anti-patterns
 
 It is unfortunately common to see non-RESTful patterns sneaking into what claim to be RESTful APIs. The most
 common of these anti-patterns is turning a REST API endpoint into a SOAP-like endpoint by invoking
@@ -139,7 +139,7 @@ a remote method call. For example, `POST /v1/courses/01ca197f-c00c-4f24-a743-091
 You can immediately tell this is an anti-pattern because "enroll" is used here as a verb
 and RESTful resources should only be nouns.
 
-#### A good REST pattern
+### A good REST pattern
 
 A RESTful approach to the above might be something along the lines of:
 `POST /v1/registrations/` with a body containing:

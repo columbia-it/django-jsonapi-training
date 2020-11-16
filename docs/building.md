@@ -1,11 +1,11 @@
-## Building our DJA project
+# Building our DJA project
 
-### Start a new project with a blank slate
+## Start a new project with a blank slate
 
 *Development project teams generally have a starter template which avoids a lot of
 these steps; they are provided here just as an illustration of what's happening.*
 
-#### Create initial project
+### Create initial project
 ```console
 src$ mkdir django-jsonapi-training
 src$ cd django-jsonapi-training
@@ -13,13 +13,13 @@ django-jsonapi-training$ git init
 Initialized empty Git repository in /Users/alan/src/django-jsonapi-training/.git/
 ```
 
-#### Set up virtualenv
+### Set up virtualenv
 ```console
 django-jsonapi-training$ python3 -m venv env
 django-jsonapi-training$ source env/bin/activate
 ```
 
-#### Install required packages
+### Install required packages
 
 We are going to use a few Python packages for Django and various add-ons. This mostly-complete list of requirements
 is here, but, in practice, you would build up this list over time as you develop your project.
@@ -162,7 +162,7 @@ Installing collected packages: Pyyaml
 Successfully installed Pyyaml-3.13
 ```
 
-#### Freeze Python package requirements
+### Freeze Python package requirements
 
 To make sure your code is working against a consistent known set of package versions, it's a good
 idea to "pin" or "freeze" your installed package versions.  You will want to upgrade these from time to time though.
@@ -203,7 +203,7 @@ virtualenv==16.0.0
 See [below](#using-unreleased-packages) for an example of a more sophisticated `requirements.txt` that uses
 specific version ranges and pre-released package versions to work around some bugs or use new features.
 
-#### Make sure git ignores irrelevant (non-source) files
+### Make sure git ignores irrelevant (non-source) files
 
 We want to ignore our virtualenv directory, and various output files created by IDEs, editors, tox,
 compiled python and so on.
@@ -221,7 +221,7 @@ htmlcov/
 *.egg-info/
 ```
 
-#### Do initial migration and superuser account setup
+### Do initial migration and superuser account setup
 
 Now that all the prerequisite Python packages are installed we can
 start:
@@ -263,7 +263,7 @@ Bypass password validation and create user anyway? [y/N]: y
 Superuser created successfully.
 ```
 
-#### Initial git checkin
+### Initial git checkin
 Let's look at what's been created. We'll ignore the `env` directory as that's where the virtualenv stuff
 lives, including all the Python packages in `env/lib/python3.6/site-packages/`.
 
@@ -374,7 +374,7 @@ We'll indicate them like this:
 
 `GIT TAG: initial`
 
-### Edit Settings to add DRF, DJA, OAuth, Debug, etc.
+## Edit Settings to add DRF, DJA, OAuth, Debug, etc.
 
 `GIT TAG: settings`
 
@@ -588,7 +588,7 @@ index 52940b5..a8dcdb6 100644
 +}
 ```
 
-### Define Models
+## Define Models
 
 `GIT TAG: models`
 
@@ -682,7 +682,7 @@ class CourseTerm(CommonModel):
         return '%s,%s,%s' % (self.id, self.term_identifier, self.course.course_identifier)
 ```
 
-### Define Serializers
+## Define Serializers
 
 `GIT TAG: serializers`
 
@@ -774,7 +774,7 @@ the one shown here, where the first serializer references the second and vice-ve
 that is referenced before being defined, so we just consistently use the string reference style. (We also saw this
 in `settings.py` for `INSTALLED_APPS` and so on.)
 
-#### Keep it DRY
+### Keep it DRY
 
 I could have made life easier for myself by using `fields = "__all__""` which tells the ModelSerializer to
 just include all the fields of the model plus the additional fields defined in this class (and, for the
@@ -949,7 +949,7 @@ Note that I've followed a somewhat common pattern of extending a class using the
 base class (HyperlinkedModelSerialzer). This can be somewhat confusing at first glance but also
 makes it easy to add functionality without changing a lot of source code.
 
-### Define URL routing and Views 
+## Define URL routing and Views 
 
 `GIT TAG: views`
 
@@ -1084,7 +1084,7 @@ class CourseTermRelationshipView(RelationshipView):
     self_link_view_name = 'course_term-relationships'
 ```
 
-### Migrate the newly-installed apps.
+## Migrate the newly-installed apps.
 
 `GIT TAG: migrations`
 
@@ -1138,7 +1138,7 @@ Anytime things are feeling confusing, just remove the sqlite3 database and re-mi
 (env) django-training$ /manage.py createsuperuser
 ```
 
-### Add some test data
+## Add some test data
 
 `GIT TAG: fixtures`
 
@@ -1155,9 +1155,9 @@ Installed 28 object(s) from 1 fixture(s)
 ```
 
 A much larger test dataset (best not used with sqlite3) is in
-[myapp/fixtures/courseterm.yaml](../myapp/fixtures/courseterm.yaml)
+[myapp/fixtures/courseterm.yaml]({{view_uri}}/myapp/fixtures/courseterm.yaml)
 
-### Run the server
+## Run the server
 Now let's run the server and see what happens.
 
 ```console
@@ -1176,13 +1176,13 @@ Quit the server with CONTROL-C.
 ^C
 ```
 
-### Experiment with Postman
+## Experiment with Postman
 Now do a few experiments with Postman, using it to simulate a client
 application.
 
 ![Postman GET /v1/courses](./media/postman1.png "screenshot of GET /v1/courses/")
 
-### Adding Authentication and Authorization
+## Adding Authentication and Authorization
 
 `GIT TAG: view-permissions`
 
@@ -1356,7 +1356,7 @@ previously-added `admin` superuser:
 ![Postman basic auth](./media/postman-auth-basic.png "Using basic auth user 'admin' and password 'admin123'")
  
 
-### Pagination, Sorting and Sparse Fieldsets
+## Pagination, Sorting and Sparse Fieldsets
 
 For "free" out of the box with DJA are pagination, sorting and _sparse fieldsets_. For an example,
 try this GET: 
@@ -1421,7 +1421,7 @@ The result should look like this:
 See `settings.py` for where the `REST_FRAMEWORK` default classes are configured.
 You can also add these classes on a per-view basis using, for example, the `.pagination_class` attribute.
  
-### Configure additional Filter Backends
+## Configure additional Filter Backends
 
 `GIT TAG: views-filter`
 
@@ -1480,7 +1480,7 @@ index 57897c8..7d58129 100644
 +    search_fields = ('term_identifier', )
 ``` 
 
-#### Configuring SearchFilter
+### Configuring SearchFilter
 
 The `search_fields` attribute is used by the `SearchFilter`. Try this GET:
 
@@ -1541,7 +1541,7 @@ Expect to see this result:
 }
 ```
 
-#### Configuring DjangoFilterBackend
+### Configuring DjangoFilterBackend
 
 In our example, we configure `filterset_fields` with a variety of relational operations. Note that
 some of these perform related field path searches, for example: `course_terms__term_identifier`.
@@ -1824,9 +1824,9 @@ Resulting in:
 }
 ```
 
-### Advanced topic: Adding the `last_mod_user_name` to the Model
+## Advanced topic: Adding the `last_mod_user_name` to the Model
 
-#### via the Serializer
+### via the Serializer
 
 `GIT TAG: serializers-lastmod`
 
@@ -1875,7 +1875,7 @@ index 4075d9c..cabd404 100644
 
 (hint: there's a mistake above. Can you find it?)
 
-#### via the Model
+### via the Model
 
 The serializer is probably **not** the right place for "business logic" in general as it allows Model
 manipulation to bypass that logic. It should probably
@@ -1894,9 +1894,9 @@ function and store it in thread local storage so it can be retrieved in the Mode
 at the [Django Signals](https://docs.djangoproject.com/en/2.1/ref/signals/#django.db.models.signals.pre_save)
 documentation for some alternative ideas.
 
-### Tests
+## Tests
 
-#### Always write unit tests
+### Always write unit tests
 
 It's imperative that you add unit tests in parallel with (or even
 before) developing your code.
@@ -1915,7 +1915,7 @@ rm 'myapp/tests.py'
 (env) django-jsonapi-training$ touch myapp/tests/__init__.py
 ``` 
 
-#### Test Models 
+### Test Models 
 
 `GIT TAG: test-models`
 
@@ -2139,7 +2139,7 @@ OK
 Destroying test database for alias 'default'...
 ```
 
-#### Trying things out with the Django Shell
+### Trying things out with the Django Shell
 
 One of the cool things about Python is you can drop into the Python shell and interactively try
 things:
@@ -2181,7 +2181,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> 
 ```
 
-#### Developing tests in PyCharm.
+### Developing tests in PyCharm.
 
 [PyCharm](https://www.jetbrains.com/PyCharm/) is an IDE for Python. There are both licensed and 
 community editions. I'm using the licensed edition
@@ -2190,7 +2190,7 @@ which has some Django-specific support, but even PyCharm CE can be used to devel
 (If you are an
 old-school CLI purist, I guess you could always use `python -m pdb ./manage.py shell`;-)
 
-##### Set up Run/Debug Configurations for Tests
+#### Set up Run/Debug Configurations for Tests
 
 Here's an example of confguring a PyCharm test. This will run all the tests under PyCharm -- equivalent
 to `./manage.py test`. We will:
@@ -2199,25 +2199,25 @@ to `./manage.py test`. We will:
 2. Set a breakpoint on line 87 of `test_models.py` and start the debugger.
 4. Take a look at values and/or use the expression evaluator to evaluate any expression in the current context.
 
-![PyCharm configuration](./media/PyCharm1.png "configure PyCharm run/debug test")
+![PyCharm configuration](./media/pycharm1.png "configure PyCharm run/debug test")
 
-![PyCharm debug breakpoint](./media/PyCharm2.png "PyCharm debug breakpoint")
+![PyCharm debug breakpoint](./media/pycharm2.png "PyCharm debug breakpoint")
 
-![PyCharm debug evaluate](./media/PyCharm3.png "PyCharm debug evaluate")
+![PyCharm debug evaluate](./media/pycharm3.png "PyCharm debug evaluate")
 
 I find this a really powerful way to develop new tests as I can have a look at a result
 before writing the test assertion code.
 
-##### Set up Run/Debug Configurations for the Project 
+#### Set up Run/Debug Configurations for the Project 
 
 You can also set up the equivalent of `./manage.py runserver` which I've found is very
 handy for settting various environment variables. For example, I have both a sqlite3 and a sqlserver
 "flavor" for running this project.
 
-![PyCharm configuration](./media/PyCharm4.png "configure PyCharm run/debug with environment variables")
+![PyCharm configuration](./media/pycharm4.png "configure PyCharm run/debug with environment variables")
 
 
-#### Check for Python Warnings
+### Check for Python Warnings
 
 An especially useful enviroment variable to set from time-to-time (either in PyCharm or just
 in the shell) is:
@@ -2259,10 +2259,10 @@ Destroying test database for alias 'default'...
 Process finished with exit code 0
 ```
 
-#### Additional testing tips
+### Additional testing tips
 
 This project has a much more complex set of test cases in
-[`test_views.py`](../myapp/test_views.py).
+[`test_views.py`]({{view_uri}}/myapp/test_views.py).
  
 A few things that happen here are:
 
@@ -2299,13 +2299,13 @@ At this point, two of the tests are skipped and labeled as such with `@unittest.
 Also, one test fails, exercising a bug in the current DJA 2.6.0 release. We'll get to how to deal with that
 [later](#using-unreleased-packages). 
 
-### Use Tox to automate testing
+## Use Tox to automate testing
 
 `GIT TAG: tox`
 
 `GIT TAG: requirements-bandit-safety`
 
-#### The `tox.ini`
+### The `tox.ini`
 Add a `tox.ini`
 to automate testing for coding style standards as well as running the tests
 you wrote:
@@ -2371,10 +2371,10 @@ depends on how long they take to run. For this tiny demonstration app, they make
 best to always check this stuff.
 
 Before we can use `tox`, a couple other things are needed:
-- [`setup.py`](../setup.py) because `tox` requires it.
-- [`README.md`](../README.md) because our `setup.py` references it.
+- [`setup.py`]({{view_uri}}/setup.py) because `tox` requires it.
+- [`README.md`]({{view_uri}}/README.md) because our `setup.py` references it.
 
-#### Run `tox`
+### Run `tox`
 
 ```console
 (env) django-jsonapi-training$ tox
@@ -2563,7 +2563,7 @@ _________________________________________________ summary ______________________
   congratulations :)
 ```
 
-#### `tox` automates more than just testing
+### `tox` automates more than just testing
 
 This particular tox.ini file also includes one additional
 script to help automate your world:
@@ -2587,7 +2587,7 @@ commands =
     twine upload dist/*
 ```
 
-### Code Coverage
+## Code Coverage
 
 One of the steps that ourt `tox.ini` performs is to generate a code coverage
 report. After running tox, open `htmlcov/index.html` in your browser and
@@ -2631,7 +2631,7 @@ I also found that I have code that is never tested (myapp/apps.py).
 This is another auto-generated file from `django-admin startapp` and is a candidate to
 remove from the project.
 
-### Using unreleased packages
+## Using unreleased packages
 
 `GIT TAG: requirements-pre-release`
 
@@ -2705,7 +2705,7 @@ Destroying test database for alias 'default'...
 Alternatively, run `tox` instead of `./manage.py test` and see a little more verbose output
 but ultimately the same success.
 
-### It's best to pin versions
+## It's best to pin versions
 
 It's probably a better practice to pin all package versions (e.g. via `pip freeze`) to make sure your
 production deployment is immutable.

@@ -1,6 +1,6 @@
-## Preparing for the classes
+# Preparing for the classes
 
-### Overview
+## Overview
 
 The plan is to do this as a few 3 hours or so segments.
 Content will be mostly me droning on about the stuff in
@@ -16,7 +16,7 @@ done as homework. We can always add on more sessions if we need to.
 For CUIT staff, you can
 always ask questions on Slack channel `#python-dev` 
 
-### Expectations
+## Expectations
 
 - It is expected that students will bring laptops that have a functional
   Python development environment set up, including Python 3.5 or higher,
@@ -42,24 +42,24 @@ always ask questions on Slack channel `#python-dev`
   Similarly, knowledge of SQL can be cursory, basically understanding the
   concepts of tables and fields (columns).
 
-### Development Environment Setup
+## Development Environment Setup
 
 Most all steps on macOS will be performed using the Unix shell. Open the "Terminal" application for this.
 
-#### Homebrew
+### Homebrew
 
 Only macOS is supported by Homebrew. Windows users can skip this
 section.
 
-##### macOS
+#### macOS
 Homebrew is a package management system used to simplify software
 installations on macOS.
 
 Run the command listed at  <https://brew.sh/>
 
-#### Python
+### Python
 
-##### macOS
+#### macOS
 
 Once Homebrew is installed, it should be simple install python:
 ```
@@ -82,15 +82,15 @@ See more about running
 ["multiple versions of Python for use with tox on macOS"](#multiple-versions-of-python-for-use-with-tox-on-macos),
 below, for more advanced Python tricks.
 
-##### Windows
+#### Windows
 
 See <https://www.python.org/downloads/windows/>
 
 This should install Python3 in `C:\\Program Files\\Python36`
 
-#### Git
+### Git
 
-##### macOS
+#### macOS
 
 The Git installation for macOS is easily done with Homebrew:
 
@@ -101,7 +101,7 @@ brew install git
 If you would prefer to install this manually without homebrew,
 see: <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>
 
-##### Windows
+#### Windows
 
 1.  Download git from <https://git-scm.com/download/win>
 2.  Click 'Run as administrator' on the .exe file in your Downloads
@@ -116,7 +116,7 @@ system’s
 
 You may also want to take a look at [Git for Windows](https://gitforwindows.org/).
 
-#### PyCharm
+### PyCharm
 
 PyCharm is an IDE for Python development. This instruction applies to
 both macOS and Windows.
@@ -124,20 +124,20 @@ both macOS and Windows.
 Download the professional or community edition from the following link and follow
 the setup instructions: <https://www.jetbrains.com/pycharm/download/>
 
-#### Postman
+### Postman
 
 Postman is a powerful tool for testing HTTP. We'll be using it extensively to test our APIs.
 If you don't already have it, you can get it at:
 [https://www.getpostman.com/](https://www.getpostman.com/).
 
-#### Advanced Topic: Multiple Version of Python for use with Tox on macOS
+### Advanced Topic: Multiple Version of Python for use with Tox on macOS
 
-##### Why do I need multiple Python versions?
+#### Why do I need multiple Python versions?
 The problem: typical tox.ini files test against multiple version of Python – py34, py35, py36 – so you
 need all those versions installed on macOS. For the purposes of this material, you can get by with the
 system version as described [above](#python).
 
-##### Installing pyenv
+#### Installing pyenv
 
 Install pyenv:
 
@@ -154,7 +154,7 @@ eval "$(pyenv init -)"
 
 Don’t forget to do the eval once if you have an open shell window.
 
-##### Installing multiple Python versions with pyenv
+#### Installing multiple Python versions with pyenv
 
 Then choose versions of python you want. `pyvenv install -l` lists what’s available. There are many flavors and versions. We just care about 3.[456] right now:
 
@@ -171,7 +171,7 @@ pyenv install -l | grep '^  3\.[456]'
   3.6.6rc1
 ```
 
-##### Install those versions and make them “global”
+#### Install those versions and make them “global”
 
 ```
 pyenv install 3.4.8
@@ -180,7 +180,7 @@ pyenv install 3.6.6
 pyenv global 3.6.6 3.5.5 3.4.8
 ```
 
-##### Installation under Mojave and XCode 10
+#### Installation under Mojave and XCode 10
 See [this issue](https://github.com/pyenv/pyenv/issues/1219)
 where pyenv install complains about missing zlib. Here’s a workaround:
 
@@ -191,7 +191,7 @@ PYTHON_CONFIGURE_OPTS=--enable-unicode=ucs2 \
 pyenv install -v 3.7.0
 ```
 
-##### Choosing which Python version to use
+#### Choosing which Python version to use
 
 The preceding will make python3.6, python3.5 and python3.4 globally available. The first-listed version is the one that becomes “python”:
 ```
@@ -205,7 +205,7 @@ Python 3.6.6
 
 See https://github.com/pyenv/pyenv/blob/master/COMMANDS.md for more.
 
-##### Install the tox-pyenv plugin
+#### Install the tox-pyenv plugin
 
 This plugin makes tox magically find the versions required in the tox.ini file.
 
@@ -248,7 +248,7 @@ If you’re running tox and you have all the interpreters installed already you 
 tox -e py36
 ```
 
-##### Installing system python
+#### Installing system python
 
 You can still use homebrew to install the system python. Brew-installed system python is located in /usr/local/bin. macOS (High Sierra or older) also still installs py27 in /usr/bin.
 

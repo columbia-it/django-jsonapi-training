@@ -13,5 +13,5 @@ dist/
 .docker
 myapp-docker.tar
 traefik/
-
 *.sh
+site/

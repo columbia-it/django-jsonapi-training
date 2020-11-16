@@ -1,4 +1,4 @@
-## Database Backends
+# Database Backends
 
 When playing around with our demo app, the default sqlite3 is plenty. Before moving the app to production,
 you'll want to use a
@@ -7,7 +7,7 @@ you'll want to use a
 **N.B.** We've deprecated use of Microsoft SQL Server due to lack of support for the django database backend library.
 You should use MySQL, including the AWS Aurora Serverless MySQL flavor.
 
-### Running a local database server
+## Running a local database server
 
 We want to be able to do all our development in a local environment (mine is MacOS). Fortunately, this is
 feasible with all the common databases.
@@ -50,12 +50,12 @@ else:
     }
 ```
 
-#### sqlite3 server
+### sqlite3 server
 
 sqlite3 is by definition a local database. It's "just there" on MacOS. You may have version compatibility problems
 on RHEL, but if you are to the point of running on RHEL, you should be using a MySQL database.
 
-#### MySQL server
+### MySQL server
 
 You can install a MacOS MySQL server and client using homebrew:
 
@@ -66,12 +66,12 @@ You can install a MacOS MySQL server and client using homebrew:
 (env) django-training$ mysql -uroot foo
 ```
 
-### database CLI tools
+## database CLI tools
 
 Following are some examples of how to use your database from the command line for [sqlite3](#sqlite3-client),
 or [mysql](#mysql-client). 
 
-#### sqlite3 client
+### sqlite3 client
 
 For the sqlite3 database, use sqlite3. For example:
 ```console
@@ -119,7 +119,7 @@ fbee2ba9b4d649a2b4e58d13317d65bc                                            admi
 sqlite> 
 ```
 
-#### MySQL client
+### MySQL client
 
 ```console
 (env) django-training$ mysql -uroot foo
@@ -195,7 +195,7 @@ mysql> describe myapp_course;
 12 rows in set (0.01 sec)
 ```
 
-#### Reminder: MYSQL environnment variables
+### Reminder: MYSQL environnment variables
 
 Because we conditionalized the database in settings.py via environment variables, don't forget to set them
 in the environment. I did this with a script which I can either source or use to run one-off commands:
@@ -214,10 +214,10 @@ If you forget, you'll end up with sqlite3 as the default database.
 
 <!-- TODO: figure out how to do inter-page links with markdown -->
 
-See ["Set up Run/Debug Configurations for the Project"](building.html#set-up-rundebug-configurations-for-tests),
+See ["Set up Run/Debug Configurations for the Project"](building.md#set-up-rundebug-configurations-for-tests),
 above, for how to set these environment variables in PyCharm.
 
-#### Debugging Migration DDL
+### Debugging Migration DDL
 
 If you want to see the SQL DDL statements that are used, use the `./manage.py sqlmigrate` command.
 

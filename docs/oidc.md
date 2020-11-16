@@ -1,4 +1,4 @@
-## Adding OIDC 1.0 Claims
+# Adding OIDC 1.0 Claims
 `GIT TAG: claims`
 
 At Columbia we've implemented a custom OIDC claim that is provided when the scope
@@ -14,7 +14,7 @@ that uses it.
 First, since you probably don't care about the gory details, let's show how to use the
 new HasClaim class. Following that are details on the implementation.
 
-### Defining Claims in Grouper
+## Defining Claims in Grouper
 
 Any Grouper group members in groups found under the `cu:app:access:clm` tree are
 put into LDAP as affiliations starting with `CLM`. These in turn are then
@@ -34,7 +34,7 @@ The following table shows the mappings from Grouper through the OIDC Claim:
 For a "real" application, all the power of Grouper is available to assert Claims
 for users.
 
-### Using the new HasClaim class
+## Using the new HasClaim class
 
 Here's how our Permission class configures HasClaim:
 ```python
@@ -98,14 +98,14 @@ class AuthnAuthzSchemaMixIn(object):
     }
 ```
 
-### Advanced Topic: Extending the DOT AccessToken Model
+## Advanced Topic: Extending the DOT AccessToken Model
 
 Now for the gory details of how HasClaim was implemented:
 
 In order to do this, we have to redefine DOT swappable models in a multi-step process which
 results in replacing some of the DOT models with our own for which we'll define a new app called `oauth`.
 
-#### Unmigrate oauth2_provider
+### Unmigrate oauth2_provider
 
 We start by dropping the `oauth2_provider` models from the database using a *zero* reverse migration.
 This will clobber any cached Access Tokens -- which is not a terrible thing as they'll just
@@ -157,7 +157,7 @@ sessions
 (env) django-training$ 
 ```
 
-#### Create the new oauth app and models
+### Create the new oauth app and models
 
 We create some new models that are based on the Abstract models that DOT uses.
 While we only care about extending AccessToken to add the `userinfo` field,
@@ -247,7 +247,7 @@ class Migration(migrations.Migration):
 ```
 (A second auto-generated migration then gets made and I'm not sure why!)
 
-#### Add the oauth app and swappable models to settings
+### Add the oauth app and swappable models to settings
 
 Now that we have everything set up and `oauth2_provider` has been unmigrated, it's time to add 
 the `oauth` replacements for DOT's Models:
@@ -279,7 +279,7 @@ index 2f08362..a462e3c 100644
  LOGGING = {
 ```
 
-#### Migrate oauth and oauth2_provider
+### Migrate oauth and oauth2_provider
 
 Now we can do a migration to create the new `oauth` tables that replace the `oauth2_provider` tables:
 
@@ -336,14 +336,14 @@ CREATE INDEX "oauth_myaccesstoken_user_id_af7b1a7f" ON "oauth_myaccesstoken"(
 );
 ```
 
-#### Create a new HasClaim Permission Class
+### Create a new HasClaim Permission Class
 
 To actually get the UserInfo result cached with the result of the Access Token introspection,
 extend DRF's BasePermission class to cache a UserInfo response as part of its associate Access Token: 
 
 See [oauth/oauth2_introspection.py](https://github.com/columbia-it/django-jsonapi-training/tree/master/oauth/oauth2_introspection.py)
 
-#### Automated filling in OAUTH2_CONFIG
+### Automated filling in OAUTH2_CONFIG
 
 See `oauth/apps.py` where we automate filling in the OAUTH2_CONFIG give the OAUTH2_SERVER environment
 variable. This uses OIDC's `.well-known/openid-configuration` endpoint. 

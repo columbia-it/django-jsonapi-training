@@ -1,6 +1,6 @@
-## The {json:api} specification
+# The {json:api} specification
 
-### Why use {json:api}?
+## Why use {json:api}?
 
 See [http://jsonapi.org/](http://jsonapi.org/) for their
 propaganda. The spec provides consistent rules for how requests and
@@ -17,7 +17,7 @@ by representing not just the primary entity but relationships to other entities.
 CU's [JSON API Architecture Pattern](https://docs.google.com/document/d/1p-gQNRzxFADHsyuWrk7zJnhL6iVu-16gr_-haNRXzRA/edit#)
 and the example DJA app which we explore below.
 
-### Media Type "Application/vnd.api+json"
+## Media Type "Application/vnd.api+json"
 
 {json:api} is a "special flavor" of JSON and has an
 [IANA-registered MIME-type](http://www.iana.org/assignments/media-types/application/vnd.api+json)
@@ -41,7 +41,7 @@ JSON using the [JSON-schema.org](http://json-schema.org/)
 notation (although the [text description](http://jsonapi.org/format/) is easier to
 understand).
 
-### Resources, Relationships
+## Resources, Relationships
 
 The main {json:api} concept is that it manipulates a collection of
 objects. Each resource item always has a *type* and *id* along with
@@ -50,13 +50,13 @@ others, which themselves are identified by their *type* and unique *id*. These c
 be "to one" or "to many" relationships, with the latter represented in
 JSON with an array.
 
-### Hypertext References
+## Hypertext References
 
 {json:api} uses URLs extensively to facilitate navigation through a
 resource collection, individual resource, related objects, pages of a
 multi-page response and so on.
 
-### Compound Documents
+## Compound Documents
 
 When a related object is referenced in a {json:api} response, it is
 identified by the *type* and *id*. This is a compact representation
@@ -66,7 +66,7 @@ To avoid extra HTTP requests, {json:api} optionally allows the client to
 request that the full values of the related resources be included in the
 same response. This is triggered using the *include* query parameter.
 
-### Pagination
+## Pagination
 
 Since a resource collection may include thousands or millions of items,
 you don't want to GET the entire collection in one HTTP transaction.
@@ -83,7 +83,7 @@ For example: GET
 browser using [DRF's Browseable API](https://www.django-rest-framework.org/topics/browsable-api/).
 Enter `admin` for the user and `admin123` for the password._)
 
-### Filtering
+## Filtering
 
 Filtering allows selecting only the items that match with the
 *Filter[*fieldname*]* query parameter; a list of values is typically ORed and
@@ -96,14 +96,14 @@ GET
 
 Filters work on *course_identifier*.
 
-### Sorting
+## Sorting
 
 Sorting using the *sort* query parameter can be ascending or descending:
 
 GET
 [http://127.0.0.1:8000/v1/courses/?sort=-course_name,course_number](http://127.0.0.1:8000/v1/courses/?sort=-course_name,course_number)
 
-### Sparse Fieldsets
+## Sparse Fieldsets
 
 Finally, since a resource may have dozens or hundreds of attributes, perhaps you only
 want to see a few of them. This is requested using the
@@ -112,7 +112,7 @@ want to see a few of them. This is requested using the
 GET
 [http://127.0.0.1:8000/v1/courses/?fields[courses]=course_name](http://127.0.0.1:8000/v1/courses/?fields[courses]=course_name)
 
-### Installing Postman
+## Installing Postman
 
 Postman is a powerful tool for testing HTTP. We'll be using it extensively to test our APIs.
 If you don't already have it, install Postman. You can get it at
@@ -343,7 +343,7 @@ GET
 }
 ```
 
-### POSTing and PATCHing: Resources and Relationships
+## POSTing and PATCHing: Resources and Relationships
 
 While we mostly GET data, every now and then we will need to create
 (POST) or update (PATCH) it. A POST creates a new object, so you are

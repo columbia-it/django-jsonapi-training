@@ -47,6 +47,7 @@ Copyright © 2018-2020 The Trustees of Columbia University in the City of New Yo
    sphinx.md
    documenting-api.md
    deploying.md
+   aws_api_gw.md
    cli_client.md
    help.md
 

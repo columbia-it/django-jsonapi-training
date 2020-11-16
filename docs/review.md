@@ -1,13 +1,13 @@
-## Review: git, Python, JSON
+# Review: git, Python, JSON
 
 Some of us have attended in-house training on using git and Python developer training, with some exposure
 to both the Flask and Django frameworks.
 
-### Git
+## Git
 
 Make sure you know how to [git](https://git-scm.com) clone, checkout, add, commit, push
 
-### Python & Django
+## Python & Django
 
 MVC: [Model-View-Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
 (and [Django's weird terminology](https://docs.djangoproject.com/en/stable/faq/general/#django-appears-to-be-a-mvc-framework-but-you-call-the-controller-the-view-and-the-view-the-template-how-come-you-don-t-use-the-standard-names))
@@ -18,7 +18,7 @@ Database persistance: models.py
 
 Examples will follow.
 
-### Javascript Object Notation (JSON)
+## Javascript Object Notation (JSON)
 
 JSON is the machine-readable de-facto standard for serializing data over
 the web, supplanting XML, HTML, etc.
@@ -27,7 +27,7 @@ the web, supplanting XML, HTML, etc.
 - Simpler than XML: maps directly to programming language data structures.
 - Human readable/writeable.
 
-#### JSON data types
+### JSON data types
 
 All JSON data types are represented as strings in a JSON-encoded (serialized)
 document but they map into common programming language datatypes (such
@@ -46,7 +46,7 @@ as in Javascript).
    [1, 2, "three", {"color": "red"}, ["a", "b", null, true]]
    ```
 
-#### (De)serializing JSON (to)from Python variables: a simple Python app
+### (De)serializing JSON (to)from Python variables: a simple Python app
 
 ```python
 #!/usr/bin/env python
@@ -78,7 +78,7 @@ item: ['a', 'b', None, True]
 red
 ```
 
-#### Footnote: Geezer history of serialization
+### Footnote: Geezer history of serialization
 
 Data in "machine" format is represented in unique ways depending on the hardware architecture.
 For instance, integers can have an 8, 16, 32, or 64 bit
