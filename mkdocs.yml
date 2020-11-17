@@ -75,7 +75,9 @@ nav:
  - 'Split Instructor model to be OneToOne with new Person model': another2.md
  - 'Adding OIDC 1.0 Claims': oidc.md
  - 'Sphinx Documentation': sphinx.md
+ - 'MkDocs Documentation': mkdocs.md
  - 'Documenting the API in OAS 3.0': documenting-api.md
+ - 'Backstage developer portal': backstage.md
  - 'Deploying to Production': deploying.md
  - 'Using AWS API Gateway': aws_api_gw.md
  - 'A Command Line Client': cli_client.md
