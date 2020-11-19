@@ -1,6 +1,5 @@
 import configparser
 import re
-from pprint import pprint
 
 
 def define_env(env):
@@ -20,10 +19,13 @@ def define_env(env):
             url = config.get(sec, 'url')
             break
     if url:
-        # url can be ssh or https style:
-        # git@gitlab.cc.columbia.edu:ac45/django-training.git
-        # https://github.com/n2ygk/examtools.git
-        url_re = re.match(r'(https://|[^@]+@)(?P<host>[^/:]*)[:/](?P<repo>.*)\.git', url)
+        # remote url can be ssh or https style:
+        # git@github.com:columbia-it/django-jsonapi-training.git
+        # https://github.com/columbia-it/django-jsonapi-training
+        url_re = re.match(r'https://(?P<host>[^/]*)/(?P<repo>.*)', url)
+        if not url_re:
+            url_re = re.match(r'[^@]*@(?P<host>[^:]*):(?P<repo>.*)\.git', url)
+
         if url_re:
             env.conf['repo_url'] = 'https://{host}/{repo}/'.format(host=url_re['host'], repo=url_re['repo'])
 
