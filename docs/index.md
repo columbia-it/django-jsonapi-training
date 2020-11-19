@@ -14,14 +14,11 @@ Ian Mieville
 Andrew Thompson  
 
 
-Repo URL: {{ config.repo_url }}
-
-View URI: {{ view_uri }}
-
 Copyright © 2018-2020 The Trustees of Columbia University in the City of New York
 
 [![CCbyncsa4.0](./media/CCbyncsa4.0.png "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE")](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
+[See other versions of this document](https://readthedocs.org/projects/columbia-it-django-jsonapi-training/versions/)
 
 
 
