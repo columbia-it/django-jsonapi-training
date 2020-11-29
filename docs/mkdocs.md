@@ -12,12 +12,14 @@ I've since been experimenting with the [Backstage](backstage.md) developer porta
 which currently uses MkDocs for their [TechDocs](https://backstage.io/docs/features/techdocs/techdocs-overview)
 tool so I figured I'd experiment with MkDocs.
 
-A few pros and cons of MkDocs over Sphinx:
+A few pros and cons of MkDocs with the [mkdocstrings](https://pawamoy.github.io/mkdocstrings) plugin over Sphinx
+with the [autodoc](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html) extension:
 
 ### Pro
 
-* Only uses Markdown. No more RsT, which is Python-specific.
-    * In general, Markdown syntax is less cumbersom thant RsT's. 
+* Only uses Markdown. No more RsT, which is Python-specific, and kind of ugly.
+    * In general, Markdown syntax is less cumbersome than RsT's. For example: `[sitename](url)` vs.
+    `` `sitename <url>`_ ``.
 * Works with Backstage TechDocs.
 * Easier configuration in [`mkdocs.yml`]({{view_uri}}/mkdocs.yml)
   vs. [`docs/conf.py`]({{view_uri}}/docs/conf.py) 
@@ -26,7 +28,12 @@ A few pros and cons of MkDocs over Sphinx:
 
 ### Con
 
-* RsT markup in Python docstrings will have to be refactored to Markdown.
+* RsT markup in Python docstrings will have to be refactored to Markdown. Maybe this is a Pro.
+* Docstrings will have to be refactored from RsT to [Google-style](https://google.github.io/styleguide/pyguide.html#381-docstrings).
+    * `#:` comments before members --> `""" docstrings """` after them (which is also supported by Sphinx autodoc)
+    * Intersphinx references like `` :py:class:`~django.db.models.Model` `` --> 
+    `[django.db.models.Model](https://docs.djangoproject.com/en/3.0/ref/models/instances/#django.db.models.Model)`
+    * URL refs from `` `sitename <url>`_ `` -->  `[sitename](url)`. TODO: move this down.
 * Also extensible via plugins and with any Python code you care to add to `conf.py`.
 * Alternatives to `apidoc` are not great. The closes seems to be 
   [`mkdocstrings`](https://pawamoy.github.io/mkdocstrings) which

@@ -65,9 +65,12 @@ class MyOAuth2Auth(OAuth2Authentication):
     def openapi_security_requirement(cls, view, method):
         """
         OAuth2 is the only OAS security requirement object that fills in the list of required scopes
-        :param view: used to get to the required_alternate_scopes attribute
-        :param method: key for required_alternate_scopes
-        :return:
+
+        Args:
+            view: used to get to the `required_alternate_scopes` attribute
+            method: HTTP method name used as key for `required_alternate_scopes`
+
+        Returns: dict of scopes
         """
         scopes = []
         if hasattr(view, 'required_alternate_scopes'):
@@ -85,10 +88,12 @@ class MyBasicAuth(BasicAuthentication):
 
 
 class SchemaGenerator(JSONAPISchemaGenerator):
-    """
-    Extend the schema to include some documentation, servers and override not-yet-implemented security.
-    """
     def get_schema(self, request, public):
+        """
+        Augments the automatically-generated `schema` with some additional
+        documentation, servers. Also overrides not-yet-implemented in upstream DRF
+        [security](https://github.com/encode/django-rest-framework/pull/7516).
+        """
         schema = super().get_schema(request, public)
         schema['info'] = {
             'version': __version__,

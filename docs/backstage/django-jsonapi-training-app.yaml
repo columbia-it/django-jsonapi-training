@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: myapp
+  description: Demo of Django REST Framework JSON-API
+  annotations:
+    backstage.io/techdocs-ref: 'github:https://github.com/columbia-it/django-jsonapi-training'
+
+  tags:
+    - rest
+spec:
+  type: openapi
+  lifecycle: development
+  owner: alan@columbia.edu
+  definition:
+    $text: https://raw.githubusercontent.com/columbia-it/django-jsonapi-training/master/docs/schemas/openapi.yaml
