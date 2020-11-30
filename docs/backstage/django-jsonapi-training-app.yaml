@@ -14,5 +14,3 @@ spec:
   owner: alan@columbia.edu
   definition:
     $text: https://raw.githubusercontent.com/columbia-it/django-jsonapi-training/master/docs/schemas/openapi.yaml
-  providesApis:
-    - myapp
