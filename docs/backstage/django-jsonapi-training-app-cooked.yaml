@@ -15,5 +15,3 @@ spec:
   definition:
     $text: https://github.com/columbia-it/django-jsonapi-training/blob/master/docs/schemas/openapi.yaml
     # raw: https://raw.githubusercontent.com/columbia-it/django-jsonapi-training/master/docs/schemas/openapi.yaml
-  providesApis:
-    - example-course-api
