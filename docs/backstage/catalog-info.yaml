@@ -5,6 +5,8 @@ metadata:
   name: django-jsonapi-training
   annotations:
     github.com/project-slug: columbia-it/django-jsonapi-training
+    
 spec:
-  type: other
-  lifecycle: unknown
+  type: website
+  lifecycle: production
+  owner: alan@columbia.edu
