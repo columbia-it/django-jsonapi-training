@@ -1,0 +1,12 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: django-jsonapi-training
+  annotations:
+    github.com/project-slug: columbia-it/django-jsonapi-training
+    
+spec:
+  type: website
+  lifecycle: production
+  owner: alan@columbia.edu
