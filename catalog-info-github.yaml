@@ -1,0 +1,32 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: django-jsonapi-training
+  description: Columbia University Information Technology training for Django REST Framework JSON:API
+  annotations:
+    github.com/project-slug: columbia-it/django-jsonapi-training
+    backstage.io/techdocs-ref: 'github:https://github.com/columbia-it/django-jsonapi-training'
+spec:
+  type: service
+  lifecycle: experimental
+  owner: user:ac45
+  consumesApis:
+    - django-jsonapi-training-api
+  providesApis:
+    - django-jsonapi-training-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: django-jsonapi-training-api
+  description: Demo backend API for Django REST Framework JSON-API training purposes.
+  tags:
+    - rest
+    - jsonapi
+spec:
+  type: openapi
+  lifecycle: development
+  owner: user:ac45
+  definition:
+    $text: https://github.com/columbia-it/django-jsonapi-training/blob/master/docs/schemas/openapi.yaml
