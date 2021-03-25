@@ -10,6 +10,6 @@ djangorestframework-jsonapi==4.0.0
 django-oauth-toolkit==1.3.2
 # master branch:
 #git+https://github.com/jazzband/django-oauth-toolkit
-PyYAML==5.3.1
+PyYAML==5.4
 PyMySQL==0.9.3
 uritemplate==3.0.1
