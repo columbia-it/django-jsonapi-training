@@ -1,17 +1,17 @@
+import re
+
 from django_filters import rest_framework as filters
 from oauth2_provider.contrib.rest_framework import TokenMatchesOASRequirements
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
 from myapp.models import Course, CourseTerm, Instructor, Person
-from myapp.schemas import MyBasicAuth, MyOAuth2Auth
+from myapp.schemas import MyOAuth2Auth
 from myapp.serializers import CourseSerializer, CourseTermSerializer, InstructorSerializer, PersonSerializer
 from oauth.oauth2_introspection import HasClaim
 
 
-# TODO: define claims for demo_djt_view & _upd:
-class MyClaimPermission(HasClaim):
+class ColumbiaGroupClaimPermission(HasClaim):
     """
     Use OIDC claim 'https://api.columbia.edu/claim/group' to determine permission
     to create/update/delete stuff: If the user has the claim `demo_d_demo2`, then
@@ -31,6 +31,68 @@ class MyClaimPermission(HasClaim):
         'POST': WRITE_CLAIM,
         'PATCH': WRITE_CLAIM,
         'DELETE': WRITE_CLAIM,
+        }
+
+
+class ColumbiaSubClaimPermission(HasClaim):
+    """
+    Use OIDC 'sub' claim to determine if the subject is from the Columbia University OIDC service.
+    Combine this with the preceding ColumbiaGroupClaimPermission.
+    """
+    claim = 'sub'
+    CU_CLAIM = re.compile('.+@columbia.edu$')  # sub ends in @columbia.edu
+    claims_map = {
+        'GET': CU_CLAIM,
+        'HEAD': CU_CLAIM,
+        'OPTIONS': CU_CLAIM,
+        'POST': CU_CLAIM,
+        'PATCH': CU_CLAIM,
+        'DELETE': CU_CLAIM,
+        }
+
+
+class DOTGroupClaimPermission(HasClaim):
+    """
+    Use OIDC custom claim 'https://api.columbia.edu/claim/group' to determine permission
+    to create/update/delete stuff: If the user has the claim 'team-c' then
+    they can do writes. Read access requires 'team-a'.
+
+    With our demo environment fixture:
+    - user1 is a member of team-a and team-c so can read and write.
+    - user2 is a member of team-a and team-b so can only read.
+    - user3 is not a member of any team so can't read or write.
+    """
+    WRITE_CLAIM = 'team-c'
+    READ_CLAIM = 'team-a'
+    #: the name of our custom claim group
+    claim = 'https://api.columbia.edu/claim/group'
+    #: mapping of HTTP methods to required claim group values
+    claims_map = {
+        'GET': READ_CLAIM,
+        'HEAD': READ_CLAIM,
+        'OPTIONS': READ_CLAIM,
+        'POST': WRITE_CLAIM,
+        'PATCH': WRITE_CLAIM,
+        'DELETE': WRITE_CLAIM,
+        }
+
+
+class DOTSubClaimPermission(HasClaim):
+    """
+    Use OIDC 'sub' claim to determine if the subject is from a service where the sub does not
+    contain '@'. This is probably the local DOT but could be an external AS too.
+    (It would be nice if 'iss' where part of a standard Userinfo response, but that is not the case.)
+    Combine this with the preceding DOTGroupClaimPermission.
+    """
+    claim = 'sub'
+    DOT_CLAIM = re.compile('^((?!@).)*$')  # sub does not contain "@"
+    claims_map = {
+        'GET': DOT_CLAIM,
+        'HEAD': DOT_CLAIM,
+        'OPTIONS': DOT_CLAIM,
+        'POST': DOT_CLAIM,
+        'PATCH': DOT_CLAIM,
+        'DELETE': DOT_CLAIM,
         }
 
 
@@ -58,30 +120,32 @@ class AuthnAuthzMixIn(object):
     """
     #: In production Oauth2 is preferred; Allow Basic and Session for testing and browseable API.
     #: (authentication_classes is an implied OR list)
-    authentication_classes = (MyOAuth2Auth, MyBasicAuth, SessionAuthentication,)
-    #: permissions are any one of:
-    #: 1. auth-columbia scope, which means there's an authenticated user, plus required claim, or
-    #: 2. auth-none scope (a server-to-server integration) where there's no authenticated user, or
-    #: 3. an authenticated user (session or basic auth) using user-based model permissions.
+    authentication_classes = (MyOAuth2Auth,)
+    #: permissions are any one of, each requiring demo-djt-sla-* scope:
+    #: 1. Authenticated Columbia user: auth-columbia scope plus required user claims.
+    #: 2. Authenticated DOT user: scopes as above plus DOT required user claims.
+    #: 3. Client Credentials (backend-to-backend): auth-none. No auth user. Claims don't exist.
     # which only support & and |.
     permission_classes = [
-        (TokenMatchesOASRequirements & IsAuthenticated & MyClaimPermission)
-        | (TokenMatchesOASRequirements & ~IsAuthenticated)
-        | (IsAuthenticated & MyDjangoModelPermissions)
+        TokenMatchesOASRequirements & (
+                (IsAuthenticated & ColumbiaGroupClaimPermission & ColumbiaSubClaimPermission)
+                | (IsAuthenticated & DOTGroupClaimPermission & DOTSubClaimPermission)
+                | (~IsAuthenticated)
+        )
     ]
     # TODO: replace cas-tsc-sla-gold scope with demo-djt-sla-bronze once available in oauth-test
-    #: Implicit/Authorization code scopes
-    CU_SCOPES = ['auth-columbia', 'demo-djt-sla-bronze', 'openid', 'https://api.columbia.edu/scope/group']
-    #: Client Credentials scopes
-    NONE_SCOPES = ['auth-none', 'demo-djt-sla-bronze']
-    #: allow either CU_SCOPES or NONE_SCOPES
+    #: Implicit/Authorization Code scopes: user via frontend client
+    USER_SCOPES = ['auth-columbia', 'demo-djt-sla-bronze', 'openid', 'https://api.columbia.edu/scope/group']
+    #: Client Credentials scopes: backend-to-backend
+    BACKEND_SCOPES = ['auth-none', 'demo-djt-sla-bronze']
+    #: allow either USER_SCOPES or BACKEND_SCOPES
     required_alternate_scopes = {
         'OPTIONS': [['read']],
-        'HEAD': [CU_SCOPES + ['read'], NONE_SCOPES + ['read']],
-        'GET': [CU_SCOPES + ['read'], NONE_SCOPES + ['read']],
-        'POST': [CU_SCOPES + ['create'], NONE_SCOPES + ['create']],
-        'PATCH': [CU_SCOPES + ['update'], NONE_SCOPES + ['update']],
-        'DELETE': [CU_SCOPES + ['delete'], NONE_SCOPES + ['delete']],
+        'HEAD': [USER_SCOPES + ['read'], BACKEND_SCOPES + ['read']],
+        'GET': [USER_SCOPES + ['read'], BACKEND_SCOPES + ['read']],
+        'POST': [USER_SCOPES + ['create'], BACKEND_SCOPES + ['create']],
+        'PATCH': [USER_SCOPES + ['update'], BACKEND_SCOPES + ['update']],
+        'DELETE': [USER_SCOPES + ['delete'], BACKEND_SCOPES + ['delete']],
     }
 
 

@@ -1,15 +1,17 @@
 # Using OAuth 2.0
 
 Our example use of OAuth 2.0 uses an external OAuth 2.0 Authorization Server (AS). It's also possible to
-add an AS using Django's auth models and the [`django-oauth-toolkit`](http://dot.evonove.it/) (DOT).
+add an AS using Django's auth models and the [`django-oauth-toolkit`](https://django-oauth-toolkit.readthedocs.io/)
+(DOT). Instructions on how to add DOT to our project can be found [below](using_dot.md).
 
 ## Get an OAuth 2.0 token
 
 You'll need to configure Postman for OAuth 2.0. 
 
 **N.B.** The example Client Credentials below may cease
-to work some day. If you are not affiliated with Columbia University, consider running your own
-OAuth 2.0 provider using DOT, since the `auth-columbia` scope will not work for you.
+to work some day. If you are not affiliated with Columbia University, consider
+[running your own OAuth 2.0 provider using DOT](using_dot.md),
+since the `auth-columbia` scope will not work for you.
 
 Select the Authorization tab, select OAuth 2.0 and click on Get New
 Access Token:
@@ -20,17 +22,15 @@ You can cut-n-paste the above from here:
 
 ```text
 Token Name: *pick a name*
-Grant Type: Authorization Code
-Callback URL: http://localhost:5432/oauth2client
+Grant Type: Authorization Code (With PKCE)
+Callback URL: https://www.getpostman.com/oauth2/callback
 Auth URL: https://oauth-test.cc.columbia.edu/as/authorization.oauth2
 Access Token URL: https://oauth-test.cc.columbia.edu/as/token.oauth2
-Client ID: demo_client
-Client Secret: b322573a7176A49FCBEF46554d3381d5
-Scope: auth-columbia read
+Client ID: demo_djt_web_client
+Client Secret: demo_djt_web_secret
+Scope: auth-columbia demo-djt-sla-bronze read openid https://api.columbia.edu/scope/group
 Client Authentication: Send as Basic Auth header
 ```
-
-and then click Request Token.
 
 You'll see a Columbia Login screen popup:
 
@@ -47,10 +47,8 @@ You'll then see a Request for Approval that looks like this:
 This is an *optional* user approval popup that is configured as part of
 registering your client app with the OAuth service. As you can see, the
 user is allowed to uncheck the scopes, effectively giving your client
-app less permission than it asked for. You need to scroll it down to
-click Allow:
-
-![Checking approved scopes](./media/image7.png "Allow the checked scopes")
+app less permission than it asked for. You need to stretch the window or scroll it down to
+click Allow.
 
 Now you are logged in and have an Access Token which Postman shows you:
 
@@ -61,7 +59,7 @@ Now you are logged in and have an Access Token which Postman shows you:
 Click on Use Token and then fill in the URL and do the
 GET by clicking SEND:
 
-![Postman successful GET display](./media/image10.png "Postman OAuth 2.0 Authorization")
+![Postman successful GET display](./media/image10.png "Postman successful GET display")
 
 There's lots more to Postman, but this should get you started. You'll
 want to explore selecting different methods (GET, POST, PATCH, DELETE),
@@ -86,3 +84,6 @@ like this:
 }
 ```
 
+And that's it!
+
+See [Using django-oauth-toolkit as the AS](using_dot.md) if you are interested in configuring Django OAuth Toolkit's AS.

@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: 1.1.0
+  version: 1.2.0
   title: myapp
   description: '![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg
     "CUIT logo")
@@ -19,7 +19,7 @@ info:
 
 
 
-    (c) 2018-2020 The Trustees of Columbia University in the City of New York
+    (c) 2018-2021 The Trustees of Columbia University in the City of New York
 
     '
   contact:
@@ -32,7 +32,13 @@ paths:
   /v1/courses/:
     get:
       operationId: List/v1/courses/
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
+        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
+        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
+        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
+        \ to docstrings.\n* Must have a docstring under each member in order for it\
+        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
+        \ for members."
       parameters:
       - $ref: '#/components/parameters/include'
       - $ref: '#/components/parameters/fields'
@@ -359,7 +365,13 @@ paths:
                 $ref: '#/components/schemas/failure'
     post:
       operationId: create/v1/courses/
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
+        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
+        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
+        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
+        \ to docstrings.\n* Must have a docstring under each member in order for it\
+        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
+        \ for members."
       parameters: []
       requestBody:
         content:
@@ -499,7 +511,13 @@ paths:
   /v1/courses/{id}/:
     get:
       operationId: retrieve/v1/courses/{id}/
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
+        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
+        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
+        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
+        \ to docstrings.\n* Must have a docstring under each member in order for it\
+        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
+        \ for members."
       parameters:
       - name: id
         in: path
@@ -818,7 +836,13 @@ paths:
                 $ref: '#/components/schemas/failure'
     patch:
       operationId: partial_update/v1/courses/{id}/
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
+        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
+        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
+        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
+        \ to docstrings.\n* Must have a docstring under each member in order for it\
+        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
+        \ for members."
       parameters:
       - name: id
         in: path
@@ -946,7 +970,13 @@ paths:
                 $ref: '#/components/schemas/failure'
     delete:
       operationId: destroy/v1/courses/{id}/
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
+        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
+        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
+        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
+        \ to docstrings.\n* Must have a docstring under each member in order for it\
+        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
+        \ for members."
       parameters:
       - name: id
         in: path
@@ -3322,7 +3352,13 @@ paths:
   /v1/course_terms/{id}/course/:
     get:
       operationId: fetch/v1/course_terms/{id}/course/
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
+        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
+        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
+        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
+        \ to docstrings.\n* Must have a docstring under each member in order for it\
+        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
+        \ for members."
       parameters:
       - name: id
         in: path
@@ -4870,10 +4906,49 @@ components:
             profile: your user profile
             email: your email address
             https://api.columbia.edu/scope/group: groups you are a member of
-            demo-django-jsonapi-training-sla-bronze: 'permitted to access the django-jsonapi-training
+            demo-djt-sla-bronze: 'permitted to access the django-jsonapi-training
               demo: 1 request per second'
-            demo-django-jsonapi-training-sla-update: permitted to update the django-jsonapi-training
-              resources
+            demo-djt-sla-update: permitted to update the django-jsonapi-training resources
+    oauth-dev:
+      type: oauth2
+      description: dev OAuth2 service
+      flows:
+        authorizationCode:
+          authorizationUrl: https://oauth-dev.cuit.columbia.edu:8443/as/authorization.oauth2
+          tokenUrl: https://oauth-dev.cuit.columbia.edu:8443/as/token.oauth2
+          scopes:
+            auth-columbia: Columbia UNI login
+            create: create
+            read: read
+            update: update
+            delete: delete
+            openid: disclose your identity
+            profile: your user profile
+            email: your email address
+            https://api.columbia.edu/scope/group: groups you are a member of
+            demo-djt-sla-bronze: 'permitted to access the django-jsonapi-training
+              demo: 1 request per second'
+            demo-djt-sla-update: permitted to update the django-jsonapi-training resources
+    oauth-local:
+      type: oauth2
+      description: local DOT OAuth2 service
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:8000/o/authorize/
+          tokenUrl: http://localhost:8000/o/token/
+          scopes:
+            auth-columbia: Columbia UNI login
+            create: create
+            read: read
+            update: update
+            delete: delete
+            openid: disclose your identity
+            profile: your user profile
+            email: your email address
+            https://api.columbia.edu/scope/group: groups you are a member of
+            demo-djt-sla-bronze: 'permitted to access the django-jsonapi-training
+              demo: 1 request per second'
+            demo-djt-sla-update: permitted to update the django-jsonapi-training resources
 servers:
 - url: http://localhost:8000
   description: local dev
@@ -4890,6 +4965,14 @@ security:
 - basicAuth: []
 - sessionAuth: []
 - oauth-test:
+  - - auth-columbia
+    - openid
+    - https://api.columbia.edu/scope/group
+- oauth-dev:
+  - - auth-columbia
+    - openid
+    - https://api.columbia.edu/scope/group
+- oauth-local:
   - - auth-columbia
     - openid
     - https://api.columbia.edu/scope/group

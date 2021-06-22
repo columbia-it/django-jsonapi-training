@@ -1,5 +1,6 @@
 import json
 import math
+from datetime import datetime, timedelta, timezone
 from unittest import expectedFailure, skip
 
 from django.contrib.auth.models import Permission, User
@@ -7,6 +8,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
 from myapp.models import Course, CourseTerm
+from oauth import models as oauth_models
 
 HEADERS = {
     'HTTP_ACCEPT': 'application/vnd.api+json',
@@ -91,18 +93,34 @@ class DJATestCase(APITestCase):
     """
     # TODO: add tests of query parameters: page, filter, fields, sort, include, and combinations thereof
     # TODO: add failure test cases (e.g. get of related where the id is invalid returns 500 instead of 404).
-    fixtures = ('testcases',)
+    fixtures = ('auth', 'oauth2', 'testcases',)
 
     def setUp(self):
-        # define some users
-        self.superuser = User.objects.create_user('tester', is_superuser=True)
+        # Users are defined in 'auth' fixture:
+        # | username | password       | staff   | su        | group memberships |
+        # | -------- | -------------- | -----   | --------- | ----------------- |
+        # | admin    | admin123       | &#9745; | &#9745;   | (none)            |
+        # | user1    | user1password1 | &#9745; |           | team-a, team-c    |
+        # | user2    | user2password2 | &#9745; |           | team-a, team-b    |
+        # | user3    | user3password3 | &#9745; |           | (none)            |
+        self.read_write_user = User.objects.filter(username='user1').first()
         # `somebody` can view course but not anything else
         self.someuser = User.objects.create_user('somebody', is_superuser=False)
         self.someuser.user_permissions.add(Permission.objects.get(codename='view_course').id)
         # `nobody` has no permissions
         self.noneuser = User.objects.create_user('nobody', is_superuser=False)
-        # most tests just use the superuser
-        self.client.force_authenticate(user=self.superuser)
+        # most tests just use the read_write_user
+        self.user1_token = oauth_models.MyAccessToken(  # nosec B106
+            token='User1Token',
+            expires=datetime.isoformat(datetime.now(tz=timezone.utc)+timedelta(seconds=3600)),
+            scope='auth-columbia demo-djt-sla-bronze read create update openid '
+                  'profile email https://api.columbia.edu/scope/group',
+            userinfo='{"sub": "user1", "given_name": "First", "family_name": "User", "name": "First User", '
+                     '"email": "user1@example.com", "https://api.columbia.edu/claim/group": "team-a team-c"}'
+        )
+        self.user1_token.save()
+        # self.client.force_authenticate(user=self.read_write_user)
+        HEADERS['Authorization'] = 'Bearer User1Token'
         self.courses = Course.objects.all()
         self.courses_url = reverse('course-list')
         self.course_terms = CourseTerm.objects.all()
@@ -234,6 +252,7 @@ class DJATestCase(APITestCase):
         response = self.client.get(self.courses_url,
                                    data={"filter[subject_area_code]": "ANTB"},
                                    **HEADERS)
+        self.assertEqual(response.status_code, 200, msg=response.content)
         j = json.loads(response.content)
         self.assertEqual(
             len(j['data']),
@@ -453,7 +472,7 @@ class DJATestCase(APITestCase):
         self.assertEqual(len(course['data']['relationships']['course_terms']['data']), 0)
 
         # put back the default user
-        self.client.force_authenticate(user=self.superuser)
+        self.client.force_authenticate(user=self.read_write_user)
 
     def test_permission_course_terms(self):
         """
@@ -468,4 +487,4 @@ class DJATestCase(APITestCase):
         self.assertIn("You do not have permission", term['errors'][0]['detail'])
 
         # put back the default user
-        self.client.force_authenticate(user=self.superuser)
+        self.client.force_authenticate(user=self.read_write_user)

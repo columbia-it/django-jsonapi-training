@@ -6,11 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--
-## [1.1.0] - 2020-11-04
+## [x.x.x] - YYYY-MM-DD
 
 ### Added
-
-- Automated openapi schema generation
 
 ### Deprecated
 
@@ -18,6 +16,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 -->
+
+## [1.2.0] - 2021-06-22
+
+### Added
+- Add use of local django-oauth-toolkit as an optional OAuth2/OIDC Authorization Server
+- Add OAS schema security objects for oauth-dev.cuit.columbia.edu (local Vagrant PingFederate server)
+- Experiment with [backstage.io](https://backstage.io) for project/API documentation
+
+### Changed
+- Reimplement OIDC claims checking for either an external AS or internal DOT 1.5.0 OIDC server
+- Change required SLA scope to `demo-djt-sla-bronze`
+- Switch documentation generation from Sphinx to Mkdocs (for backstage.io)
+- Update to OAS 3.0 schema generation using DRF 3.12.1 and DJA 4.0.0
+
+## [1.1.0] - 2020-11-04
+
+### Added
+
+- Automated openapi schema generation
 
 ## [1.0.1] - 2020-05-14
 

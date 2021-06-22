@@ -1,6 +1,5 @@
 from django.conf import settings
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
-from rest_framework.authentication import BasicAuthentication
 from rest_framework_json_api.schemas.openapi import SchemaGenerator as JSONAPISchemaGenerator
 
 from myapp import __author__, __copyright__, __license__, __license_url__, __title__, __version__
@@ -80,13 +79,6 @@ class MyOAuth2Auth(OAuth2Authentication):
         return scopes
 
 
-class MyBasicAuth(BasicAuthentication):
-    """
-    demonstrate customizing the OAS security scheme name, once DRF 3.13 adds this functionality.
-    """
-    openapi_security_scheme_name = 'FooBar'
-
-
 class SchemaGenerator(JSONAPISchemaGenerator):
     def get_schema(self, request, public):
         """
@@ -159,11 +151,61 @@ class SchemaGenerator(JSONAPISchemaGenerator):
                                 'profile': 'your user profile',
                                 'email': 'your email address',
                                 'https://api.columbia.edu/scope/group': 'groups you are a member of',
-                                'demo-django-jsonapi-training-sla-bronze':
+                                'demo-djt-sla-bronze':
                                     'permitted to access the django-jsonapi-training demo: 1 request per second',
-                                'demo-django-jsonapi-training-sla-update':
+                                'demo-djt-sla-update':
                                     'permitted to update the django-jsonapi-training resources'
                              }
+                        }
+                    }
+                },
+                'oauth-dev': {
+                    'type': 'oauth2',
+                    'description': 'dev OAuth2 service',
+                    'flows': {
+                        'authorizationCode': {
+                            'authorizationUrl': 'https://oauth-dev.cuit.columbia.edu:8443/as/authorization.oauth2',
+                            'tokenUrl': 'https://oauth-dev.cuit.columbia.edu:8443/as/token.oauth2',
+                            'scopes': {
+                                'auth-columbia': 'Columbia UNI login',
+                                'create': 'create',
+                                'read': 'read',
+                                'update': 'update',
+                                'delete': 'delete',
+                                'openid': 'disclose your identity',
+                                'profile': 'your user profile',
+                                'email': 'your email address',
+                                'https://api.columbia.edu/scope/group': 'groups you are a member of',
+                                'demo-djt-sla-bronze':
+                                    'permitted to access the django-jsonapi-training demo: 1 request per second',
+                                'demo-djt-sla-update':
+                                    'permitted to update the django-jsonapi-training resources'
+                             }
+                        }
+                    }
+                },
+                'oauth-local': {
+                    'type': 'oauth2',
+                    'description': 'local DOT OAuth2 service',
+                    'flows': {
+                        'authorizationCode': {
+                            'authorizationUrl': 'http://localhost:8000/o/authorize/',
+                            'tokenUrl': 'http://localhost:8000/o/token/',
+                            'scopes': {
+                                'auth-columbia': 'Columbia UNI login',
+                                'create': 'create',
+                                'read': 'read',
+                                'update': 'update',
+                                'delete': 'delete',
+                                'openid': 'disclose your identity',
+                                'profile': 'your user profile',
+                                'email': 'your email address',
+                                'https://api.columbia.edu/scope/group': 'groups you are a member of',
+                                'demo-djt-sla-bronze':
+                                    'permitted to access the django-jsonapi-training demo: 1 request per second',
+                                'demo-djt-sla-update':
+                                    'permitted to update the django-jsonapi-training resources'
+                            }
                         }
                     }
                 }
@@ -174,7 +216,9 @@ class SchemaGenerator(JSONAPISchemaGenerator):
             schema['security'] = [
                 {'basicAuth': []},
                 {'sessionAuth': []},
-                {'oauth-test': [['auth-columbia', 'openid', 'https://api.columbia.edu/scope/group']]}
+                {'oauth-test': [['auth-columbia', 'openid', 'https://api.columbia.edu/scope/group']]},
+                {'oauth-dev': [['auth-columbia', 'openid', 'https://api.columbia.edu/scope/group']]},
+                {'oauth-local': [['auth-columbia', 'openid', 'https://api.columbia.edu/scope/group']]}
             ]
 
         return schema

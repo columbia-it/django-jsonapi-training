@@ -1,0 +1,14 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: django-training
+  annotations:
+    backstage.io/techdocs-ref: url:https://gitlab.cc.columbia.edu/cuit-ent-arch/django-training
+spec:
+  type: website
+  lifecycle: production
+  owner: alan@columbia.edu
+  definition:
+    $text: https://gitlab.cc.columbia.edu/cuit-ent-arch/django-training/blob/master/docs/schemas/openapi.yaml
+

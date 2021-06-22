@@ -12,10 +12,15 @@ class MyAccessToken(oauth2_models.AbstractAccessToken):
     userinfo = models.TextField(null=True, blank=True)
 
 
+# It's not clear why, but there's some interdependency between the models that
+# seems to require creating swappable models even when no changes are needed
+# to them:
+class MyIDToken(oauth2_models.AbstractIDToken):
+    class Meta(oauth2_models.AbstractIDToken.Meta):
+        swappable = "OAUTH2_PROVIDER_ID_TOKEN_MODEL"
+
+
 class MyRefreshToken(oauth2_models.AbstractRefreshToken):
-    """
-    extend the AccessToken model with the external introspection server response
-    """
     class Meta(oauth2_models.AbstractRefreshToken.Meta):
         swappable = "OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL"
 

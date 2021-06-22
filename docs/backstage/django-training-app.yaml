@@ -1,10 +1,10 @@
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: myapp
+  name: myapp-gitlab
   description: Demo of Django REST Framework JSON-API
   annotations:
-    backstage.io/techdocs-ref: 'gitlab:https://gitlab.cc.columbia.edu/ac45/django-training'
+    backstage.io/techdocs-ref: 'url:https://gitlab.cc.columbia.edu/cuit-ent-arch/django-training'
 
   tags:
     - rest
@@ -13,4 +13,4 @@ spec:
   lifecycle: development
   owner: alan@columbia.edu
   definition:
-    $text: https://gitlab.cc.columbia.edu/ac45/django-training/raw/master/docs/schemas/openapi.yaml
+    $text: https://gitlab.cc.columbia.edu/cuit-ent-arch/django-training/raw/master/docs/schemas/openapi.yaml

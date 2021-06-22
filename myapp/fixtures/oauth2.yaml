@@ -1,0 +1,28 @@
+- model: oauth2_provider.application
+  pk: 3
+  fields:
+    client_id: demo_djt_web_client
+    user: null
+    redirect_uris: "https://www.getpostman.com/oauth2/callback\r\nhttp://localhost:8000/oauth2-redirect.html\r\nhttp://127.0.0.1:8000/oauth2-redirect.html"
+    client_type: public
+    authorization_grant_type: authorization-code
+    client_secret: demo_djt_web_secret
+    name: demo_djt_web_client
+    skip_authorization: false
+    created: 2021-04-02 18:14:12.712226+00:00
+    updated: 2021-04-02 18:14:18.947672+00:00
+    algorithm: RS256
+- model: oauth2_provider.application
+  pk: 5
+  fields:
+    client_id: demo-django-jsonapi-training_validator
+    user: 1
+    redirect_uris: ''
+    client_type: confidential
+    authorization_grant_type: client-credentials
+    client_secret: SaulGoodman
+    name: demo-django-jsonapi-training_validator
+    skip_authorization: false
+    created: 2021-04-02 20:57:09.921335+00:00
+    updated: 2021-04-02 20:57:09.921369+00:00
+    algorithm: ''

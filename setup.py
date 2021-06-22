@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 from myapp import VERSION
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
+with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding="utf-8") as readme:
     README = readme.read()
 
 # allow setup.py to be run from any path
@@ -24,7 +24,7 @@ setup(
     author_email='alan@columbia.edu',
     # TODO: this duplicates requirements.txt
     install_requires=[
-        'Django>=2.1.0<2.2',
+        'Django>=3.1.10,<3.2.0',
         'django-admin',
     ]
 )

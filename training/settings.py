@@ -89,6 +89,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'training.wsgi.application'
 
+LOGIN_URL='/admin/login/'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -204,58 +205,63 @@ JSON_API_PLURALIZE_TYPES = True
 # django-oauth-toolkit settings
 CORS_ORIGIN_ALLOW_ALL = True
 
+###
+# OAuth2/OIDC Server Configuration
+# Set env['OAUTH2_SERVER'] to 'self' to use the built-in django-oauth-toolkit server.
+# Otherwise et it to a baseURL of an external PingFederate AS.
+###
 OAUTH2_SERVER = os.environ.get('OAUTH2_SERVER','https://oauth-test.cc.columbia.edu')
+
+# Workaround inability of PyCharm to handle multi-line environment variables by reading
+# the OIDC RSA private key from a file. Otherwise just take it from the env.
+oidc_key_file = os.environ.get('OIDC_RSA_PRIVATE_KEY_FILE', None)
+if oidc_key_file:
+    oidc_key = open(oidc_key_file, 'rb').read().decode()
+else:
+    oidc_key = os.environ.get('OIDC_RSA_PRIVATE_KEY', None)
+
 
 OAUTH2_PROVIDER = {
     # here's where we add the external introspection endpoint:
-    'RESOURCE_SERVER_INTROSPECTION_URL': OAUTH2_SERVER + '/as/introspect.oauth2',
+    'RESOURCE_SERVER_INTROSPECTION_URL': None if OAUTH2_SERVER == 'self' else OAUTH2_SERVER + '/as/introspect.oauth2',
     'RESOURCE_SERVER_INTROSPECTION_CREDENTIALS': (
         os.environ.get('RESOURCE_SERVER_ID','demo-django-jsonapi-training_validator'),
         os.environ.get('RESOURCE_SERVER_SECRET','SaulGoodman')
     ),
+    'SCOPES': {
+        "address": "Share my address",
+        "read": "Read my resource(s)",
+        "openid": "Share my UNI",
+        "profile": "Share my name",
+        "email": "Share my email address",
+        "update": "Update my resource(s)",
+        "demo-djt-sla-bronze": "May access the django-jsonapi-training API",
+        "auth-columbia": "Columbia University UNI login",
+        "delete": "Delete my resources(s)",
+        "auth-none": "no login required",
+        "https://api.columbia.edu/scope/group": "Share my group memberships",
+        "create": "Create my resource(s)",
+        "introspection": "Introspect token scope",
+    },
+    # set an external Userinfo endpoint if using an external OAUTH2 Server:
+    'OIDC_USERINFO_ENDPOINT': None if OAUTH2_SERVER == 'self' else OAUTH2_SERVER + '/idp/userinfo.openid',
+    # Use internal OIDC implementation if RSA key has been configured:
+    'OIDC_ENABLED': True if oidc_key else False,
+    'OIDC_RSA_PRIVATE_KEY': oidc_key,
+    'PKCE_REQUIRED': True,
+    'OAUTH2_VALIDATOR_CLASS': 'myapp.oauth2_validator.CustomOAuth2Validator',
 }
 
-# TODO: Use this for configuring openapi securitySchemes. Do OIDC discovery to fill it in.
-OAUTH2_CONFIG = {
-    "authorization_endpoint": OAUTH2_SERVER + "/as/authorization.oauth2",
-    "token_endpoint": OAUTH2_SERVER + "/as/token.oauth2",
-    "revocation_endpoint": OAUTH2_SERVER + "/as/revoke_token.oauth2",
-    "userinfo_endpoint": OAUTH2_SERVER + "/idp/userinfo.openid",
-    "introspection_endpoint": OAUTH2_SERVER + "/as/introspect.oauth2",
-    "scopes_supported": [
-        "address",
-        "read",
-        "openid",
-        "profile",
-        "update",
-        "demo-netphone-admin",
-        "auth-columbia",
-        "delete",
-        "auth-none",
-        "auth-windowslive",
-        "auth-columbia-mfa",
-        "https://api.columbia.edu/scope/group",
-        "create",
-        "auth-facebook",
-        "email",
-        "auth-google"
-    ],
-    "grant_types_supported": [
-        "implicit",
-        "authorization_code",
-        "refresh_token",
-        "password",
-        "client_credentials",
-        "urn:pingidentity.com:oauth2:grant_type:validate_bearer",
-        "urn:ietf:params:oauth:grant-type:jwt-bearer",
-        "urn:ietf:params:oauth:grant-type:saml2-bearer"
-    ],
-} 
-
-OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.MyApplication"
+# Use swappable models to extend the Access Token to include the userinfo claims.
+# N.B. Through trial and error I've found that I had to extend all the models that are related to AccessToken.
+# OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.MyApplication"
+OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = "oauth.MyAccessToken"
 OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "oauth.MyRefreshToken"
+# OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "oauth2_provider.RefreshToken"
 OAUTH2_PROVIDER_GRANT_MODEL = "oauth2_provider.Grant"
+# OAUTH2_PROVIDER_ID_TOKEN_MODEL = "oauth2_provider.IDToken"
+OAUTH2_PROVIDER_ID_TOKEN_MODEL = "oauth.MyIDToken"
 
 # debug logging
 LOGGING = {
@@ -268,7 +274,7 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '%(asctime)s %(message)s'
+        'format': '%(asctime)s %(levelname)s %(name)s.%(funcName)s:%(lineno)d: %(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -284,10 +290,14 @@ LOGGING = {
     },
     'loggers': {
         'django.db.backends': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'handlers': ['console'],
         },
         'oauth2_provider': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+        'oauthlib': {
             'level': 'DEBUG',
             'handlers': ['console'],
         },
@@ -295,7 +305,7 @@ LOGGING = {
             'level': 'INFO',
             'handlers': ['console'],
         },
-        'cuit_enterprise_scope_shim': {
+        'oauth': {
             'level': 'DEBUG',
             'handlers': ['console'],
         },

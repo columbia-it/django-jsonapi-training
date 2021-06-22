@@ -4,7 +4,7 @@ site_description: Django REST framework JSONAPI Training
 
 ## N.B these URLs are overridden in mkdocs_macros_main.py:
 
-#repo_url: https://gitlab.cc.columbia.edu/ac45/django-training
+#repo_url: https://gitlab.cc.columbia.edu/cuit-ent-arch/django-training
 edit_uri: edit/master/docs/
 
 #repo_url: https://github.com/columbia-it/django-jsonapi-training
@@ -80,6 +80,7 @@ nav:
  - 'Backstage developer portal': backstage.md
  - 'Deploying to Production': deploying.md
  - 'Using AWS API Gateway': aws_api_gw.md
+ - 'Using django-oauth-toolkit as the AS': using_dot.md
  - 'A Command Line Client': cli_client.md
  - 'Help Wanted': help.md
  - 'API Reference':

@@ -1,7 +1,7 @@
 # Views
 
 <!--
-::: myapp.views.MyClaimPermission
+::: myapp.views.ColumbiaGroupClaimPermission
     :docstring:
     :members:
 

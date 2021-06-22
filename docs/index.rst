@@ -50,6 +50,7 @@ Copyright © 2018-2020 The Trustees of Columbia University in the City of New Yo
    aws_api_gw.md
    cli_client.md
    help.md
+   using_dot.md
 
    api.rst
 
