@@ -3,9 +3,13 @@
 Since this project is primarily documentation for training purposes, this Changelog
 documents the changes to the docs. See the project CHANGELOG for changes to the demo app.
 
+## 2021-06-25
+- Disable API autodocumentation for the time being due to mkdocstrings/pytkdocs version issues.
+- Document using DOT's 1.5.0's new OIDC support.
+
 ## 2020-11-17
 - Switched documentation from Sphinx to MkDocs.
-- Added [Backstage](docs/backstage.md) developer portal info.
+- Added [Backstage](/backstage) developer portal info.
 
 ## 2020-11-05
 - Added automated OpenAPI schema generation now that it is supported by DJA.

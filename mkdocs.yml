@@ -23,20 +23,20 @@ theme:
 
 plugins:
   - techdocs-core
-  - mkdocstrings:
-      default_handler: python
-      handlers:
-        python:
-          setup_commands:
-            - import mkdocs_mkdocstrings_setup
-          rendering:
-            show_source: true
-            # show_if_no_docstring: true
-          # selection:
-            # inherited_members: true
-            # docstring_options:
-      watch:
-        - myapp
+  # - mkdocstrings:
+  #     default_handler: python
+  #     handlers:
+  #       python:
+  #         setup_commands:
+  #           - import mkdocs_mkdocstrings_setup
+  #         rendering:
+  #           show_source: true
+  #           # show_if_no_docstring: true
+  #         # selection:
+  #           # inherited_members: true
+  #           # docstring_options:
+  #     watch:
+  #       - myapp
   - macros:
       module_name: mkdocs_macros_main
 
