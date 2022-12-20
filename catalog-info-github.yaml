@@ -6,7 +6,7 @@ metadata:
   description: Columbia University Information Technology training for Django REST Framework JSON:API
   annotations:
     github.com/project-slug: columbia-it/django-jsonapi-training
-    backstage.io/techdocs-ref: 'github:https://github.com/columbia-it/django-jsonapi-training'
+    backstage.io/techdocs-ref: 'url:https://github.com/columbia-it/django-jsonapi-training'
 spec:
   type: service
   lifecycle: experimental

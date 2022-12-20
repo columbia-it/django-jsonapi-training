@@ -1,18 +1,19 @@
 # requirements for our django app
-Django==3.1.13
-django-cors-middleware==1.5.0
-django-debug-toolbar==3.2.1
-django-extensions==2.2.8
-django-filter==2.4.0
-djangorestframework==3.12.1
-djangorestframework-jsonapi==4.0.0
-# production release:
-django-oauth-toolkit==1.5.0
+Django==4.1.2
+django-debug-toolbar==3.7.0
+django-extensions==3.2.1
+django-filter==21.1
+djangorestframework==3.14.0
+djangorestframework-jsonapi==6.0.0
+# production release of DOT:
+django-oauth-toolkit==2.2.0
 # master branch:
 #git+https://github.com/jazzband/django-oauth-toolkit
 # local dev copy
 #/Users/ac45/src/django-oauth-toolkit
-PyYAML==5.4.1
-PyMySQL==0.9.3
-uritemplate==3.0.1
-pip>=21.1
+PyYAML==6.0
+PyMySQL==1.0.2
+uritemplate==4.1.1
+pip>=22.3
+django-cors-headers==3.13.0
+

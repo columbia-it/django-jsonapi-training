@@ -1,0 +1,13 @@
+#!/bin/sh
+# make sphinx docs
+if [ -z `pip freeze | grep pygraphviz` ]; then
+    pip install -r requirements-dev.txt
+fi
+./manage.py graph_models -g -S --disable-abstract-fields -E -o docs/media/current-uml.png myapp
+cd docs
+make html
+# and also a simple markdown index of the source files to aid in browsing via gitlab/github/grip
+cat ../index-head.md >../index.md
+awk '/^   :caption: Contents:/{on=1;next}/^Indices/{on=0}{if (on && $1) {printf("- [%s](docs/%s)\n",$1,$1)}}' index.rst >>../index.md
+
+

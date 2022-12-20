@@ -1,0 +1,38 @@
+{
+  "GET/v1/courses/?$": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-bronze", "read"],
+    ["auth-columbia", "demo-django-jsonapi-training-sla-silver", "read"]
+  ],
+  "POST/v1/courses/?$": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-update", "create"]
+  ],
+  "GET/v1/courses/[^/]+/?$": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-bronze", "read"],
+    ["auth-columbia", "demo-django-jsonapi-training-sla-silver", "read"]
+  ],
+  "PATCH/v1/courses/[^/]+/?$": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-update", "update"],
+    ["auth-columbia", "demo-django-jsonapi-training-sla-silver", "read"]
+  ],
+  "DELETE/v1/courses/[^/]+/?$": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-update", "delete"]
+  ],
+  "GET/v1/courses/[^/]+/relationships/[^/]+/?": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-bronze", "read"],
+    ["auth-columbia", "demo-django-jsonapi-training-sla-silver", "read"]
+  ],
+  "POST/v1/courses/[^/]+/relationships/[^/]+/?": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-update", "create"]
+  ],
+  "PATCH/v1/courses/[^/]+/relationships/[^/]+/?": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-update", "update"]
+  ],
+  "DELETE/v1/courses/[^/]+/relationships/[^/]+/?": [
+    ["auth-columbia", "demo-django-jsonapi-training-sla-update", "delete"]
+  ],
+  "GET/courses/[^/]+/course_terms/?":[
+    ["auth-columbia", "demo-django-jsonapi-training-sla-bronze", "read"],
+    ["auth-columbia", "demo-django-jsonapi-training-sla-silver", "read"]
+  ]
+}
+

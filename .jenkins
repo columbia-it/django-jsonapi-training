@@ -1,0 +1,38 @@
+#!/bin/bash
+# Jenkins script to run tox tests
+
+# our RHEL7 hosts have ASCII as the default encoding. Change it to use UTF-8:
+export PYTHONIOENCODING=utf8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.en
+export LC_ALL=en_US.UTF-8
+
+# We need sqlite3 > 3.8.3... for django >= 2.2; sqlite 3.7 is what comes with RHEL7.
+if python -c 'from sqlite3 import sqlite_version; tuple(map(int, sqlite_version.split("."))) >= (3,8,3) and exit(1)'
+then
+    MY_SQLITE3=${PWD}/sqlite3
+    if [ ! -f ${MY_SQLITE3}/bin/sqlite3 ]; then
+	wget https://www.sqlite.org/2021/sqlite-autoconf-3340100.tar.gz
+	tar -xzf sqlite-autoconf-3340100.tar.gz
+	cd sqlite-autoconf-3340100
+	./configure --prefix=${MY_SQLITE3}
+	make
+	make install
+	cd ..
+    fi
+    export LD_LIBRARY_PATH=${MY_SQLITE3}/lib:$LD_LIBRARY_PATH
+    export PATH=${MY_SQLITE3}/bin:$PATH
+fi
+sqlite3 --version
+
+# Finally actually begin the tests.
+# TODO: Use pyvenv or something to allow Jenkins tests with multiple Python versions....
+python3 --version
+python3 -m venv venv
+source venv/bin/activate
+ls -l `which pip`
+head -1 `which pip`
+pip install --upgrade pip
+pip install tox
+# We currently only have py36 available....
+tox -e py36

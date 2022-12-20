@@ -17,7 +17,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 -->
 
-## [1.2.0] - 2021-06-22
+## [1.3.0] - 2022-12-19
+
+### Added
+- Add Grades model
+- Add some incomplete AWS API gateway deployment documentation.
+
+### Deprecated
+- Remove sphinx documentation, instead using mkdocs.
+
+### Changed
+
+### Fixed
+- oauth: different python versions return a different type for compiled re: use isinstance.
+
+
+## [1.2.0] - 2021-06-25
 
 ### Added
 - Add use of local django-oauth-toolkit as an optional OAuth2/OIDC Authorization Server

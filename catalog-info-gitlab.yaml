@@ -2,30 +2,28 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: django-training
-  description: Columbia University Information Technology training for Django REST Framework JSON:API
+  name: {{cookiecutter.name | jsonify}}
+  description: {{cookiecutter.description | jsonify}}
   annotations:
-    # github.com/project-slug: columbia-it/django-jsonapi-training
-    backstage.io/techdocs-ref: 'gitlab:https://gitlab.cc.columbia.edu:/ac45/django-training'
+    # github.com/project-slug: {{cookiecutter.destination.owner + "/" + cookiecutter.destination.repo}}
+    backstage.io/techdocs-ref: url:{{"https://" + cookiecutter.destination.host + "/" + cookiecutter.destination.owner + "/" + cookiecutter.destination.repo}}
 spec:
   type: service
   lifecycle: experimental
-  owner: user:ac45
-  consumesApis:
-    - django-training-api
+  owner: {{cookiecutter.owner | jsonify}}
   providesApis:
-    - django-training-api
+    - {{cookiecutter.name | jsonify}}-api
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: django-training-api
-  description: Demo of Django REST Framework JSON-API
+  name: {{cookiecutter.name | jsonify}}-api
+  description: {{cookiecutter.description | jsonify}} RESTful API
   tags:
     - rest
 spec:
   type: openapi
-  lifecycle: development
-  owner: user:ac45
+  lifecycle: experimental
+  owner: {{cookiecutter.owner | jsonify}}
   definition:
-    $text: https://gitlab.cc.columbia.edu/ac45/django-training/blob/master/docs/schemas/openapi.yaml
+    $text: {{"https://gitlab.cc.columbia.edu/" + cookiecutter.destination.owner + "/" + cookiecutter.destination.repo}}
