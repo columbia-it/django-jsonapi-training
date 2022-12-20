@@ -4,8 +4,8 @@ Since this project is primarily documentation for training purposes, this Change
 documents the changes to the docs. See the project CHANGELOG for changes to the demo app.
 
 ## 2022-12-20
-- Get mkdocs documentation back working
-
+- Get mkdocs documentation back working and deprecate sphinx. Still need to update the docs!
+- Add documentation for using Django OAuth Toolkit (DOT) as the OAuth AS.
 
 ## 2021-06-25
 - Disable API autodocumentation for the time being due to mkdocstrings/pytkdocs version issues.

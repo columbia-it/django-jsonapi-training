@@ -21,12 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add Grades model
-- Add some incomplete AWS API gateway deployment documentation.
+- Add some incomplete AWS API Gateway/Lambda/Aurora Serverless RDS deployment documentation.
+  - Includes configuring AWS API Gateway to do preliminary OAuth2 scope validation.
+- Attempt at Jenkins configuration for our local CI/CD. Currently not working.
+- Experiment with a non Model-based endpoint. (Incomplete)
+- Extende DOT with swappable dependencies for OIDC.
+
 
 ### Deprecated
 - Remove sphinx documentation, instead using mkdocs.
 
 ### Changed
+- Bump to Django 4.x which requires a new minimum Python version.
 
 ### Fixed
 - oauth: different python versions return a different type for compiled re: use isinstance.
