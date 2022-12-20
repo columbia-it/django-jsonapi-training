@@ -3,6 +3,10 @@
 Since this project is primarily documentation for training purposes, this Changelog
 documents the changes to the docs. See the project CHANGELOG for changes to the demo app.
 
+## 2022-12-20
+- Get mkdocs documentation back working
+
+
 ## 2021-06-25
 - Disable API autodocumentation for the time being due to mkdocstrings/pytkdocs version issues.
 - Document using DOT's 1.5.0's new OIDC support.

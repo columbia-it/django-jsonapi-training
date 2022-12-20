@@ -62,7 +62,7 @@ plugins:
 #   - css/custom.css
 
 nav:
- - Home: 'index.rst'
+ - Home: 'index.md'
  - 'Welcome and Caveat': welcome.md
  - 'Documentation Revision History': changelog.md
  - 'Preparing for the classes': preparing.md

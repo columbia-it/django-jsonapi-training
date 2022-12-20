@@ -14,7 +14,7 @@ Ian Mieville
 Andrew Thompson  
 
 
-Copyright © 2018-2020 The Trustees of Columbia University in the City of New York
+Copyright © 2018-2022 The Trustees of Columbia University in the City of New York
 
 [![CCbyncsa4.0](./media/CCbyncsa4.0.png "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE")](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
