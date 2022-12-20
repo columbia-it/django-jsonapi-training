@@ -1,7 +1,12 @@
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 name: Test
 
-on: [push, pull_request]
+on:
+  # only runs tests if pushed directly to master branch and for any PR
+  push:
+    branches:
+    - master
+  pull_request:
 
 jobs:
   build:
@@ -14,6 +19,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Install graphviz
+      run: sudo apt-get install -y graphviz
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
