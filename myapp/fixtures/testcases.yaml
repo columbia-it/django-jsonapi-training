@@ -1,162 +1,352 @@
 - model: myapp.course
-  pk: 001b55e0-9a60-4386-98c7-4c856bb840b4
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: XCEFK9, suffix_two: '00',
-    subject_area_code: ANTB, course_number: 04961, course_identifier: ANTH3160V, course_name: THE
-      BODY AND SOCIETY, course_description: THE BODY AND SOCIETY}
+  pk: 06d57ab7-087e-46fd-9131-853fe7739f32
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: XCEFK9
+    suffix_two: '00'
+    subject_area_code: ANTB
+    course_number: 04961
+    course_identifier: ANTH3160V
+    course_name: THE BODY AND SOCIETY
+    course_description: THE BODY AND SOCIETY
 - model: myapp.course
-  pk: 00fb17bb-e4a0-49a0-a27e-6939e3e04b62
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: B, suffix_two: '00', subject_area_code: ACCT,
-    course_number: '73272', course_identifier: ACCT8122B, course_name: Accounting
-      for Consultants, course_description: Accounting for Consultants}
+  pk: 31786aff-a593-46ca-8748-6e2c78107739
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: O
+    suffix_two: '00'
+    subject_area_code: AUDT
+    course_number: '87448'
+    course_identifier: AUPH1010O
+    course_name: METHODS/PROB OF PHILOS THOUGHT
+    course_description: METHODS/PROB OF PHILOS THOUGHT
 - model: myapp.course
-  pk: 016659e9-e29f-49b4-b85d-d25da0724dbb
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: B, suffix_two: '00', subject_area_code: ACCT,
-    course_number: '73290', course_identifier: ACCT7022B, course_name: Accounting
-      for Value, course_description: Accounting for Value}
+  pk: 3483bcab-5c2d-438c-940d-46d64a6ec593
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: XCEFK9
+    suffix_two: '00'
+    subject_area_code: AMSB
+    course_number: '00373'
+    course_identifier: AMST3704X
+    course_name: SENIOR RESEARCH ESSAY SEMINAR
+    course_description: SENIOR RESEARCH ESSAY SEMINAR
 - model: myapp.course
-  pk: 01ca197f-c00c-4f24-a743-091b62f1d500
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: XCEFK9, suffix_two: '00',
-    subject_area_code: AMSB, course_number: '00373', course_identifier: AMST3704X,
-    course_name: SENIOR RESEARCH ESSAY SEMINAR, course_description: SENIOR RESEARCH
-      ESSAY SEMINAR}
+  pk: 3d6ada0b-05da-4fc2-a1b5-07fee52c1e4f
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: B
+    suffix_two: '00'
+    subject_area_code: BUEC
+    course_number: '72074'
+    course_identifier: BUEC7255B
+    course_name: 'FinTech: Consumer Financial Se'
+    course_description: 'FinTech: Consumer Financial Se'
 - model: myapp.course
-  pk: 02d5fcbc-cc6d-40e0-9acf-5f4e54cf3d87
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: O, suffix_two: '00', subject_area_code: AUDT,
-    course_number: '87448', course_identifier: AUPH1010O, course_name: METHODS/PROB
-      OF PHILOS THOUGHT, course_description: METHODS/PROB OF PHILOS THOUGHT}
+  pk: 426e224f-9baf-47e9-a7b5-906a1786eadc
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: B
+    suffix_two: '00'
+    subject_area_code: ACCT
+    course_number: '73290'
+    course_identifier: ACCT7022B
+    course_name: Accounting for Value
+    course_description: Accounting for Value
 - model: myapp.course
-  pk: 02e2e004-326e-4be8-aecc-aa67ece50fdf
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: RXCEIGF2U, suffix_two: '00',
-    subject_area_code: COMS, course_number: '84695', course_identifier: COMS3102W,
-    course_name: DEVELOPMENT TECHNOLOGY, course_description: MODERN iOS APPLICATION
-      DEVELOP}
+  pk: 7c63bc7f-3da4-4ce2-bd68-51747c879832
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: RXCEIGFKU
+    suffix_two: '00'
+    subject_area_code: ENCL
+    course_number: '89695'
+    course_identifier: CLEN4414W
+    course_name: HIST OF LITERARY CRITICISM:PLATO TO KANT
+    course_description: HIST OF LIT CRIT PLATO TO KANT
 - model: myapp.course
-  pk: 0381673f-e0a4-4212-b95a-3b62ebff9267
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: IG, suffix_two: '00',
-    subject_area_code: APAM, course_number: '74450', course_identifier: APPH9143E,
-    course_name: APPLIED PHYSICS SEMINAR, course_description: STELLARATOR PHYSICS}
+  pk: 843566d4-619f-45a2-bb99-973d91498e0f
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: RXCEIGF2U
+    suffix_two: '00'
+    subject_area_code: COMS
+    course_number: '84695'
+    course_identifier: COMS3102W
+    course_name: DEVELOPMENT TECHNOLOGY
+    course_description: MODERN iOS APPLICATION DEVELOP
 - model: myapp.course
-  pk: 03e32754-3da7-4005-be6b-8de0e088816a
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: XCEF, suffix_two: '00',
-    subject_area_code: CEEM, course_number: '26118', course_identifier: CIEN3304E,
-    course_name: IND STUDIES-CIVIL ENGIN-SENIOR, course_description: IND STUDIES-CIVIL
-      ENGIN-SENIOR}
+  pk: 925d3e83-db7a-44d6-bfd4-6be63b226da3
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: XCEF
+    suffix_two: '00'
+    subject_area_code: CEEM
+    course_number: '26118'
+    course_identifier: CIEN3304E
+    course_name: IND STUDIES-CIVIL ENGIN-SENIOR
+    course_description: IND STUDIES-CIVIL ENGIN-SENIOR
 - model: myapp.course
-  pk: 046741cd-c700-4752-b57a-e37a948ebc44
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: B, suffix_two: '00', subject_area_code: BUEC,
-    course_number: '72074', course_identifier: BUEC7255B, course_name: 'FinTech: Consumer
-      Financial Se', course_description: 'FinTech: Consumer Financial Se'}
+  pk: d35d74af-28d4-4f43-886f-07e13c7abf99
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: IG
+    suffix_two: '00'
+    subject_area_code: APAM
+    course_number: '74450'
+    course_identifier: APPH9143E
+    course_name: APPLIED PHYSICS SEMINAR
+    course_description: STELLARATOR PHYSICS
 - model: myapp.course
-  pk: 04893b8f-0cbe-4e09-b8e6-17a4745900c1
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, school_bulletin_prefix_code: RXCEIGFKU, suffix_two: '00',
-    subject_area_code: ENCL, course_number: '89695', course_identifier: CLEN4414W,
-    course_name: 'HIST OF LITERARY CRITICISM:PLATO TO KANT', course_description: HIST
-      OF LIT CRIT PLATO TO KANT}
+  pk: d5a0b3a4-4a21-4eff-941b-de2513b57234
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    school_bulletin_prefix_code: B
+    suffix_two: '00'
+    subject_area_code: ACCT
+    course_number: '73272'
+    course_identifier: ACCT8122B
+    course_name: Accounting for Consultants
+    course_description: Accounting for Consultants
 - model: myapp.courseterm
-  pk: 00290ba0-ebae-44c0-9f4b-58a5f27240ed
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20191ANTH3160V, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 001b55e0-9a60-4386-98c7-4c856bb840b4}
+  pk: 054023bf-059b-42d6-bd64-5fa7365d35e2
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181AUPH1010O
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: 31786aff-a593-46ca-8748-6e2c78107739
 - model: myapp.courseterm
-  pk: 00d14ddb-9fb5-4cff-9954-d52fc33217e7
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20191ACCT8122B, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 00fb17bb-e4a0-49a0-a27e-6939e3e04b62}
+  pk: 10c84b3a-589a-433c-9e5a-a0adc55ed109
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181ACCT7022B
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: 426e224f-9baf-47e9-a7b5-906a1786eadc
 - model: myapp.courseterm
-  pk: 010a7ff7-ef5a-4b36-b3ff-9c34e30b76e8
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20191ACCT7022B, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 016659e9-e29f-49b4-b85d-d25da0724dbb}
+  pk: 27428adc-3493-4e64-ba60-0835b2115bae
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181CIEN3304E
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: 925d3e83-db7a-44d6-bfd4-6be63b226da3
 - model: myapp.courseterm
-  pk: 01163a94-fc8f-47fe-bb4a-5407ad1a35fe
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20191AMST3704X, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 01ca197f-c00c-4f24-a743-091b62f1d500}
+  pk: 3615c76d-99a7-468c-847b-dc6612402c5d
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181BUEC7255B
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: 3d6ada0b-05da-4fc2-a1b5-07fee52c1e4f
 - model: myapp.courseterm
-  pk: 01764ebb-34b7-4b21-8835-cf712532cf5c
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20182AUPH1010O, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 02d5fcbc-cc6d-40e0-9acf-5f4e54cf3d87}
+  pk: 385f288a-71ab-4fdc-b109-2f2be0ebfede
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20191AMST3704X
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: 3483bcab-5c2d-438c-940d-46d64a6ec593
 - model: myapp.courseterm
-  pk: 02e877b2-35c4-47d4-b72c-25bab1e87065
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20183COMS3102W, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 02e2e004-326e-4be8-aecc-aa67ece50fdf}
+  pk: 38896e90-0682-4332-8afb-2775ac5f134c
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20183COMS3102W
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: 843566d4-619f-45a2-bb99-973d91498e0f
 - model: myapp.courseterm
-  pk: 0316e6ad-fe6a-4339-8d18-a98e4ffb0bee
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20191APPH9143E, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 0381673f-e0a4-4212-b95a-3b62ebff9267}
+  pk: 3e1550fe-a9f8-4f7e-aa57-93cc1ed660b8
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20191APPH9143E
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: d35d74af-28d4-4f43-886f-07e13c7abf99
 - model: myapp.courseterm
-  pk: 035c31c5-398d-43b7-a55b-19f6d1472797
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20183CIEN3304E, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 03e32754-3da7-4005-be6b-8de0e088816a}
+  pk: 6e4779db-4bb0-411d-ab59-50ec19d842ee
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181ANTH3160V
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: 06d57ab7-087e-46fd-9131-853fe7739f32
 - model: myapp.courseterm
-  pk: 0378c6c0-b658-4cf6-b8ba-6fa19614e3aa
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20192BUEC7255B, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 046741cd-c700-4752-b57a-e37a948ebc44}
+  pk: 72cda220-6be6-443b-8ced-2a21dc6ad690
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181APPH9143E
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: d35d74af-28d4-4f43-886f-07e13c7abf99
 - model: myapp.courseterm
-  pk: 243e2b9c-a3c6-4d40-9b9a-2750d6c03250
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181ANTH3160V, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 001b55e0-9a60-4386-98c7-4c856bb840b4}
+  pk: 78890c75-45f3-4f60-81c5-76d9394ebd97
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20182AUPH1010O
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: 31786aff-a593-46ca-8748-6e2c78107739
 - model: myapp.courseterm
-  pk: 2d763c14-a566-4600-860f-329e44cbbd4a
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181COMS3102W, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 02e2e004-326e-4be8-aecc-aa67ece50fdf}
+  pk: 83dc0ea7-1d62-48cf-bd2e-c56b4e2a63c0
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20191ACCT7022B
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: 426e224f-9baf-47e9-a7b5-906a1786eadc
 - model: myapp.courseterm
-  pk: 39ca7b38-f273-4fa3-9494-5a422780aebd
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181ACCT7022B, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 016659e9-e29f-49b4-b85d-d25da0724dbb}
+  pk: 8a85d4b7-022e-46ea-86db-bb8328203a96
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20192BUEC7255B
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: 3d6ada0b-05da-4fc2-a1b5-07fee52c1e4f
 - model: myapp.courseterm
-  pk: 48a7ab4f-35d7-4004-97b2-2a95626dd25a
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: admin,
-    last_mod_date: 2018-12-05, term_identifier: 20181COMS3109W, audit_permitted_code: 0,
-    exam_credit_flag: false, course: null}
+  pk: 9595cbd1-db75-4b94-9be9-8daf0bcf229d
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181COMS3102W
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: 843566d4-619f-45a2-bb99-973d91498e0f
 - model: myapp.courseterm
-  pk: 52cc86dd-7a78-48b8-a6a5-76c1fc7fc9be
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181ACCT8122B, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 00fb17bb-e4a0-49a0-a27e-6939e3e04b62}
+  pk: b25862dc-d16c-4b62-a01c-a0f1de8e413b
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20191ACCT8122B
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: d5a0b3a4-4a21-4eff-941b-de2513b57234
 - model: myapp.courseterm
-  pk: 964ff272-acb8-4adc-9a7e-21a241e63ff1
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181CIEN3304E, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 03e32754-3da7-4005-be6b-8de0e088816a}
+  pk: b3b4dd53-f41a-4f40-8862-992e904a921d
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20191ANTH3160V
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: 06d57ab7-087e-46fd-9131-853fe7739f32
 - model: myapp.courseterm
-  pk: bca761f7-03f6-4ff5-bbb8-b58467ef3970
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181BUEC7255B, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 046741cd-c700-4752-b57a-e37a948ebc44}
+  pk: bcf7a4d6-a8b7-4653-bdb5-11ff53485740
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181ACCT8122B
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: d5a0b3a4-4a21-4eff-941b-de2513b57234
 - model: myapp.courseterm
-  pk: e8e13192-0677-44e7-a590-606a38d66b34
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181AUPH1010O, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 02d5fcbc-cc6d-40e0-9acf-5f4e54cf3d87}
+  pk: c03dc81f-ae5d-4273-8eb1-ac6a98c6865f
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: null
+    last_mod_date: 2022-12-23
+    term_identifier: 20183CIEN3304E
+    audit_permitted_code: 0
+    exam_credit_flag: true
+    course: 925d3e83-db7a-44d6-bfd4-6be63b226da3
 - model: myapp.courseterm
-  pk: f9057456-fed6-4982-bb82-3276999cb1ae
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181APPH9143E, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 0381673f-e0a4-4212-b95a-3b62ebff9267}
+  pk: c759f57f-feda-4d84-8d34-6554ddb7b0fb
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181AMST3704X
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: 3483bcab-5c2d-438c-940d-46d64a6ec593
 - model: myapp.courseterm
-  pk: f9aa1a51-bf3b-45cf-b1cc-34ce47ca9913
-  fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: loader,
-    last_mod_date: 2018-08-03, term_identifier: 20181AMST3704X, audit_permitted_code: 0,
-    exam_credit_flag: false, course: 01ca197f-c00c-4f24-a743-091b62f1d500}
+  pk: e48bdabe-9e44-416c-b20b-815d3b25b40b
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: admin
+    last_mod_date: 2018-10-07
+    term_identifier: 20181CLEN4414W
+    audit_permitted_code: 0
+    exam_credit_flag: false
+    course: 7c63bc7f-3da4-4ce2-bd68-51747c879832
 - model: myapp.person
   pk: 4a64f7fa-0c47-402c-907b-83fa339afc64
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
@@ -189,7 +379,7 @@
     last_mod_user_name: null
     last_mod_date: 2018-11-12
     person: 4a64f7fa-0c47-402c-907b-83fa339afc64
-    course_terms: [39ca7b38-f273-4fa3-9494-5a422780aebd, 00d14ddb-9fb5-4cff-9954-d52fc33217e7]
+    course_terms: [10c84b3a-589a-433c-9e5a-a0adc55ed109, b25862dc-d16c-4b62-a01c-a0f1de8e413b]
 - model: myapp.instructor
   pk: 1b3b7d1a-7eb5-43a2-941f-c18364013f9c
   fields:
@@ -207,7 +397,7 @@
     last_mod_user_name: null
     last_mod_date: 2018-11-12
     person: 8c1bf6eb-810e-4060-8a41-e87e9732e545
-    course_terms: [00d14ddb-9fb5-4cff-9954-d52fc33217e7, 00290ba0-ebae-44c0-9f4b-58a5f27240ed]
+    course_terms: [b25862dc-d16c-4b62-a01c-a0f1de8e413b, b3b4dd53-f41a-4f40-8862-992e904a921d]
 - model: myapp.instructor
   pk: 4baaf8fa-9832-4732-a1dd-ee7bc5e58c21
   fields:
@@ -225,4 +415,4 @@
     last_mod_user_name: null
     last_mod_date: 2018-11-12
     person: 7fe24e43-eceb-4d03-94e7-73ef73ffccb0
-    course_terms: [00d14ddb-9fb5-4cff-9954-d52fc33217e7]
+    course_terms: [b25862dc-d16c-4b62-a01c-a0f1de8e413b]
