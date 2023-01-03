@@ -1,25 +1,42 @@
-# From https://github.com/ymyzk/tox-gh-actions
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 name: Test
 
-on: [push]
+on:
+  # only runs tests if pushed directly to master branch and for any PR
+  push:
+    branches:
+    - master
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       max-parallel: 5
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: ["3.8", "3.9", "3.10"]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
+
+    - name: Install graphviz
+      run: sudo apt-get install -y graphviz libgraphviz-dev
+
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install tox tox-gh-actions
+        pip install --upgrade tox tox-gh-actions
+
     - name: Test with tox
       run: tox -vv
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v1
+      with:
+        name: Python ${{ matrix.python-version }}

@@ -1,28 +1,36 @@
-- model: oauth2_provider.application
-  pk: 3
-  fields:
-    client_id: demo_djt_web_client
-    user: null
-    redirect_uris: "https://www.getpostman.com/oauth2/callback\r\nhttp://localhost:8000/oauth2-redirect.html\r\nhttp://127.0.0.1:8000/oauth2-redirect.html"
-    client_type: public
-    authorization_grant_type: authorization-code
-    client_secret: demo_djt_web_secret
-    name: demo_djt_web_client
-    skip_authorization: false
-    created: 2021-04-02 18:14:12.712226+00:00
-    updated: 2021-04-02 18:14:18.947672+00:00
-    algorithm: RS256
-- model: oauth2_provider.application
-  pk: 5
-  fields:
-    client_id: demo-django-jsonapi-training_validator
-    user: 1
-    redirect_uris: ''
-    client_type: confidential
-    authorization_grant_type: client-credentials
-    client_secret: SaulGoodman
-    name: demo-django-jsonapi-training_validator
-    skip_authorization: false
-    created: 2021-04-02 20:57:09.921335+00:00
-    updated: 2021-04-02 20:57:09.921369+00:00
-    algorithm: ''
+[
+{
+  "model": "oauth2_provider.application",
+  "pk": 3,
+  "fields": {
+    "client_id": "demo_djt_web_client",
+    "user": null,
+    "redirect_uris": "https://www.getpostman.com/oauth2/callback\r\nhttp://localhost:8000/oauth2-redirect.html\r\nhttp://127.0.0.1:8000/oauth2-redirect.html",
+    "client_type": "public",
+    "authorization_grant_type": "authorization-code",
+    "client_secret": "pbkdf2_sha256$390000$yN0L1tQoZUjHEWyrLI7IjZ$qmlZleiLq0PbEgoaU8wU5GHGZcNWt2m/zAsRA9awsVA=",
+    "name": "demo_djt_web_client",
+    "skip_authorization": false,
+    "created": "2021-04-02T18:14:12.712Z",
+    "updated": "2022-12-21T16:47:18.955Z",
+    "algorithm": "RS256"
+  }
+},
+{
+  "model": "oauth2_provider.application",
+  "pk": 5,
+  "fields": {
+    "client_id": "demo-django-jsonapi-training_validator",
+    "user": 1,
+    "redirect_uris": "",
+    "client_type": "confidential",
+    "authorization_grant_type": "client-credentials",
+    "client_secret": "pbkdf2_sha256$390000$TNNQzSdYUSand4sfuXsG4q$JqhJadOZNCqEJ6NpUMS0l8qxY0g8QJV8WQPct4gM/do=",
+    "name": "demo-django-jsonapi-training_validator",
+    "skip_authorization": false,
+    "created": "2021-04-02T20:57:09.921Z",
+    "updated": "2022-12-21T16:48:32.388Z",
+    "algorithm": ""
+  }
+}
+]

@@ -33,4 +33,5 @@ Otherwise, you can just view these documentation source files:
 - [aws_api_gw.md](docs/aws_api_gw.md)
 - [cli_client.md](docs/cli_client.md)
 - [help.md](docs/help.md)
+- [using_dot.md](docs/using_dot.md)
 - [api.rst](docs/api.rst)

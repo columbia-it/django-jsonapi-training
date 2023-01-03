@@ -10,7 +10,7 @@ edit_uri: edit/master/docs/
 #repo_url: https://github.com/columbia-it/django-jsonapi-training
 #edit_uri: /columbia-it/django-jsonapi-training/edit/master/docs/
 
-copyright: Copyright &copy; 2018-2020 The Trustees of Columbia University in the City of New York
+copyright: Copyright &copy; 2018-2021 The Trustees of Columbia University in the City of New York
 
 theme:
    name: material
@@ -23,20 +23,24 @@ theme:
 
 plugins:
   - techdocs-core
-  # - mkdocstrings:
-  #     default_handler: python
-  #     handlers:
-  #       python:
-  #         setup_commands:
-  #           - import mkdocs_mkdocstrings_setup
-  #         rendering:
-  #           show_source: true
-  #           # show_if_no_docstring: true
-  #         # selection:
-  #           # inherited_members: true
-  #           # docstring_options:
-  #     watch:
-  #       - myapp
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          setup_commands:
+            - import mkdocs_mkdocstrings_setup
+          selection:
+            docstring_style: sphinx
+            # docstring_style: google
+            inherited_members: false
+            # docstring_options:
+          rendering:
+            show_source: true
+            show_if_no_docstring: true
+            show_signature_annotations: false
+      watch:
+        - myapp
   - macros:
       module_name: mkdocs_macros_main
 

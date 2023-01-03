@@ -33,6 +33,8 @@ router.register(r'courses', views.CourseViewSet)
 router.register(r'course_terms', views.CourseTermViewSet)
 router.register(r'people', views.PersonViewSet)
 router.register(r'instructors', views.InstructorViewSet)
+router.register(r'grades', views.GradeViewSet)
+router.register(r'non-models', views.NonModelViewSet)
 
 urlpatterns = [
 

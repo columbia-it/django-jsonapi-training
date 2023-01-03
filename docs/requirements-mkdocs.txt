@@ -1,9 +1,19 @@
 # bring in requirements for my app (excepting the optional database):
 -r../requirements-django.txt
 # stuff needed for mkdocs documentation:
-#mkdocs-techdocs-core==0.0.16
-# workaround a Markdown pinned requirements incompatibility
-git+https://github.com/n2ygk/mkdocs-techdocs-core@issue/26/pinned-reqs
-mkdocs-macros-plugin==0.5.12
-mkdocstrings==0.15.2
-mkdocs==1.1.2
+#workaround a Markdown pinned requirements incompatibility
+#git+https://github.com/n2ygk/mkdocs-techdocs-core@issue/26/pinned-reqs
+#Markdown<3.2
+pygraphviz==1.10
+Jinja2==3.1.2
+mkdocs==1.4.2
+mkdocs-material==8.1.11
+mkdocs-material-extensions==1.1.1
+mkdocs-monorepo-plugin==1.0.4
+mkdocs-techdocs-core==1.1.7
+mkdocs-autorefs==0.4.1
+mkdocs-macros-plugin==0.7.0
+mkdocstrings==0.19.1
+mkdocstrings-python-legacy==0.2.3
+slugify==0.0.1
+

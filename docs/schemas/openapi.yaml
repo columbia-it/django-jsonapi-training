@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   version: 1.2.0
   title: myapp
-  description: '![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg
+  description: '![CUIT logo](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg
     "CUIT logo")
 
 
@@ -32,13 +32,7 @@ paths:
   /v1/courses/:
     get:
       operationId: List/v1/courses/
-      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
-        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
-        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
-        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
-        \ to docstrings.\n* Must have a docstring under each member in order for it\
-        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
-        \ for members."
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
       parameters:
       - $ref: '#/components/parameters/include'
       - $ref: '#/components/parameters/fields'
@@ -365,13 +359,7 @@ paths:
                 $ref: '#/components/schemas/failure'
     post:
       operationId: create/v1/courses/
-      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
-        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
-        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
-        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
-        \ to docstrings.\n* Must have a docstring under each member in order for it\
-        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
-        \ for members."
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
       parameters: []
       requestBody:
         content:
@@ -511,13 +499,7 @@ paths:
   /v1/courses/{id}/:
     get:
       operationId: retrieve/v1/courses/{id}/
-      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
-        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
-        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
-        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
-        \ to docstrings.\n* Must have a docstring under each member in order for it\
-        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
-        \ for members."
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
       parameters:
       - name: id
         in: path
@@ -836,13 +818,7 @@ paths:
                 $ref: '#/components/schemas/failure'
     patch:
       operationId: partial_update/v1/courses/{id}/
-      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
-        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
-        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
-        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
-        \ to docstrings.\n* Must have a docstring under each member in order for it\
-        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
-        \ for members."
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
       parameters:
       - name: id
         in: path
@@ -970,13 +946,7 @@ paths:
                 $ref: '#/components/schemas/failure'
     delete:
       operationId: destroy/v1/courses/{id}/
-      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
-        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
-        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
-        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
-        \ to docstrings.\n* Must have a docstring under each member in order for it\
-        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
-        \ for members."
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
       parameters:
       - name: id
         in: path
@@ -3352,13 +3322,7 @@ paths:
   /v1/course_terms/{id}/course/:
     get:
       operationId: fetch/v1/course_terms/{id}/course/
-      description: "A course of instruction. e.g. COMSW1002 Computing in Context\n\
-        \ntesting [mkdocstrings](https://pawamoy.github.io/mkdocstrings):\n\nChanges\
-        \ from [sphinxcontrib.apidoc](https://github.com/sphinx-contrib/apidoc):\n\
-        \n* Uses markdown in docstring rather than RsT. Will require lots of changes\
-        \ to docstrings.\n* Must have a docstring under each member in order for it\
-        \ to show up in the docs:\n    * `#:` does not implement apidoc-style comments\
-        \ for members."
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
       parameters:
       - name: id
         in: path
@@ -4909,6 +4873,10 @@ components:
             demo-djt-sla-bronze: 'permitted to access the django-jsonapi-training
               demo: 1 request per second'
             demo-djt-sla-update: permitted to update the django-jsonapi-training resources
+    oidc-test:
+      type: openIdConnect
+      description: test OIDC service
+      openIdConnectUrl: https://oauth-test.cc.columbia.edu/.well-known/openid-configuration
     oauth-dev:
       type: oauth2
       description: dev OAuth2 service

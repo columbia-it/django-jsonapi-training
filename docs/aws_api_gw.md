@@ -127,6 +127,8 @@ $ aws iam attach-role-policy --role-name lambda_invoke_function_assume_apigw_rol
 The lambda function uses environment variables to configure it so let's install both a `test` and `prod` flavor:
 ```text
 $ rm -f lambda.zip
+$ # replace dummy account number
+$ sed -i.bak -e s/999999999999/123456789012/g lambda_function.py
 $ zip lambda.zip lambda_function.py
 $ aws lambda create-function --function-name introspect_test --runtime python3.7 --role arn:aws:iam::123456789012:role/lambda_basic_execution  --handler lambda_function.lambda_handler --zip-file fileb://lambda.zip --environment "Variables={clientId=demo_resource_server,clientSecret=wL0pgS5RcNOgdOSSmejzZNA605d3MtkoXMVSDaJxmaTU70XnYQPOabBAYtfkWXay,introspectionUrl=https://oauth-test.cc.columbia.edu/as/introspect.oauth2}" --profile alan:CTO
 $ aws lambda create-function --function-name introspect_prod --runtime python3.7 --role arn:aws:iam::123456789012:role/lambda_basic_execution  --handler lambda_function.lambda_handler --zip-file fileb://lambda.zip --environment "Variables={clientId=demo_resource_server,clientSecret=wL0pgS5RcNOgdOSSmejzZNA605d3MtkoXMVSDaJxmaTU70XnYQPOabBAYtfkWXay,introspectionUrl=https://oauth.cc.columbia.edu/as/introspect.oauth2}" --profile alan:CTO
@@ -291,6 +293,8 @@ And here's the OAS 3.0 spec, with a bunch of AWS-specific extension fields:
 Let's import it:
 
 ```text
+$ # replace dummy AWS account number
+$ sed -i.bak -e s/999999999999/123456789012/g proxy+oas3.json
 $ aws apigateway import-rest-api --body file://proxy+oas3.json --parameters endpointConfigurationTypes=REGIONAL --profile alan:CTO
 {
     "id": "p32r23u5jb",

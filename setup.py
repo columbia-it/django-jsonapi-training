@@ -24,7 +24,7 @@ setup(
     author_email='alan@columbia.edu',
     # TODO: this duplicates requirements.txt
     install_requires=[
-        'Django>=3.1.10,<3.2.0',
+        'Django>=3.2.11,<4.3',
         'django-admin',
     ]
 )

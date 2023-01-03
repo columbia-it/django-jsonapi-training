@@ -3,6 +3,13 @@
 Since this project is primarily documentation for training purposes, this Changelog
 documents the changes to the docs. See the project CHANGELOG for changes to the demo app.
 
+## 2022-12-23
+- Get mkdocs documentation back working and deprecate sphinx. Still need to update the docs!
+- Add documentation for using Django OAuth Toolkit (DOT) as the OAuth AS.
+- You can now do `(env) django-training$ ./manage.py loaddata myapp/fixtures/*` to create the superuser,
+  regular test users, various OAuth2 client identities and load both test data and a large course
+  inventory dataset of about 4K Courses and CourseTerms.
+
 ## 2021-06-25
 - Disable API autodocumentation for the time being due to mkdocstrings/pytkdocs version issues.
 - Document using DOT's 1.5.0's new OIDC support.

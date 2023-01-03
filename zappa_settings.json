@@ -1,0 +1,34 @@
+{
+    "dev": {
+        "lambda_description": "Django-training by Alan Crosswell",
+        "aws_region": "us-east-1",
+        "profile_name": "sandbox",
+        "project_name": "django-training",
+        "runtime": "python3.6",
+        "django_settings": "dev_zappa_settings",
+        "s3_bucket": "dtrain-deployment",
+
+        "touch": false,
+        "timeout_seconds": 900,
+        "slim_handler": true,
+        "log_level": "DEBUG",
+        "memory_size": 512,
+        "xray_tracing": "true",
+
+        "remote_env": "s3://dtrain-remote-env/dtraindb.json",
+
+        "environment_variables": {
+            "USE_REMOTE_ENV": "false",
+            "USE_S3": "false",
+            "USE_SEC_MAN": "true",
+            "SEC_NAME": "dev-lemoncake-aurora-mysql",
+
+            "BUCKET_NAME": "dtrain-remote-env",
+            "FILE_NAME": "dtrain_en_file",
+            "DTRAIN_STATIC": "dtrain-static"
+
+        },
+
+        "keep_warm": false
+    }
+}

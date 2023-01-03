@@ -1,8 +1,8 @@
-![alt-text](docs/media/CUIT_Logo_286_web.jpg "Columbia University Information Technology logo")
+![CUIT logo](docs/media/CUIT_Logo_286_web.jpg "Columbia University Information Technology logo")
 
 # django-jsonapi-training
 
-![alt-text](docs/media/CCbyncsa4.0.png "CC BY-NC-SA 4.0") [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE](./LICENSE)
+![CC BY-NC-SA 4.0 logo](docs/media/CCbyncsa4.0.png "CC BY-NC-SA 4.0") [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International LICENSE](./LICENSE)
 
 This is some in-house staff developer training developed by and for
 [Columbia University Information Technology](https://cuit.columbia.edu).

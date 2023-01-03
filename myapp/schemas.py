@@ -91,7 +91,7 @@ class SchemaGenerator(JSONAPISchemaGenerator):
             'version': __version__,
             'title': __title__,
             'description':
-                '![alt-text](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")'
+                '![CUIT logo](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")'
                 '\n'
                 '\n'
                 '\n'
@@ -158,6 +158,11 @@ class SchemaGenerator(JSONAPISchemaGenerator):
                              }
                         }
                     }
+                },
+                'oidc-test': {
+                    'type': 'openIdConnect',
+                    'description': 'test OIDC service',
+                    'openIdConnectUrl': 'https://oauth-test.cc.columbia.edu/.well-known/openid-configuration',
                 },
                 'oauth-dev': {
                     'type': 'oauth2',

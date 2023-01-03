@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Provisions Aurora Serverless and related resources
+Parameters:
+  AppName:
+    Description: "Application Name"
+    Type: String
+    Default: dtrain
+  EnvType:
+    Description: "Environment type (eg, dev, qa, prod)"
+    Type: String
+    Default: dev
+  DBClusterName:
+    Description: "Aurora RDS cluster name"
+    Type: String
+    Default: dtrain-rds-cluster
+  DatabaseName:
+    Description: "Aurora RDS database name"
+    Type: String
+    Default: dtrain_db
+  DBMasterUserName:
+    AllowedPattern: "[a-zA-Z0-9_]+"
+    ConstraintDescription: must be between 1 to 16 alphanumeric characters.
+    Description: The database admin account user name, between 1 to 16 alphanumeric characters.
+    MaxLength: '16'
+    MinLength: '1'
+    Type: String
+    Default: admin_user
+  DBSubnetList:
+    Description: "List of subnets for the Aurora RDS cluster"
+    Type: List<AWS::EC2::Subnet::Id>
+    ConstraintDescription: "must be a list of at least three existing subnets associated with at least three different availability zones."
+Resources:
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: CloudFormation managed DB subnet group.
+      SubnetIds:
+        - !Select [0, !Ref DBSubnetList ]
+        - !Select [1, !Ref DBSubnetList ]
+        - !Select [2, !Ref DBSubnetList ]
+  DBSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub "${EnvType}-Aurora-${DatabaseName}-UserSecret"
+      Description: RDS database auto-generated user password
+      GenerateSecretString:
+        SecretStringTemplate: !Sub '{"username": "${DBMasterUserName}"}'
+        GenerateStringKey: "password"
+        PasswordLength: 30
+        ExcludeCharacters: '"@/\'
+      Tags:
+        -
+          Key: AppName
+          Value: !Ref AppName
+  RDSCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      DBClusterIdentifier: !Ref DBClusterName
+      MasterUsername: !Join ['', ['{{resolve:secretsmanager:', !Ref DBSecret, ':SecretString:username}}' ]]
+      MasterUserPassword: !Join ['', ['{{resolve:secretsmanager:', !Ref DBSecret, ':SecretString:password}}' ]]
+      DatabaseName: !Ref DatabaseName
+      Engine: aurora
+      EngineMode: serverless
+      EngineVersion: 5.6.10a
+      ScalingConfiguration:
+        AutoPause: true
+        MaxCapacity: 4
+        MinCapacity: 1
+        SecondsUntilAutoPause: 900 # 15 min
+      DBSubnetGroupName:
+        Ref: DBSubnetGroup
+Outputs:
+  StackName:
+    Description: Aurora Stack Name
+    Value: !Ref AWS::StackName
+    Export:
+      Name: !Sub ${AWS::StackName}-StackName
+
+  DatabaseName:
+    Description: Aurora Database Name
+    Value: !Ref DatabaseName
+    Export:
+      Name: !Sub ${AWS::StackName}-DatabaseName
+
+  DatabaseClusterArn:
+    Description: Aurora Cluster ARN
+    Value: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${DBClusterName}
+    Export:
+      Name: !Sub ${AWS::StackName}-DatabaseClusterArn
+
+  DatabaseSecretArn:
+    Description: Aurora Secret ARN
+    Value: !Ref DBSecret
+    Export:
+      Name: !Sub ${AWS::StackName}-DatabaseSecretArn
+
+  DatabaseClusterID:
+    Description: Aurora Cluster ID
+    Value: !Ref RDSCluster
+    Export:
+      Name: !Sub ${AWS::StackName}-DatabaseClusterID
+
+  AuroraDbURL:
+    Description: Aurora Database URL
+    Value: !GetAtt RDSCluster.Endpoint.Address
+    Export:
+      Name: !Sub ${AWS::StackName}-DatabaseURL
+
+  DatabaseMasterUserName:
+    Description: Aurora Database User
+    Value: !Ref DBMasterUserName
+    Export:
+      Name: !Sub ${AWS::StackName}-DatabaseMasterUserName
