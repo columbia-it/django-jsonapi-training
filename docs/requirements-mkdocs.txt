@@ -6,4 +6,4 @@
 git+https://github.com/n2ygk/mkdocs-techdocs-core@issue/26/pinned-reqs
 mkdocs-macros-plugin==0.5.12
 mkdocstrings==0.15.2
-mkdocs==1.1.2
+mkdocs==1.2.3
