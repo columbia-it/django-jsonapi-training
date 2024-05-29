@@ -20,7 +20,7 @@ class OauthConfig(AppConfig):
         ):
             url = settings.OAUTH2_SERVER + "/.well-known/openid-configuration"
             try:
-                result = requests.get(url)
+                result = requests.get(url, timeout=10)
                 if result.status_code == 200:
                     settings.OAUTH2_CONFIG = result.json()
                     settings.OAUTH2_PROVIDER["SCOPES"]: {

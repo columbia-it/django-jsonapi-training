@@ -69,6 +69,7 @@ class HasClaim(BasePermission, OAuthLibMixin):
             response = requests.get(
                 self.userinfo_url,
                 headers={"authorization": "Bearer {}".format(request.auth)},
+                timeout=30,
             )
         except requests.exceptions.RequestException:
             log.exception(
