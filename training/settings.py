@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'myapp',
     'rest_framework',
     'rest_framework_json_api',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'corsheaders',
     'oauth2_provider',
     'oauth',
