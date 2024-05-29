@@ -152,7 +152,7 @@ class HasClaim(BasePermission, OAuthLibMixin):
                     log.debug("Claim approved (empty string means True)")
                     return True
                 claim_value = json.loads(request.auth.userinfo)[self.claim]
-                if type(claims_map_entry) == str:
+                if isinstance(claims_map_entry, str):
                     claims = claim_value.split()
                     if claims_map_entry in claims:
                         log.debug(
