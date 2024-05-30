@@ -210,7 +210,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Set env['OAUTH2_SERVER'] to 'self' to use the built-in django-oauth-toolkit server.
 # Otherwise et it to a baseURL of an external PingFederate AS.
 ###
-OAUTH2_SERVER = os.environ.get('OAUTH2_SERVER','https://oauth-test.cc.columbia.edu')
+OAUTH2_SERVER = os.environ.get('OAUTH2_SERVER','self')
 
 # Workaround inability of PyCharm to handle multi-line environment variables by reading
 # the OIDC RSA private key from a file. Otherwise just take it from the env.
