@@ -8,7 +8,7 @@
     "redirect_uris": "https://www.getpostman.com/oauth2/callback\r\nhttp://localhost:8000/oauth2-redirect.html\r\nhttp://127.0.0.1:8000/oauth2-redirect.html",
     "client_type": "public",
     "authorization_grant_type": "authorization-code",
-    "client_secret": "pbkdf2_sha256$390000$yN0L1tQoZUjHEWyrLI7IjZ$qmlZleiLq0PbEgoaU8wU5GHGZcNWt2m/zAsRA9awsVA=",
+    "client_secret": "demo_djt_web_secret",
     "name": "demo_djt_web_client",
     "skip_authorization": false,
     "created": "2021-04-02T18:14:12.712Z",
