@@ -112,6 +112,7 @@ class DJATestCase(APITestCase):
         # most tests just use the read_write_user
         self.user1_token = oauth_models.MyAccessToken(  # nosec B106
             token='User1Token',
+            user=self.read_write_user,
             expires=datetime.isoformat(datetime.now(tz=timezone.utc)+timedelta(seconds=3600)),
             scope='auth-columbia demo-djt-sla-bronze read create update openid '
                   'profile email https://api.columbia.edu/scope/group',
@@ -291,6 +292,7 @@ class DJATestCase(APITestCase):
                                    data={"filter[subject_area_code]": "ANTB",
                                          "filter[school_bulletin_prefix_code]": "XCEFK9"},
                                    **HEADERS)
+        self.assertEqual(response.status_code, 200)
         j = json.loads(response.content)
         self.assertEqual(
             len(j['data']),
@@ -307,6 +309,7 @@ class DJATestCase(APITestCase):
         response = self.client.get("{}{}/".format(self.courses_url, self.courses[5].id),
                                    data={"fields[courses]": "course_name,course_description"},
                                    **HEADERS)
+        self.assertEqual(response.status_code, 200)
         j = json.loads(response.content)
         self.assertEqual(len(j['data']['attributes']), 2)
         self.assertIn('course_name', j['data']['attributes'])
