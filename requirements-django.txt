@@ -4,7 +4,7 @@ django-debug-toolbar==4.4.2
 django-extensions==3.2.3
 django-filter==24.2
 djangorestframework==3.15.1
-djangorestframework-jsonapi==7.0.0
+djangorestframework-jsonapi==7.0.1
 # production release of DOT:
 django-oauth-toolkit==2.4.0
 # master branch:
