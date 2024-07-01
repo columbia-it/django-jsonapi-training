@@ -10,7 +10,7 @@ Make sure you know how to [git](https://git-scm.com) clone, checkout, add, commi
 ## Python & Django
 
 MVC: [Model-View-Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
-(and [Django's weird terminology](https://docs.djangoproject.com/en/stable/faq/general/#django-appears-to-be-a-mvc-framework-but-you-call-the-controller-the-view-and-the-view-the-template-how-come-you-don-t-use-the-standard-names))
+(and [Django's weird Model-Template-View terminology](https://docs.djangoproject.com/en/stable/faq/general/#django-appears-to-be-a-mvc-framework-but-you-call-the-controller-the-view-and-the-view-the-template-how-come-you-don-t-use-the-standard-names))
 
 How to start a Django project and an app within the project: `django-admin startproject` and `django-admin startapp`.
 
@@ -87,7 +87,7 @@ representation. Floating point numbers can be 32, 64 or 128-bits using represent
 that are vendor-proprietary or perhaps
 [IEEE floating point](https://www.cs.cornell.edu/~tomf/notes/cps104/floating.html).
 Furthermore, the order of bytes within words can be
-[big- or little-endian](https://chortle.ccsu.edu/AssemblyTutorial/Chapter-15/ass15_3.html).
+[big- or little-endian](https://en.wikipedia.org/wiki/Endianness).
 
 When early computer networks were created among heterogenous systems, their
 architectural differences were significant and standards were created

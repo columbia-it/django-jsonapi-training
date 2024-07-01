@@ -2,7 +2,7 @@
 
 ## Why use {json:api}?
 
-See [http://jsonapi.org/](http://jsonapi.org/) for their
+See [https://jsonapi.org/](http://jsonapi.org/) for their
 propaganda. The spec provides consistent rules for how requests and
 responses are formatted, is truly RESTful, and implements HATEOAS.
 Any standard is better than none and this one seems pretty good.

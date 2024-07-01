@@ -5,7 +5,8 @@
 An HTTP request consists of a verb (HTTP method), scheme (http/https), server, port and
 resource (noun), and query parameters.
 
-e.g. GET `https://127.0.0.1:8000/api/widgets/123?sort=-name` is actually transmitted like this
+e.g. A GET of `https://127.0.0.1:8000/api/widgets/123?sort=-name`
+(using [Basic authentication](https://datatracker.ietf.org/doc/html/rfc7235)) is actually transmitted like this
 after establishing a TCP connection to port 8000:
 
 ```text
@@ -39,12 +40,13 @@ Common methods are:
 
 Usually where longer form parameters or content is POSTed. The `Content-Type`
 header specifies what kind of content is being POSTed, PATCHed or PUT.
-For our purposes this will be `application/json` or a variant such as `application/vnd.api+json`.
+For our purposes this will be `application/json` or a variant such as `application/vnd.api+json`
+(which is used by [{json:api}](https://jsonapi.org)).
 
 ### Response Body
 
-The response to the request, which can be empty (204 No Content) and
-looks like this, for example for a 200 response:
+The response to the request, which can be empty (204 No Content)
+looks like this, for example, for a 200 response:
 
 ```text
 HTTP/1.1 200 OK
