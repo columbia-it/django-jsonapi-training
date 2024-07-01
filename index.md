@@ -5,8 +5,8 @@ You can find the documentation online here:
 
 Or, to locally view it in a browser:
 ```bash
-./makedocs
-open docs/build/index.html
+tox -e mkdocs
+mkdocs serve  # or open ./site/index.html
 ```
 
 Otherwise, you can just view these documentation source files:
