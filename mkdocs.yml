@@ -10,7 +10,7 @@ edit_uri: edit/master/docs/
 #repo_url: https://github.com/columbia-it/django-jsonapi-training
 #edit_uri: /columbia-it/django-jsonapi-training/edit/master/docs/
 
-copyright: Copyright &copy; 2018-2021 The Trustees of Columbia University in the City of New York
+copyright: Copyright &copy; 2018-2024 The Trustees of Columbia University in the City of New York
 
 theme:
    name: material

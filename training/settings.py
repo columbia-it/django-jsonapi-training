@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from distutils.util import strtobool
+from str2bool import str2bool as strtobool
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -95,6 +95,11 @@ LOGIN_URL='/admin/login/'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 if os.environ.get('MYSQL_HOST', None):
+    # kludge to use pymysql instead of mysqlclient:
+    import pymysql
+    pymysql.version_info = (1, 4, 6, 'final', 0)  # change mysqlclient version
+    pymysql.install_as_MySQLdb()
+
     password = os.environ.get('MYSQL_PASSWORD', None)
     # unable to pass None/null value in environment
     if password and password.lower() == 'none':
