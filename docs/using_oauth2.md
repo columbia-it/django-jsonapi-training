@@ -1,8 +1,8 @@
-# Using OAuth 2.0
+# Using Columbia OAuth 2.0 as the AS
 
-Our example use of OAuth 2.0 uses an external OAuth 2.0 Authorization Server (AS). It's also possible to
-add an AS using Django's auth models and the [`django-oauth-toolkit`](https://django-oauth-toolkit.readthedocs.io/)
-(DOT). Instructions on how to add DOT to our project can be found [below](using_dot.md).
+This example use of OAuth 2.0 uses an external OAuth 2.0 Authorization Server (AS) run by Columbia University.
+It's also possible to add an AS using Django's auth models and the [`django-oauth-toolkit`](https://django-oauth-toolkit.readthedocs.io/)
+(DOT). Instructions on how to add DOT to our project can be found [here](using_dot.md).
 
 ## Get an OAuth 2.0 token
 

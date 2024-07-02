@@ -1,12 +1,12 @@
 # Using django-oauth-toolkit as the AS
 
-In case you don't have access to the Columbia University OAuth2 AS, or want to quickly experiment without
+In case you don't have access to the [Columbia University OAuth2 AS](using_oauth2.md), or want to quickly experiment without
 waiting for your requested client registration to be implemented, you can optionally configure 
 the built-in Django OAuth Toolkit (DOT) AS.
 
 It's fairly easy to use DOT as your AS, logging in Django "staff" users with the Authorization Code flow. To
 keep it easy to switch between DOT and our external AS we'll
-configure our DOT AS using the same scopes as used for the Columbia AS &mdash; they just won't mean much. (For example,
+configure our DOT AS using the same scopes as used for the [Columbia AS](using_oauth2.md) &mdash; they just won't mean much. (For example,
 the `auth-columbia` _scope selector_ will not lead to a Shibboleth login when using DOT.)
 
 DOT >= 1.5.0 supports OpenID Connect (OIDC) 1.0, so we'll
@@ -104,7 +104,7 @@ index e784527..518a691 100644
 
 ## Adding Users
 
-When using the Columbia AS, users are members of the user community and show up with a Django
+When using the [Columbia AS](using_oauth2.md), users are members of the user community and show up with a Django
 [request.user](https://docs.djangoproject.com/en/3.1/topics/auth/default/) of _UNI_@columbia.edu. When using DOT,
 you need to create users in the
 [Django Authentication System](https://docs.djangoproject.com/en/3.1/topics/auth/default/#using-the-django-authentication-system).
@@ -158,7 +158,12 @@ rather than the more common approach of using Basic Auth to authenticate introsp
 
 ## Get an OAuth 2.0 token
 
-See the [prior descrption](using_oauth2.md#get-an-oauth-20-token) and simply change the Auth URL and Access Token URL.
+You'll need to configure Postman for OAuth 2.0. 
+
+![Postman get new access token display](./media/imageX.png "get an access token")
+
+You can cut-n-paste the above from here:
+
 
 ```text
 Token Name: *pick a name*
@@ -180,13 +185,13 @@ You'll then see a Request for Approval that looks like this:
 
 ![DOT approval display](./media/dot3.png "Request for Approval")
 
-Unlike the Columbia AS which allows you to individually approve scopes, DOT's is all-or-nothing.
+Unlike the [Columbia AS](using_oauth2.md) which allows you to individually approve scopes, DOT's is all-or-nothing.
 
 Now you are logged in and have an Access Token which Postman shows you:
 
 ![Postman Manage Access Token display](./media/dot4.png "Granted Access and Refresh tokens")
 
-From there, things will mostly work the same as with the Columbia AS.
+From there, things will mostly work the same as with the [Columbia AS](using_oauth2.md).
 
 If you want to interrogate the DOT AS to see what the userinfo and introspection endpoints return, you can do that now.
 
@@ -236,7 +241,7 @@ DOT returns these claims in the ID Token (Use https://jwt.io to easily decode th
 }
 ```
 
-Whereas Columbia AS returns quite a bit more:
+Whereas [[Columbia AS](using_oauth2.md)](using_oauth2.md) returns quite a bit more:
 ```json
 {
   "sub": "ac45@columbia.edu",
@@ -340,7 +345,7 @@ ID number for the `sub`:
 ```
 It appears that extending the ID Token is somewhat related to the Userinfo response, even without extending Userinfo.
 
-Here's what the Columbia AS returns for Userinfo:
+Here's what the [[Columbia AS](using_oauth2.md)](using_oauth2.md) returns for Userinfo:
 ```json
 {
     "sub": "ac45@columbia.edu",

@@ -1,11 +1,12 @@
 # Split Instructor model to be OneToOne with new Person model
 
-Just as a thought experiment, let's decide that we want a generic Person model.
+As a thought experiment, let's decide that we want a generic Person model.
 For the time being, this model will be one-to-one with an Instructor.
 Let's assume that our production database has live data in it that we don't want to break
 things, so we'll need some migration magic.
 
 We want to:
+
 1. [Create the new Model, Serializer, and Views.](#new-person-models-serializers-views)
 2. [Make the new migration and customize it](#custom-person-migration) 
    to fix our data, moving `Instructor.name` to `Person.name` and
@@ -32,6 +33,7 @@ Here's the new model:
 ## Custom Person migration
 
 We customize the migration:
+
 1. Rename it from the auto name.
 1. Move adding the new `Instructor.person` OneToOneField up to the top.
 1. Add Python code to move the `Instructor.name` field into `Person.name` and vice-versa.
@@ -150,6 +152,7 @@ Changes to be committed:
 ## Update fixtures
 
 Our test fixtures currently only work with an older version of our app's models, so let's:
+
 1. Checkout that older version.
 2. Start with a fresh sqlite3 database.
 3. Migrate and load the current fixture data.
@@ -281,9 +284,9 @@ a060bdbe6a3f49a08172ad89742b82c4                                                
 8c1bf6eb810e40608a41e87e9732e545                                                                2018-12-05     Samuel Johnson    
 sqlite> 
 (env) django-training$ ./manage.py dumpdata myapp --format yaml >myapp/fixtures/testcases.yaml
-(env) django-training$ git diff myapp
 ```
 ```diff
+(env) django-training$ git diff myapp
 diff --git a/myapp/fixtures/testcases.yaml b/myapp/fixtures/testcases.yaml
 index 9572763..8dd3672 100644
 --- a/myapp/fixtures/testcases.yaml

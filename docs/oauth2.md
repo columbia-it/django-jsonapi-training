@@ -66,6 +66,7 @@ How scopes are used can vary greatly. Our implementation of scopes includes seve
 ### Resource Server SLA Scopes
 
 Resource Server Service Level Agreement scopes are used to indicate that a registered Client is:
+
 - permitted to access a given Resource Server, and
 - optionally, at a specified (set of) service level(s).
 
@@ -198,7 +199,7 @@ are authorized based on the scopes associated with the token, which it
 learns from token introspection. It can also make decisions based on the
 identity of the user, in the cases where a user was identified
 (Authorization Code or Implicit grants) as this is exposed by the
-introspection (and userinfo).
+introspection (and userinfo) endpoints.
 
 Resource server designers need to decide:
 
@@ -231,7 +232,7 @@ You need to provide:
 
 You'll be given a *client_id* and *client_secret*. Configure these in
 [settings.OAUTH2_PROVIDER](building.md#edit-settings-to-add-drf-dja-oauth-debug-etc)
-using environment variables or some other method to protect the credentials (e.g. not in the source code!).
+using environment variables or some other method to protect the credentials (**not** in the source code!).
 
 ### Register Client App(s)
 
@@ -241,7 +242,7 @@ about when registering a client are:
 #### Client is operating on behalf of an end user
 
 1.  Is it a fully in-browser (javascript) app? If so, it will likely be using
-    the Implicit grant type and will require a user to log in,
+    the ~~Implicit~~[^1] Authorization Code grant type (with no password) and will require a user to log in,
     using the auth-columbia scope selector.
 2.  What scopes should the app be allowed to request on behalf of the
     user and what scopes are required by its Resource Server?
@@ -252,3 +253,7 @@ about when registering a client are:
 
 In this case, the app should be registered with permission to request
 the **auth-none** and additional scopes.
+
+[^1]: SPA use of Implicit grants is [deprecated](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#name-implicit-grant)
+      in favor of Authorization Code (with no password)
+	  and [PKCE](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#name-pkce).

@@ -1,5 +1,22 @@
 # Building our DJA project
 
+## Quick Start
+
+You can skip ahead and simply clone this project at https://github.com/columbia-it/django-jsonapi-training
+with ssh:
+```console
+src$ git clone git@github.com:columbia-it/django-jsonapi-training.git
+src$ cd django-jsonapi-training
+```
+or with https:
+```console
+src$ git clone https://github.com/columbia-it/django-jsonapi-training.git
+src$ cd django-jsonapi-training
+```
+
+If you want to see how this project was built up over time, follow along below. Just be aware that
+versions of Django, DOT, DJA, DRF, etc. have progressed from when this was initially written.
+
 ## Start a new project with a blank slate
 
 *Development project teams generally have a starter template which avoids a lot of
@@ -209,7 +226,7 @@ We want to ignore our virtualenv directory, and various output files created by 
 compiled python and so on.
 
 ```console
-(env) django-jsonapi-training$ <b>cat >.gitignore
+(env) django-jsonapi-training$ cat >.gitignore
 env/
 *.pyc
 db.sqlite3
@@ -360,7 +377,7 @@ Date:   Fri Oct 26 16:36:49 2018 -0400
 You can now use the above commit as a template to start future projects if you like.
 
 Browse the source code for this project or clone it. Most of the code is reproduced below as well,
-but is likely not completely up to date. Here's a summary of cloning, assuming you've already
+but is not completely up to date. Here's a summary of cloning, assuming you've already
 setup your git SSH keys:
 
 ```console
@@ -370,9 +387,13 @@ django-jsonapi-training$ git checkout initial
 ```
 
 If you want to follow along, you can uses the various git tags to check out pieces of the project.
-We'll indicate them like this:
+However, many of these intermediate versions have now been replaced. It's probably better to simply
+skip ahead and go to the latest code.
 
-`GIT TAG: initial`
+!!! note
+    We'll indicate the git tags like this in the documentation.
+
+    `GIT TAG: initial`
 
 ## Edit Settings to add DRF, DJA, OAuth, Debug, etc.
 
@@ -394,7 +415,7 @@ We will make the following additions to the default settings.py:
 9. Parametrize various credentials and options using environment variables
 10. Configure an optional external Microsoft SQLServer database 
 
-You can just take a look at the latest version of `settings.py`. Following is the
+You can take a look at the latest version of `settings.py`. Following is the
 diff between the initial boilerplate code and our edits.
 
 ```diff
@@ -595,7 +616,7 @@ index 52940b5..a8dcdb6 100644
 Generally, you need to have an application architecture sketched out in advance. This includes a data model.
 You can start by sketching your entity-relationship diagrams on a whiteboard or use a modeling tool to generate a
 [UML](https://en.wikipedia.org/wiki/Unified_Modeling_Language)
-diagram. Or, you can just make Django models
+diagram. Or, you can make Django models
 and then pretend you designed them first using the `django-extensions` package. Your manager will never known;-)
 
 ```bash
@@ -610,6 +631,7 @@ Here's our model with the CommonModel off to the side to make things more readab
 These are just like in "vanilla" Django.
 
 We're going to:
+
 1. Make a `CommonModel` abstract class that adds some common fields that we want all our models to include.
    These are things like various dates, modifying users, etc. We also choose to make our `id` a UUID4
    as [recommended in the {json:api} spec](https://jsonapi.org/format/#crud-creating-client-ids).
@@ -617,6 +639,7 @@ We're going to:
    a `ForeignKey`.
 3. Each model has a default parameter to order by. These will come in handy when we get to pagination and want
    consistent paginated results. 
+
 ```python
 import uuid
 
@@ -689,6 +712,7 @@ class CourseTerm(CommonModel):
 Serializers render the Models in the "wire" format, which is JSON, and specifically {json:api},
 so we import our serializers from `rest_framework_json_api.serializers`.
 We will:
+
 1. Use a `HyperlinkedModelSerializer` which gives us the HATEOAS links.
 2. For each Model, choose which model fields to serialize.
 3. Define the `ResourceRelatedField` linkage between the models and the {json:api} representation.
@@ -771,13 +795,13 @@ Note the Django style of forward-referencing classes that have not yet been defi
 you can either provide a reference to the serializer (e.g. `{'course': CourseSerializer}`) or a string containing
 the full Python path name of the serializer (`{'course': 'myapp.serializers.CourseSerializer'}`). In a case like
 the one shown here, where the first serializer references the second and vice-versa, there will always be one
-that is referenced before being defined, so we just consistently use the string reference style. (We also saw this
+that is referenced before being defined, so we consistently use the string reference style. (We also saw this
 in `settings.py` for `INSTALLED_APPS` and so on.)
 
 ### Keep it DRY
 
 I could have made life easier for myself by using `fields = "__all__""` which tells the ModelSerializer to
-just include all the fields of the model plus the additional fields defined in this class (and, for the
+include all the fields of the model plus the additional fields defined in this class (and, for the
 HyperlinkedModelSerializer, also the `url` field). Also, to keep things DRY (Don't Repeat Yourself) I've tried to
 minimize repetive code:
 
@@ -945,9 +969,10 @@ index 32604cb..beb962c 100644
 ```
 
 
-Note that I've followed a somewhat common pattern of extending a class using the same name as the
-base class (HyperlinkedModelSerialzer). This can be somewhat confusing at first glance but also
-makes it easy to add functionality without changing a lot of source code.
+!!! Note
+    I've followed a somewhat common pattern of extending a class using the same name as the
+    base class (HyperlinkedModelSerialzer). This can be somewhat confusing at first glance but also
+    makes it easy to add functionality without changing a lot of source code.
 
 ## Define URL routing and Views 
 
@@ -960,11 +985,12 @@ defined in the `urlpatterns` list in `urls.py` and reference the CBV's in `views
 See `training/urls.py`.
 
 Let's start with the URL routing:
+
 1. Version our API by prepending `/v1` in front of our resources.
 1. Redirect from `/` to `/v1` (the current version).
 1. Use the DRF `DefaultRouter` to generate "the usual" URL routes to our ViewSets
   (`CourseViewSet` and `CourseTermViewSet`)
-1. Because DJA doesn't (yet) have a `DefaultRouter`, we then have to explicitly add
+1. Because DJA doesn't have a `DefaultRouter`, we then have to explicitly add
    routes for each resource's `relationships` and `related` attributes.
    
 We'll explain the `kwargs` that are set with `<arg>` in each `path()` when we get to the views.
@@ -1130,7 +1156,7 @@ Running migrations:
   Applying sessions.0001_initial... OK
 ```
 
-Anytime things are feeling confusing, just remove the sqlite3 database and re-migrate.
+Anytime things are feeling confusing, remove the sqlite3 database and re-migrate.
 ```console
 (env) django-training$ rm db.sqlite3
 (env) django-training$ /manage.py makemigrations
@@ -1350,7 +1376,7 @@ We get denied with a `401 Unauthorized`:
 }
 ```
 
-Since we're just testing and Oauth 2.0 is pretty complicated, let's just use Basic Auth with our
+Since we're testing and Oauth 2.0 is pretty complicated, let's use Basic Auth with our
 previously-added `admin` superuser:
 
 ![Postman basic auth](./media/postman-auth-basic.png "Using basic auth user 'admin' and password 'admin123'")
@@ -1430,6 +1456,7 @@ As you may have noticed in `settings.py`, we've added several Filter Backends:
   makes sure only valid {json:api} query
   parameters are provided. If you leave this out, a client could misspell `sprt` and they'd wonder why
   the results were not properly sorted.
+
 - [`rest_framework_json_api.filters.OrderingFilter`](https://django-rest-framework-json-api.readthedocs.io/en/stable/usage.html#orderingfilter)
   implements sorting.
 - [`rest_framework_json_api.django_filters.DjangoFilterBackend`](https://django-rest-framework-json-api.readthedocs.io/en/stable/usage.html#djangofilterbackend)
@@ -2219,7 +2246,7 @@ handy for settting various environment variables. For example, I have both a sql
 
 ### Check for Python Warnings
 
-An especially useful enviroment variable to set from time-to-time (either in PyCharm or just
+An especially useful enviroment variable to set from time-to-time (either in PyCharm or
 in the shell) is:
 `PYTHONWARNINGS=default` since the _default_ value for
 [PYTHONWARNINGS](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONWARNINGS) is `ignore`.
@@ -2315,7 +2342,7 @@ you wrote:
 1. run [`isort`](https://isort.readthedocs.io) to sort imports.
 1. run `./manage.py check` to make sure all the Django stuff is correct.
 1. run [`bandit`](https://bandit.readthedocs.io) to check for common static security vulernabilities.
-1. run [`safety`](https://pyup.io/safety/) to check for that there are no problems
+1. run [`safety`](https://pyup.io/safety/) to check that there are no problems
    with the pinned requirements versions. 
 1. wrap `./manage.py test` in a test [coverage](https://coverage.readthedocs.io) report.  
 
@@ -2397,7 +2424,8 @@ ERROR:   py36: commands failed
 ```
 
 Above we see a couple of `flake8` errors that have to be fixed before the tests can be run.
-1. `myapp/admin.py` (an `django-admin startapp` auto-generated file that we don't need) has an unused `import`.
+
+1. `myapp/admin.py` (a `django-admin startapp` auto-generated file that we don't need) has an unused `import`.
 2. `myapp/tests/test_views.py` also has an unused `import`.
 3. Let's use that `expectedFailure` import and label the failing test so we can move on.
 
@@ -2641,10 +2669,11 @@ is available but hasn't been released yet. It's actually pretty easy to do this 
 A couple of real-world examples have to do with a race condition in DOT and a bug in DRF 2.6.0's
 new `RelatedMixin`. Here's our modified `requirements.txt` that has a few changes from our simplistic
 earlier version:
+
 1. We are OK with any version of Django 2.1.x and matching versions of django-cors-middleware, etc.
 2. We replace `django-oauth-toolkit`'s latest published release (1.2.0) with a newer commit that has been
    merged into the project but is not yet published.
-3. We replace `djangorestframework-jsonapi` 2.6.0 with a commit of merged
+3. We replace `djangorestframework-jsonapi` 2.6.0 with a commit of a merged
    [PR](https://github.com/django-json-api/django-rest-framework-json-api/pull/517) that is not yet released.
 4. All the customizations are commented so we know why they are there.
 
@@ -2671,6 +2700,7 @@ tox-pip-extensions==1.4.0
 PyYAML
 ```
 Let's clean up our world and try again:
+
 1. Deactivate and remove the current virtualenv.
 2. Use tox to set up our dev enviroment this time.
 3. Run the tests and see we now have an _unexpected_ success.

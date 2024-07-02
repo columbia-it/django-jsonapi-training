@@ -2,11 +2,12 @@
 
 Let's further enhance our model such that any given instance of a Course (a CourseTerm) can have zero
 or more Instructors. We'll:
+
 1. Add an Instructor model.
 2. Do a new migration.
 3. Create new serializers and views for that Instructor model.
 4. Update the existing serializers to demonstrate a second relationship for CourseTerm.
-5. Add some fancy searching features that allow a client to, for instance. GET all the instructors for
+5. Add some fancy searching features that allow a client to, for instance, GET all the instructors for
    a given course name:
    http://localhost:8000/v1/instructors/?filter[course_name]=accounting%20for%20consultants
 

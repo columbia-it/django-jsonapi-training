@@ -30,12 +30,11 @@ plugins:
         python:
           setup_commands:
             - import mkdocs_mkdocstrings_setup
-          selection:
+          options:
             docstring_style: sphinx
             # docstring_style: google
             inherited_members: false
             # docstring_options:
-          rendering:
             show_source: true
             show_if_no_docstring: true
             show_signature_annotations: false
@@ -70,7 +69,8 @@ nav:
  - 'Review: git, Python, JSON': review.md
  - 'HTTP and REpresentational State Transfer (REST)': rest.md
  - 'The {json:api} specification': jsonapi.md
- - 'Using OAuth 2.0': using_oauth2.md
+ - 'Using django-oauth-toolkit as the AS': using_dot.md
+ - 'Using Columbia OAuth 2.0 as the AS': using_oauth2.md
  - 'More About Using OAuth 2.0': oauth2.md
  - 'Building our DJA project': building.md
  - 'Modifying our DJA Project': modifying.md
@@ -78,13 +78,12 @@ nav:
  - 'Database Backends': database.md
  - 'Split Instructor model to be OneToOne with new Person model': another2.md
  - 'Adding OIDC 1.0 Claims': oidc.md
- - 'Sphinx Documentation': sphinx.md
+# - 'Sphinx Documentation': sphinx.md
  - 'MkDocs Documentation': mkdocs.md
  - 'Documenting the API in OAS 3.0': documenting-api.md
  - 'Backstage developer portal': backstage.md
  - 'Deploying to Production': deploying.md
  - 'Using AWS API Gateway': aws_api_gw.md
- - 'Using django-oauth-toolkit as the AS': using_dot.md
  - 'A Command Line Client': cli_client.md
  - 'Help Wanted': help.md
  - 'API Reference':

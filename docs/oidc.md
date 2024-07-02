@@ -107,7 +107,7 @@ results in replacing some of the DOT models with our own for which we'll define 
 ### Unmigrate oauth2_provider
 
 We start by dropping the `oauth2_provider` models from the database using a *zero* reverse migration.
-This will clobber any cached Access Tokens -- which is not a terrible thing as they'll just
+This will clobber any cached Access Tokens -- which is not a terrible thing as they'll
 get re-cached the next time they are presented in the Authorization Bearer header.
 
 ```text
@@ -191,7 +191,7 @@ class MyApplication(oauth2_models.AbstractApplication):
         swappable = "OAUTH2_PROVIDER_APPLICATION_MODEL"
 ```
 
-Unfortuantetly, one can't just say `manage.py makemigrations` for these models due to circular
+Unfortuantetly, one can't say `manage.py makemigrations` for these models due to circular
 relationships between the Access and RefreshToken Models. So, steal the migrations that DOT
 uses and tweak them a little (TODO: This may no longer be necessary):
 
@@ -338,11 +338,11 @@ CREATE INDEX "oauth_myaccesstoken_user_id_af7b1a7f" ON "oauth_myaccesstoken"(
 ### Create a new HasClaim Permission Class
 
 To actually get the UserInfo result cached with the result of the Access Token introspection,
-extend DRF's BasePermission class to cache a UserInfo response as part of its associate Access Token: 
+extend DRF's BasePermission class to cache a UserInfo response as part of its associated Access Token: 
 
 See [oauth/oauth2_introspection.py](https://github.com/columbia-it/django-jsonapi-training/tree/master/oauth/oauth2_introspection.py)
 
 ### Automated filling in OAUTH2_CONFIG
 
-See `oauth/apps.py` where we automate filling in the OAUTH2_CONFIG give the OAUTH2_SERVER environment
+See `oauth/apps.py` where we automate filling in the `OAUTH2_CONFIG` given the `OAUTH2_SERVER` environment
 variable. This uses OIDC's `.well-known/openid-configuration` endpoint. 
