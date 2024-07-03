@@ -71,10 +71,12 @@ class CourseSerializer(HyperlinkedModelSerializer):
         self_link_view_name="course-relationships",
         related_link_view_name="course-related",
     )
-    """#: a course has zero or more course_term instances"""
+    """
+    A course has zero or more course_term instances so include the CourseTermSerializer.
+    See [{json:api} compound document](https://jsonapi.org/format/#document-compound-documents).
 
-    #: `{json:api} compound document <https://jsonapi.org/format/#document-compound-documents>`_
-    #: (also used for `related_serializers` for DJA 2.6.0)
+    (Also used for `related_serializers` for DJA 2.6.0)
+    """
     included_serializers = {
         "course_terms": "myapp.serializers.CourseTermSerializer",
     }
