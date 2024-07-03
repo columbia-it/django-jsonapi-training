@@ -1,5 +1,8 @@
 # Backstage Developer Portal
 
+!!! Note
+    Work on Backstage with this tutorial is currently on hold.
+
 [Backstage](https://backstage.io) is Spotify's recently-open sourced developer portal. I've been experimenting with
 it with the eventual goal(s) of supporting:
 

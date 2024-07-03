@@ -33,15 +33,17 @@ plugins:
           options:
             docstring_style: sphinx
             # docstring_style: google
+            show_root_heading: true
             inherited_members: false
             # docstring_options:
             show_source: true
             show_if_no_docstring: true
             show_signature_annotations: false
-      watch:
-        - myapp
   - macros:
       module_name: mkdocs_macros_main
+
+watch:
+  - myapp
 
 #extra:
 
@@ -80,7 +82,7 @@ nav:
  - 'Adding OIDC 1.0 Claims': oidc.md
 # - 'Sphinx Documentation': sphinx.md
  - 'MkDocs Documentation': mkdocs.md
- - 'Documenting the API in OAS 3.0': documenting-api.md
+ - 'Documenting the API with OAS 3': documenting-api.md
  - 'Backstage developer portal': backstage.md
  - 'Deploying to Production': deploying.md
  - 'Using AWS API Gateway': aws_api_gw.md

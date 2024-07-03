@@ -1,19 +1,26 @@
-# Documenting the API in OAS 3.0
+# Documenting the API with OAS 3
 
-The [Open API Specification](https://github.com/OAI/OpenAPI-Specification/versions/3.0.0.md)
-(OAS 3.0), a follow-on to Swagger 2.0 which merges in many of the
+The [Open API Specification](https://spec.openapis.org/oas/latest.html)
+(OAS 3), a follow-on to Swagger 2.0 which merges in many of the
 modeling features of
 [RAML](https://raml.org/)
 1.0, allows us to model and document our APIs
 in a machine- and human-readable format.
-OAS 3.0 has become the standard machine-readable representation of API schemas.
+OAS 3 has become the standard machine-readable representation of API schemas.
 
 DRF release [3.12](https://www.django-rest-framework.org/community/release-notes/#312x-series)
 and DJA release [4.0](https://django-rest-framework-json-api.readthedocs.io/en/stable/usage.html#generating-an-openapi-specification-oas-3-0-schema-document)
 now have fairly comprehensive
-[OAS 3.0](https://www.django-rest-framework.org/community/3.9-announcement/#built-in-openapi-schema-support) support.
+[OAS 3](https://www.django-rest-framework.org/community/3.9-announcement/#built-in-openapi-schema-support) support.
 
-## Why an OAS 3.0 Schema?
+!!! Warning
+    Built-in DRF support for OAS has been
+	[deprecated in lieu of third-party packages](https://www.django-rest-framework.org/topics/documenting-your-api/)
+	such as [drf-spectacular](https://drf-spectacular.readthedocs.io/en/latest/).
+
+    Watch this space for future updates on using drf-spectacular.
+
+## Why an OAS 3 Schema?
 
 Having a standardized schema document enables API consumer and producer developers to formally agree on the
 API details in an automated way, providing tools for developers to perform basic data input validation
@@ -51,15 +58,6 @@ You can try out your static schema document with `swagger-ui-watcher`:
 Install it with `npm install swagger-ui-watcher -g` and then use
 `swagger-ui-watcher -p 8080 docs/openapi.yaml` to open the schema document in your browser.
 
-#### Working around a missing oauth2-redirect.html in swagger-ui-watcher
-
-The (hopefully temporary) [workaround](https://github.com/moon0326/swagger-ui-watcher/issues/31#issuecomment-476799840)
-for swagger-ui-watcher is to grab a copy of
-[oauth2-redirect.html](https://github.com/swagger-api/swagger-ui/blob/master/dist/oauth2-redirect.html)
-and:
-```text
-cp oauth2-redirect.html /usr/local/lib/node_modules/swagger-ui-watcher/node_modules/swagger-editor-dist/
-```
 ### Use the schema with Postman
 
 Postman can import an openapi schema document and create a [collection](https://www.postman.com/collection/) 
@@ -92,13 +90,19 @@ urlpatterns = [
 ]
 ```
 
-Open http://127.0.0.1:8000/swagger-ui to get the swagger UI.
+Open http://127.0.0.1:8000/swagger-ui/ to get the swagger UI.
 
 ## Adding what's missing to the generated schema
 
-DRF's openapi schema support still lacks `securitySchemes` and `security` requirement objects. This 
-[feature](https://github.com/encode/django-rest-framework/pull/7516) is expected to be added in 
-[release 3.13](https://github.com/encode/django-rest-framework/milestone/77).
+!!! Warning
+    DRF support of openapi schema generation is deprecated
+	in favor of using [drf-spectacular](https://drf-spectacular.readthedocs.io/en/latest/).
+	This documentation will be updated once I update the code to use drf-spectacular.
+
+DRF's openapi schema support lacks `securitySchemes` and `security` requirement objects. This 
+[feature](https://github.com/encode/django-rest-framework/pull/7516) is expected to never be added in DRF
+as the approach has changed to use [drf-spectacular](https://drf-spectacular.readthedocs.io/en/latest/).
+
 Without defining these security requirements, the openapi schema can't be used to access our demo app 
 with swagger due to lack of authentication and permissions. You can extend the generated schema to add some additional
 info about the app, a list of servers to test against, as well as the basic required security features by
@@ -199,13 +203,14 @@ class SchemaGenerator(JSONAPISchemaGenerator):
             ]
 
         return schema
-```  
+```
 
 ## OAuth2 Client Configuration
 
 Furthermore, in order to use OAuth2, clients need to be configured in the Authorization Server to include these
 request_uris:
-  - http://127.0.0.1/oauth2-redirect.html (for swagger-ui)
-  - http://localhost/oauth2-redirect.html
-  - https://www.postman.com/oauth2/callback (for Postman)
+
+- http://127.0.0.1/oauth2-redirect.html (for swagger-ui)
+- http://localhost/oauth2-redirect.html
+- https://www.postman.com/oauth2/callback (for Postman)
 

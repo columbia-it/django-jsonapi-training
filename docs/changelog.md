@@ -16,7 +16,7 @@ documents the changes to the docs. See the project CHANGELOG for changes to the 
 
 ## 2020-11-17
 - Switched documentation from Sphinx to MkDocs.
-- Added [Backstage](/backstage) developer portal info.
+- Added [Backstage](backstage.md) developer portal info.
 
 ## 2020-11-05
 - Added automated OpenAPI schema generation now that it is supported by DJA.
