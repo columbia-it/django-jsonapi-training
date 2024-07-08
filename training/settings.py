@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from myapp import __title__, __version__, __author__, __license__, __license_url__, __copyright__
 from str2bool import str2bool as strtobool
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -207,9 +208,29 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
-    'VERSION': '1.0.0',
+    'TITLE': __title__,
+    'DESCRIPTION':
+         '![CUIT logo](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")'
+         '\n'
+         '\n'
+         '\n'
+         'A sample API that uses courses as an example to demonstrate representing\n'
+         '[JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.\n'
+         '\n'
+         '\n'
+         'See [https://columbia-it-django-jsonapi-training.readthedocs.io]'
+         '(https://columbia-it-django-jsonapi-training.readthedocs.io)\n'
+         'for more about this.\n'
+         '\n'
+         '\n' + __copyright__ + '\n',
+    'VERSION': __version__,
+    'CONTACT': {
+        'name': __author__,
+    },
+    'LICENSE': {
+        'name': __license__,
+        'url': __license_url__,
+    },
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
     'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
