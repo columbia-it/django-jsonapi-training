@@ -100,7 +100,7 @@ class DJATestCase(APITestCase):
         """
         Set up some test data for the tests.
         !!! Note
-            These users are defined in the 'auth' fixture: 
+            These users are defined in the 'auth' fixture:
             ```
             | username | password       | staff   | su        | group memberships |
             | -------- | -------------- | -----   | --------- | ----------------- |
