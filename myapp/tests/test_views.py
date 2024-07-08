@@ -93,16 +93,23 @@ class DJATestCase(APITestCase):
     """
     # TODO: add tests of query parameters: page, filter, fields, sort, include, and combinations thereof
     # TODO: add failure test cases (e.g. get of related where the id is invalid returns 500 instead of 404).
+
     fixtures = ('auth', 'oauth2', 'testcases',)
 
     def setUp(self):
-        # Users are defined in 'auth' fixture:
-        # | username | password       | staff   | su        | group memberships |
-        # | -------- | -------------- | -----   | --------- | ----------------- |
-        # | admin    | admin123       | &#9745; | &#9745;   | (none)            |
-        # | user1    | user1password1 | &#9745; |           | team-a, team-c    |
-        # | user2    | user2password2 | &#9745; |           | team-a, team-b    |
-        # | user3    | user3password3 | &#9745; |           | (none)            |
+        """
+        Set up some test data for the tests.
+        !!! Note
+            These users are defined in the 'auth' fixture: 
+            ```
+            | username | password       | staff   | su        | group memberships |
+            | -------- | -------------- | -----   | --------- | ----------------- |
+            | admin    | admin123       | X       | X         | (none)            |
+            | user1    | user1password1 | X       |           | team-a, team-c    |
+            | user2    | user2password2 | X       |           | team-a, team-b    |
+            | user3    | user3password3 | X       |           | (none)            |
+            ```
+        """
         self.read_write_user = User.objects.filter(username='user1').first()
         # `somebody` can view course but not anything else
         self.someuser = User.objects.create_user('somebody', is_superuser=False)

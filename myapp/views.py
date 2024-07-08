@@ -244,7 +244,7 @@ class PersonViewSet(CourseBaseViewSet):
 
 class InstructorFilterSet(filters.FilterSet):
     """
-    Extend :py:class:`django_filters.rest_framework.FilterSet` for the Instructor model
+    Extend class `django_filters.rest_framework.FilterSet` for the Instructor model
 
     Includes a filter "alias" for a chained search from instructor->course_term->course
     """

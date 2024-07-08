@@ -35,6 +35,7 @@ plugins:
             # docstring_style: google
             show_root_heading: true
             inherited_members: false
+            members_order: source
             # docstring_options:
             show_source: true
             show_if_no_docstring: true
@@ -88,8 +89,9 @@ nav:
  - 'Using AWS API Gateway': aws_api_gw.md
  - 'A Command Line Client': cli_client.md
  - 'Help Wanted': help.md
- - 'API Reference':
+ - 'Code Reference':
      - 'Models': api_models.md
      - 'Views': api_views.md
      - 'Serializers': api_serializers.md
      - 'Schemas': api_schemas.md
+     - 'Tests': tests.md
