@@ -16,6 +16,5 @@ uritemplate==4.1.1
 pip>=24.0
 django-cors-headers==4.3.1
 str2bool
-
 drf-spectacular==0.27.2
 drf-spectacular-sidecar==2024.7.1

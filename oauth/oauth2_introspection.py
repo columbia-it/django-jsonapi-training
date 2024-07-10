@@ -42,11 +42,11 @@ class HasClaim(BasePermission, OAuthLibMixin):
         See if our OAuth2/OIDC AS even has the userinfo endpoint
         """
         self.userinfo_url = oauth2_settings.OIDC_USERINFO_ENDPOINT
-        log.debug(
-            "OIDC enabled: {}, userinfo_url: {}".format(
-                oauth2_settings.OIDC_ENABLED, self.userinfo_url
-            )
-        )
+        # log.debug(
+        #     "OIDC enabled: {}, userinfo_url: {}".format(
+        #         oauth2_settings.OIDC_ENABLED, self.userinfo_url
+        #     )
+        # )
 
     def _get_claims_from_authentication_server(self, request):
         """

@@ -7,3 +7,9 @@ __copyright__ = '(c) 2018-2024 The Trustees of Columbia University in the City o
 
 # Version synonym
 VERSION = __version__
+
+from drf_spectacular.extensions import OpenApiViewExtension
+from .spectacular_jsonapi_schema_extensions import MyModelViewSetExtension
+
+# Register the view extension
+OpenApiViewExtension.register(MyModelViewSetExtension)
