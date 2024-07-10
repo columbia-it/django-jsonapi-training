@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 from setuptools import find_packages, setup
 
@@ -11,26 +12,28 @@ def get_version():
     return re.search("^__version__ = ['\"]([^'\"]+)['\"]",
                      init_py, re.MULTILINE).group(1)
 
-version=get_version()
+version = get_version()
 
 def parse_requirements(filename):
     """Read requirements file and include recursive requirements."""
     lines = []
-    with open(filename, 'r') as f:
-        for line in f:
-            line = line.strip()
-            if line.startswith('-r '):
-                # Recursively read included requirements files
-                included_file = line.split(' ')[1]
-                if os.path.exists(included_file):
-                    lines.extend(parse_requirements(included_file))
-            elif line and not line.startswith('#'):
-                lines.append(line)
-    return lines
+    try:
+        with open(filename, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith('-r '):
+                    # Recursively read included requirements files
+                    included_file = line.split(' ')[1]
+                    if os.path.exists(included_file):
+                        lines.extend(parse_requirements(included_file))
+                elif line and not line.startswith('#'):
+                    lines.append(line)
+        return lines
+    except:
+        return []
 
 # Parse the requirements.txt file
 requirements = parse_requirements('requirements.txt')
-print(f"requirements: {requirements}")
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), encoding="utf-8") as readme:
     README = readme.read()
