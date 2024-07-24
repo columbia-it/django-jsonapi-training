@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
 from myapp.models import Course, CourseTerm, Grade, Instructor, NonModel, Person
-from myapp.schemas import MyOAuth2Auth
+# from myapp.schemas import MyOAuth2Auth
 from myapp.serializers import (CourseSerializer, CourseTermSerializer, GradeSerializer, InstructorSerializer,
                                NonModelSerializer, PersonSerializer)
 from oauth.oauth2_introspection import HasClaim
@@ -131,7 +131,7 @@ class AuthnAuthzMixIn(object):
 
     #: In production Oauth2 is preferred; Allow Basic and Session for testing and browseable API.
     #: (authentication_classes is an implied OR list)
-    authentication_classes = (MyOAuth2Auth,)
+    # authentication_classes = (MyOAuth2Auth,)
     #: permissions are any one of, each requiring demo-djt-sla-* scope:
     #: 1. Authenticated Columbia user: auth-columbia scope plus required user claims.
     #: 2. Authenticated DOT user: scopes as above plus DOT required user claims.
