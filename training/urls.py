@@ -41,36 +41,19 @@ urlpatterns = [
     # redirect the base URL to something useful, the Swagger UI:
     path('', RedirectView.as_view(url='/swagger-ui/', permanent=False)),
     path('v1/', include(router.urls)),
-    # TODO: Is there a Router than can generate these for me? If not, create one.
-    # course relationships:
-    # path('v1/courses/<pk>/relationships/<related_field>/',
-    #     views.CourseRelationshipView.as_view(),
-    #     name='course-relationships'),
     # use new `retrieve_related` functionality in DJA 2.6.0 which hangs all the related serializers off the parent.
     # (we only have one relationship in the current model so this doesn't really demonstrate the power).
     path('v1/courses/<pk>/<related_field>/',
         views.CourseViewSet.as_view({'get': 'retrieve_related'}),
         name='course-related'),
-    # course_terms relationships
-    # path('v1/course_terms/<pk>/relationships/<related_field>/',
-    #     views.CourseTermRelationshipView.as_view(),
-    #     name='course_term-relationships'),
     # use new `retrieve_related` functionality in DJA 2.6.0:
     path('v1/course_terms/<pk>/<related_field>/',
         views.CourseTermViewSet.as_view({'get': 'retrieve_related'}), # a toOne relationship
         name='course_term-related'),
-    # person relationships
-    # path('v1/people/<pk>/relationships/<related_field>/',
-    #     views.PersonRelationshipView.as_view(),
-    #     name='person-relationships'),
     # use new `retrieve_related` functionality in DJA 2.6.0:
     path('v1/people/<pk>/<related_field>/',
         views.PersonViewSet.as_view({'get': 'retrieve_related'}),
         name='person-related'),
-    # instructor relationships
-    # path('v1/instructors/<pk>/relationships/<related_field>/',
-    #     views.InstructorRelationshipView.as_view(),
-    #     name='instructor-relationships'),
     # use new `retrieve_related` functionality in DJA 2.6.0:
     path('v1/instructors/<pk>/<related_field>/',
         views.InstructorViewSet.as_view({'get': 'retrieve_related'}), # a toMany relationship
@@ -94,6 +77,36 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout'),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
+
+# temporarily move these here as drf-spec-dja breaks on them but they are needed for runserver:
+relationship_patterns = [
+    # TODO: Is there a Router than can generate these for me? If not, create one.
+    # course relationships:
+    path('v1/courses/<pk>/relationships/<related_field>/',
+        views.CourseRelationshipView.as_view(),
+        name='course-relationships'),
+    # course_terms relationships
+    path('v1/course_terms/<pk>/relationships/<related_field>/',
+        views.CourseTermRelationshipView.as_view(),
+        name='course_term-relationships'),
+    # person relationships
+    path('v1/people/<pk>/relationships/<related_field>/',
+        views.PersonRelationshipView.as_view(),
+        name='person-relationships'),
+    # instructor relationships
+    path('v1/instructors/<pk>/relationships/<related_field>/',
+        views.InstructorRelationshipView.as_view(),
+        name='instructor-relationships'),
+]
+
+
+if not settings.DISABLE_RELATIONSHIP_PATTERNS:
+    urlpatterns += relationship_patterns
+    print("***WARNING: Including relationship patterns. This will break the spectactular command.")
+    print("Set SPECTACULAR=true in the environment to use the spectacular command.")
+    print("Set SPECTACULAR=false or missing from the environment to run the server.")
+else:
+    print("***WARNING: Relationship patterns are excluded. This will break the runserver command.")
 
 urlpatterns += staticfiles_urlpatterns()
 

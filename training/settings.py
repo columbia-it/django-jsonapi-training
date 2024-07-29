@@ -209,6 +209,9 @@ REST_FRAMEWORK = {
     ),
 }
 
+# temporary hack to disable RelationshipView urls when using spectacular management command.
+DISABLE_RELATIONSHIP_PATTERNS = strtobool(os.environ.get('SPECTACULAR', 'false'))
+
 SPECTACULAR_SETTINGS = {
     'TITLE': __title__,
     'DESCRIPTION':
@@ -268,6 +271,8 @@ if oidc_key_file:
 else:
     oidc_key = os.environ.get('OIDC_RSA_PRIVATE_KEY', None)
 
+if oidc_key is None:
+    print("***WARNING: OIDC is NOT enabled.")
 
 OAUTH2_PROVIDER = {
     # here's where we add the external introspection endpoint:
