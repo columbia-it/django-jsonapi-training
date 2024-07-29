@@ -201,7 +201,6 @@ REST_FRAMEWORK = {
     'SEARCH_PARAM': 'filter[search]',
     'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
      # 'DEFAULT_SCHEMA_CLASS': 'rest_framework_json_api.schemas.openapi.AutoSchema',
-     # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular_jsonapi.schemas.openapi.JsonApiAutoSchema",
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json',
     'TEST_REQUEST_RENDERER_CLASSES': (
