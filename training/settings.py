@@ -246,6 +246,10 @@ SPECTACULAR_SETTINGS = {
     "PREPROCESSING_HOOKS": [
         "drf_spectacular_jsonapi.hooks.fix_nested_path_parameters"
     ],
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+        "myapp.schema.custom_postprocessing_hook",
+    ],
 }
 
 JSON_API_FORMAT_TYPES = 'underscore'

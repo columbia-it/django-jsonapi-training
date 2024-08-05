@@ -1,5 +1,4 @@
 from django.conf import settings
-from pprint import pprint
 from drf_spectacular.extensions import OpenApiAuthenticationExtension
 from drf_spectacular.plumbing import build_bearer_security_scheme_object
 
@@ -88,3 +87,18 @@ class MyAuthenticationSchemes(OpenApiAuthenticationExtension):
                 }
             },
         ]
+
+
+def custom_postprocessing_hook(result, generator, request, public):
+    """
+    Customize the schema to include a selectable list of servers, including
+    the option to supply your own custom server URL.
+    """
+    result["servers"] = [
+        {'url': 'http://localhost:8000', 'description': 'local dev'},
+        {'url': 'https://localhost', 'description': 'local docker'},
+        {'url': 'https://ac45devapp01.cc.columbia.edu', 'description': 'demo'},
+        {'url': '{serverURL}', 'description': 'provide your server URL',
+         'variables': {'serverURL': {'default': 'http://localhost:8000'}}}
+    ]
+    return result

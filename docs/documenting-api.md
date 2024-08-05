@@ -238,6 +238,8 @@ the server API actually returns.
 
 I've made a few changes to the project to switch to DSJA:
 
+#### Requirements
+
 Add drf-spectacular and drf-spectacular-jsonapi.
 
 ```diff
@@ -254,6 +256,8 @@ index ac0a5a0..c96ed57 100644
 +drf-spectacular-sidecar==2024.7.1
 +drf-spectacular-jsonapi==0.4.1
 ```
+
+#### Settings
 
 Most changes happen in `settings.py` with some (temporary) changes to `urls.py` because DSJA currently
 breaks on RelationshipViews:
@@ -441,3 +445,81 @@ index e66a72f..12b32b7 100644
 
 There are a few other minor changes to remove my custom DJA schema generator extensions.
 
+#### Extending the schema for Servers and OAuth2
+
+`myapp/schema.py` is where our customizations get added:
+
+* OpenApiAuthenticationExtension is used to add specifics about our OAuth2 AS's.
+* `myapp.schema.custom_postprocessing_hook` is added to the `POSTPROCESSING_HOOKS` list to
+  add our list of servers.
+
+```python
+from django.conf import settings
+from drf_spectacular.extensions import OpenApiAuthenticationExtension
+from drf_spectacular.plumbing import build_bearer_security_scheme_object
+
+class MyAuthenticationSchemes(OpenApiAuthenticationExtension):
+    """
+    Make a list of securityScheme names and return a parallel list of definitions
+    """
+    target_class = "oauth2_provider.contrib.rest_framework.OAuth2Authentication"
+    name = ["oauth2-test", "oauth2-prod", "oauth2-local"]
+
+
+    def get_security_definition(self, auto_schema):
+        return [
+            {
+                "type": "oauth2",
+                "description": "test OAuth2 service",
+                "flows": {
+                    "authorizationCode": {
+                        "authorizationUrl": "https://oauth-test.cc.columbia.edu/as/authorization.oauth2",
+                        "tokenUrl": "https://oauth-test.cc.columbia.edu/as/token.oauth2",
+                        "scopes": {
+                            "auth-columbia": "Columbia UNI login",
+                            "create": "create",
+                            "read": "read",
+                            "update": "update",
+                            "delete": "delete",
+                            "openid": "disclose your identity",
+                            "profile": "your user profile",
+                            "email": "your email address",
+                            "https://api.columbia.edu/scope/group": "groups you are a member of",
+                            "demo-djt-sla-bronze": "permitted to access the django-jsonapi-training demo: 1 request per second",
+                            "demo-djt-sla-update": "permitted to update the django-jsonapi-training resources",
+                        }
+                    }
+                }
+            },
+			...
+        ]
+
+
+def custom_postprocessing_hook(result, generator, request, public):
+    """
+    Customize the schema to include a selectable list of servers, including
+    the option to supply your own custom server URL.
+    """
+    result["servers"] = [
+        {'url': 'http://localhost:8000', 'description': 'local dev'},
+        {'url': 'https://localhost', 'description': 'local docker'},
+        {'url': 'https://ac45devapp01.cc.columbia.edu', 'description': 'demo'},
+        {'url': '{serverURL}', 'description': 'provide your server URL',
+         'variables': {'serverURL': {'default': 'http://localhost:8000'}}}
+    ]
+    return result
+```
+
+```diff
+--- a/training/settings.py
++++ b/training/settings.py
+@@ -246,6 +246,10 @@ SPECTACULAR_SETTINGS = {
+     "PREPROCESSING_HOOKS": [
+         "drf_spectacular_jsonapi.hooks.fix_nested_path_parameters"
+     ],
++    "POSTPROCESSING_HOOKS": [
++        "drf_spectacular.hooks.postprocess_schema_enums",
++        "myapp.schema.custom_postprocessing_hook",
++    ],
+ }
+```
