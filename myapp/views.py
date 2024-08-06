@@ -139,21 +139,15 @@ class AuthnAuthzMixIn(object):
     #: 1. Authenticated Columbia user: auth-columbia scope plus required user claims.
     #: 2. Authenticated DOT user: scopes as above plus DOT required user claims.
     #: 3. Client Credentials (backend-to-backend): auth-none. No auth user. Claims don't exist.
-    # which only support & and |.
     permission_classes = [
         TokenMatchesOASRequirements
         & (
-            (
-                IsAuthenticated
-                & ColumbiaGroupClaimPermission
-                & ColumbiaSubClaimPermission
-            )
+            (IsAuthenticated & ColumbiaGroupClaimPermission & ColumbiaSubClaimPermission)
             | (IsAuthenticated & DOTGroupClaimPermission & DOTSubClaimPermission)
-            | (IsAuthenticated & DOTSubClaimPermission)
+            # | (IsAuthenticated & DOTSubClaimPermission)
             | (~IsAuthenticated)
         )
     ]
-    # TODO: replace cas-tsc-sla-gold scope with demo-djt-sla-bronze once available in oauth-test
     #: Implicit/Authorization Code scopes: user via frontend client
     USER_SCOPES = [
         "auth-columbia",

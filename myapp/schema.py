@@ -1,6 +1,7 @@
 from django.conf import settings
-#from drf_spectacular.extensions import OpenApiAuthenticationExtension
-from drf_spectacular.contrib.django_oauth_toolkit import DjangoOAuthToolkitScheme
+# from drf_spectacular.extensions import OpenApiAuthenticationExtension
+# from drf_spectacular.contrib.django_oauth_toolkit import DjangoOAuthToolkitScheme
+from myapp.django_oauth_toolkit import DjangoOAuthToolkitScheme
 
 # class MyAuthenticationSchemes(DjangoOAuthToolkitScheme):
 #     """
