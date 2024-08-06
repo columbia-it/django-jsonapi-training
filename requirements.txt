@@ -1,5 +1,5 @@
 # requirements for our app:
--rrequirements-django.txt
+-r requirements-django.txt
 # optional mysql requirements:
--rrequirements-mysql.txt
+#-r requirements-mysql.txt
 
