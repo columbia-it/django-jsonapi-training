@@ -6,7 +6,7 @@ django-filter==24.2
 djangorestframework==3.15.2
 djangorestframework-jsonapi==7.0.1
 # production release of DOT:
-django-oauth-toolkit==2.4.0
+django-oauth-toolkit==3.0.1
 # master branch:
 #git+https://github.com/jazzband/django-oauth-toolkit
 # local dev copy
@@ -16,6 +16,7 @@ uritemplate==4.1.1
 pip>=24.0
 django-cors-headers==4.3.1
 str2bool
-drf-spectacular==0.27.2
+#drf-spectacular==0.27.2
 drf-spectacular-sidecar==2024.7.1
-drf-spectacular-jsonapi==0.4.1
+#/Users/ac45/src/drf-spectecular-json-api
+drf-spectacular-jsonapi>=0.5.1
