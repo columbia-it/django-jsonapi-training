@@ -23,8 +23,9 @@ from django.urls import include, path
 from django.views.generic.base import RedirectView, TemplateView
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView, SpectacularSwaggerOauthRedirectView
 
-from myapp import views, schemas, __title__ as API_TITLE
+from myapp import views, __title__ as API_TITLE
 
 admin.autodiscover()
 
@@ -37,7 +38,6 @@ router.register(r'grades', views.GradeViewSet)
 router.register(r'non-models', views.NonModelViewSet)
 
 urlpatterns = [
-
     # redirect the base URL to something useful, the Swagger UI:
     path('', RedirectView.as_view(url='/swagger-ui/', permanent=False)),
     path('v1/', include(router.urls)),
@@ -58,23 +58,18 @@ urlpatterns = [
     path('v1/instructors/<pk>/<related_field>/',
         views.InstructorViewSet.as_view({'get': 'retrieve_related'}), # a toMany relationship
         name='instructor-related'),
-    # path /v1/openapi is the OAS 3.0 schema document for this app.
-    # path /swagger-ui is the swagger user interface that uses that schema document.
-    # (v1/openapi and swagger-ui fail if the user is not logged in as the routers are not public.
-    # so set public=True since the endpoint documentation is not a secret, just the content.)
-    path('v1/openapi', get_schema_view(generator_class=schemas.SchemaGenerator, public=True),
-         name='openapi-schema'),
-    path('swagger-ui/', TemplateView.as_view(
-        template_name='swagger-ui.html',
-        extra_context={'schema_url': 'openapi-schema', 'title': API_TITLE}
-    ), name='swagger-ui'),
-    # The default request_uri is /oauth2-redirect.html (no /static prefix) so just pass it into staticfiles serve():
-    path('oauth2-redirect.html', serve, {'path': 'oauth2-redirect.html'}),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Optional UI:
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    # not sure if this is needed or how to serve this when DEBUG is false
+    path('api/schema/swagger-ui/oauth2-redirect.html', SpectacularSwaggerOauthRedirectView.as_view()),
     # browseable API and admin stuff. TODO: Consider leaving out except when debugging.
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('accounts/login/', auth_views.LoginView.as_view()),
     path('accounts/logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout'),
+    # OAuth2 AS
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
 
