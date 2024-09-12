@@ -208,10 +208,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-# temporary hack to disable RelationshipView urls when using spectacular management command.
-# no longer needed as of drf-spectacular-json-api >= 0.5.1
-DISABLE_RELATIONSHIP_PATTERNS = strtobool(os.environ.get('SPECTACULAR', 'false'))
-
 ###
 # OAuth2/OIDC Server Configuration
 # Set env['OAUTH2_SERVER'] to 'self' to use the built-in django-oauth-toolkit server.

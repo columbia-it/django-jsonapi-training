@@ -1,9 +1,5 @@
-# from drf_spectacular.extensions import OpenApiViewExtension
-
-# from .spectacular_jsonapi_schema_extensions import MyModelViewSetExtension
-
 __title__ = 'myapp'
-__version__ = '1.3.0'
+__version__ = '1.4.0'
 __author__ = 'Alan Crosswell'
 __email__ = 'alan@columbia.edu'
 __license__ = 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License'
@@ -12,6 +8,3 @@ __copyright__ = '(c) 2018-2024 The Trustees of Columbia University in the City o
 
 # Version synonym
 VERSION = __version__
-
-# Register the view extension
-# OpenApiViewExtension.register(MyModelViewSetExtension)

@@ -17,6 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 -->
 
+## [1.4.0] - 2024-09-11
+
+### Changed
+- Replaced OAS 3.x schema support from deprecated DRF/DJA built-in to use
+  [drf-spectacular](https://github.com/tfranzel/drf-spectacular) and
+  [drf-spectacular-json-api](https://github.com/jokiefer/drf-spectacular-json-api)
+- Routine updates to current Python and Django versions.
+
 ## [1.3.0] - 2022-12-19
 
 ### Added
