@@ -1,10 +1,12 @@
 import json
 import logging
+
 import requests
 from django.apps import AppConfig
 from django.conf import settings
 from django.urls import reverse
 from oauth2_provider.settings import oauth2_settings
+
 
 class OauthConfig(AppConfig):
     name = "oauth"
@@ -24,7 +26,7 @@ class OauthConfig(AppConfig):
                 "token_endpoint": baseUrl + reverse("oauth2_provider:token"),
                 "userinfo_endpoint": baseUrl + reverse("oauth2_provider:user-info"),
                 "jwks_uri": baseUrl + reverse("oauth2_provider:jwks-info"),
-                "scopes_supported": [ s for s in oauth2_settings.SCOPES ],
+                "scopes_supported": [s for s in oauth2_settings.SCOPES],
                 "response_types_supported": [
                     "code",
                     "token",
@@ -76,4 +78,3 @@ class OauthConfig(AppConfig):
                 self.log.error(e)
         else:
             settings.OAUTH2_CONFIG = None
-

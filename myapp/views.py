@@ -2,16 +2,15 @@ import logging
 import re
 
 from django_filters import rest_framework as filters
+# mypass my Oauth2 schema hack for the time being:
+# from myapp.schemas import MyOAuth2Auth
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication as MyOAuth2Auth
 from oauth2_provider.contrib.rest_framework import TokenMatchesOASRequirements
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
 from myapp.models import Course, CourseTerm, Grade, Instructor, NonModel, Person
-# mypass my Oauth2 schema hack for the time being:
-# from myapp.schemas import MyOAuth2Auth
-from oauth2_provider.contrib.rest_framework import OAuth2Authentication as MyOAuth2Auth
-
 from myapp.serializers import (CourseSerializer, CourseTermSerializer, GradeSerializer, InstructorSerializer,
                                NonModelSerializer, PersonSerializer)
 from oauth.oauth2_introspection import HasClaim
