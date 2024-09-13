@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from myapp import __title__, __version__, __author__, __email__, __license__, __license_url__, __copyright__
 from str2bool import str2bool as strtobool
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -55,6 +56,8 @@ INSTALLED_APPS = [
     'oauth',
     'django_filters',
     'django_extensions',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',  # required for Django collectstatic discovery
 ]
 
 MIDDLEWARE = [
@@ -177,8 +180,9 @@ STATIC_ROOT = '/var/www/html'
 REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework_json_api.pagination.JsonApiPageNumberPagination',
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework_json_api.pagination.JsonApiPageNumberPagination',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework_json_api.pagination.JsonApiLimitOffsetPagination',
+    "DEFAULT_PAGINATION_CLASS": "drf_spectacular_jsonapi.schemas.pagination.JsonApiPageNumberPagination",
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework_json_api.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
@@ -196,19 +200,13 @@ REST_FRAMEWORK = {
     ),
     'SEARCH_PARAM': 'filter[search]',
     'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework_json_api.schemas.openapi.AutoSchema',
+     # 'DEFAULT_SCHEMA_CLASS': 'rest_framework_json_api.schemas.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular_jsonapi.schemas.openapi.JsonApiAutoSchema",
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json',
     'TEST_REQUEST_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',
     ),
 }
-
-JSON_API_FORMAT_TYPES = 'underscore'
-# JSON_API_FORMAT_FIELD_NAMES = 'camelize'
-JSON_API_PLURALIZE_TYPES = True
-
-# django-oauth-toolkit settings
-CORS_ORIGIN_ALLOW_ALL = True
 
 ###
 # OAuth2/OIDC Server Configuration
@@ -224,6 +222,9 @@ if oidc_key_file:
     oidc_key = open(oidc_key_file, 'rb').read().decode()
 else:
     oidc_key = os.environ.get('OIDC_RSA_PRIVATE_KEY', None)
+
+if oidc_key is None:
+    print("***WARNING: OIDC is NOT enabled.")
 
 
 OAUTH2_PROVIDER = {
@@ -243,7 +244,7 @@ OAUTH2_PROVIDER = {
         "demo-djt-sla-bronze": "May access the django-jsonapi-training API",
         "auth-columbia": "Columbia University UNI login",
         "delete": "Delete my resources(s)",
-        "auth-none": "no login required",
+        "auth-none": "No user login (for backend-to-backend client-credentials flow)",
         "https://api.columbia.edu/scope/group": "Share my group memberships",
         "create": "Create my resource(s)",
         "introspection": "Introspect token scope",
@@ -267,6 +268,72 @@ OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "oauth.MyRefreshToken"
 OAUTH2_PROVIDER_GRANT_MODEL = "oauth2_provider.Grant"
 # OAUTH2_PROVIDER_ID_TOKEN_MODEL = "oauth2_provider.IDToken"
 OAUTH2_PROVIDER_ID_TOKEN_MODEL = "oauth.MyIDToken"
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': __title__,
+    'DESCRIPTION':
+         '![CUIT logo](https://cuit.columbia.edu/sites/default/files/logo/CUIT_Logo_286_web.jpg "CUIT logo")'
+         '\n'
+         '\n'
+         '\n'
+         'A sample API that uses courses as an example to demonstrate representing\n'
+         '[JSON:API 1.0](http://jsonapi.org/format) in the OpenAPI 3.0 specification.\n'
+         '\n'
+         '\n'
+         '\n' + __copyright__ + '\n',
+    'VERSION': __version__,
+    'CONTACT': {
+        'name': __author__,
+        'email': __email__,
+    },
+    'LICENSE': {
+        'name': __license__,
+        'url': __license_url__,
+    },
+    'EXTERNAL_DOCS': {
+        'description': 'Read all about this JSONAPI demonstration app.',
+        'url': 'https://columbia-it-django-jsonapi-training.readthedocs.io'
+    },
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+    # To provide different schema components for patch and post
+    "COMPONENT_SPLIT_REQUEST": True,
+    # to fix path parameter names for nested routes https://chibisov.github.io/drf-extensions/docs/#nested-routes
+    "PREPROCESSING_HOOKS": [
+        "drf_spectacular_jsonapi.hooks.fix_nested_path_parameters"
+    ],
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+    ],
+    # this stuff gets added to SpectacularSwaggerView:
+    "SWAGGER_UI_OAUTH2_CONFIG": {
+        "clientId": "demo_djt_web_client",
+        "clientSecret": "demo_djt_web_secret",
+        "usePkceWithAuthorizationCodeGrant": True,
+    },
+    "OAUTH2_FLOWS": [ "authorizationCode", "clientCredentials", ],
+    "OAUTH2_AUTHORIZATION_URL": "http://localhost:8000/o/authorize/" if OAUTH2_SERVER == 'self' else OAUTH2_SERVER + '/as/introspect.oauth2',
+    "OAUTH2_TOKEN_URL": "http://localhost:8000/o/token/" if OAUTH2_SERVER == 'self' else OAUTH2_SERVER + '/as/token.oauth2',
+    "OAUTH2_REFRESH_URL": None,  # same as token url?
+    "OAUTH2_SCOPES": OAUTH2_PROVIDER["SCOPES"],
+    "SERVERS": [
+        {'url': 'http://localhost:8000', 'description': 'local dev'},
+        {'url': 'https://localhost', 'description': 'local docker'},
+        {'url': 'https://ac45devapp01.cc.columbia.edu', 'description': 'demo'},
+        {'url': '{serverURL}', 'description': 'provide your server URL',
+         'variables': {'serverURL': {'default': 'http://localhost:8000'}}}
+    ]
+}
+
+JSON_API_FORMAT_TYPES = 'underscore'
+# JSON_API_FORMAT_FIELD_NAMES = 'camelize'
+JSON_API_PLURALIZE_TYPES = True
+
+# django-oauth-toolkit settings
+CORS_ORIGIN_ALLOW_ALL = True
 
 # debug logging
 LOGGING = {

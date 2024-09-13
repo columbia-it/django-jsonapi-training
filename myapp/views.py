@@ -2,13 +2,15 @@ import logging
 import re
 
 from django_filters import rest_framework as filters
+# mypass my Oauth2 schema hack for the time being:
+# from myapp.schemas import MyOAuth2Auth
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication as MyOAuth2Auth
 from oauth2_provider.contrib.rest_framework import TokenMatchesOASRequirements
 from rest_framework.permissions import DjangoModelPermissions, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_json_api.views import ModelViewSet, RelationshipView
 
 from myapp.models import Course, CourseTerm, Grade, Instructor, NonModel, Person
-from myapp.schemas import MyOAuth2Auth
 from myapp.serializers import (CourseSerializer, CourseTermSerializer, GradeSerializer, InstructorSerializer,
                                NonModelSerializer, PersonSerializer)
 from oauth.oauth2_introspection import HasClaim
@@ -136,21 +138,15 @@ class AuthnAuthzMixIn(object):
     #: 1. Authenticated Columbia user: auth-columbia scope plus required user claims.
     #: 2. Authenticated DOT user: scopes as above plus DOT required user claims.
     #: 3. Client Credentials (backend-to-backend): auth-none. No auth user. Claims don't exist.
-    # which only support & and |.
     permission_classes = [
         TokenMatchesOASRequirements
         & (
-            (
-                IsAuthenticated
-                & ColumbiaGroupClaimPermission
-                & ColumbiaSubClaimPermission
-            )
+            (IsAuthenticated & ColumbiaGroupClaimPermission & ColumbiaSubClaimPermission)
             | (IsAuthenticated & DOTGroupClaimPermission & DOTSubClaimPermission)
-            | (IsAuthenticated & DOTSubClaimPermission)
+            # | (IsAuthenticated & DOTSubClaimPermission)
             | (~IsAuthenticated)
         )
     ]
-    # TODO: replace cas-tsc-sla-gold scope with demo-djt-sla-bronze once available in oauth-test
     #: Implicit/Authorization Code scopes: user via frontend client
     USER_SCOPES = [
         "auth-columbia",
