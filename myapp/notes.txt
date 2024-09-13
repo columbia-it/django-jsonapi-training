@@ -1,4 +1,0 @@
-See https://chatgpt.com/share/e/9fb081b4-6cde-40a7-ba4b-a7c98346b1b6 for ideas on how to tweak swagger-ui to highlight required scopes.
-
-
-
