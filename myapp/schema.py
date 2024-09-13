@@ -3,18 +3,21 @@ from django.conf import settings
 # from drf_spectacular.contrib.django_oauth_toolkit import DjangoOAuthToolkitScheme
 from myapp.django_oauth_toolkit import DjangoOAuthToolkitScheme
 
+
 class MyAuthenticationSchemes(DjangoOAuthToolkitScheme):
     """
     Make a list of securityScheme names and return a parallel list of definitions
+
+    TODO -- flesh out Django-oauth-toolkit stuff
+
+    N.B. see also spectacular_settings.SWAGGER_UI_OAUTH2_CONFIG, OAUTH2_FLOWS, etc.
+    which will do most of this!
     """
     target_class = "oauth2_provider.contrib.rest_framework.OAuth2Authentication"
     name = ["oauth2-test", "oauth2-prod", "oauth2-local"]
 
 
     def get_security_definition(self, auto_schema):
-        # TODO -- flesh out Django-oauth-toolkit stuff
-        # N.B. see also spectacular_settings.SWAGGER_UI_OAUTH2_CONFIG, OAUTH2_FLOWS, etc.
-        # which will do most of this!
         r = super().get_security_definition(auto_schema)
         print(f"security definition: {r}")
         return [
