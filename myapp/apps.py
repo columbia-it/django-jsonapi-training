@@ -6,4 +6,4 @@ class MyappConfig(AppConfig):
 
     def ready(self):
         # bring in the drf-spectacular schema extensions
-        import myapp.schema  # noqa: E402
+        import myapp.django_oauth_toolkit  # noqa: E402

@@ -1,3 +1,3 @@
-# Schemas
+# Schema Extensions
 
-::: myapp.schemas
+::: myapp.django_oauth_toolkit

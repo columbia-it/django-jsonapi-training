@@ -6,6 +6,14 @@ class DjangoOAuthToolkitScheme(OpenApiAuthenticationExtension):
     name = 'oauth2'
 
     def get_security_requirement(self, auto_schema):
+        """
+        Generate the OAS [Oauth2 security requirement object](https://spec.openapis.org/oas/latest#oauth2-security-requirement).
+
+        Looks through the view permissions for relevent OAuth2 permission classes such as TokenMatchesOASRequirements
+        in order to generate a list of alternative required scopes.
+
+        TODO: Better deal with hierarchical (AND, OR) permissions.
+        """
         from oauth2_provider.contrib.rest_framework import (
             IsAuthenticatedOrTokenHasScope, TokenHasScope, TokenMatchesOASRequirements,
         )
@@ -30,8 +38,10 @@ class DjangoOAuthToolkitScheme(OpenApiAuthenticationExtension):
             return [{self.name: a} for a in scopes[auto_schema.method]]
 
     def get_security_definition(self, auto_schema):
+        """
+        Render the securitySchemes for our oauth2 service.
+        """
         from oauth2_provider.scopes import get_scopes_backend
-
         from drf_spectacular.settings import spectacular_settings
 
         flows = {}
@@ -50,3 +60,4 @@ class DjangoOAuthToolkitScheme(OpenApiAuthenticationExtension):
             'type': 'oauth2',
             'flows': flows
         }
+    

@@ -22,7 +22,6 @@ from django.contrib.staticfiles.views import serve
 from django.urls import include, path
 from django.views.generic.base import RedirectView, TemplateView
 from rest_framework import routers
-from rest_framework.schemas import get_schema_view
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView, SpectacularSwaggerOauthRedirectView
 
 from myapp import views, __title__ as API_TITLE

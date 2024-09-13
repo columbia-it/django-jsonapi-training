@@ -244,7 +244,7 @@ OAUTH2_PROVIDER = {
         "demo-djt-sla-bronze": "May access the django-jsonapi-training API",
         "auth-columbia": "Columbia University UNI login",
         "delete": "Delete my resources(s)",
-        "auth-none": "no login required",
+        "auth-none": "No user login (for backend-to-backend client-credentials flow)",
         "https://api.columbia.edu/scope/group": "Share my group memberships",
         "create": "Create my resource(s)",
         "introspection": "Introspect token scope",
