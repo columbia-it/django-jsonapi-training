@@ -15,4 +15,4 @@ request/response framework and related components such as OAuth 2.0.
 
 We welcome improvements! See [how to contribute](./CONTRIBUTING.md)
 
-Copyright © 2018 The Trustees of Columbia University in the City of New York
+Copyright © 2018-2024 The Trustees of Columbia University in the City of New York
