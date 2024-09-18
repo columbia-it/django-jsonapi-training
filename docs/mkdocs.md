@@ -36,10 +36,6 @@ with the [autodoc](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc
 
 ## Converting this project to MkDocs
 
-Since my docs are already in Markdown, converting from Sphinx was easy and can mostly coexist.
-Here's a summary of changes I made:
-
-See [`docs/requirements-mkdocs.txt`]({{view_uri}}/docs/requirements-mkdocs.txt).
 ```text
 # bring in requirements for my app (excepting the optional database):
 -r../requirements-django.txt
