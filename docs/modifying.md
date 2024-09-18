@@ -11,8 +11,6 @@ which is 14 characters (not 10) and unique. What will this involve:
 
 ## Update CourseTerm
 
-`GIT TAG: courseterm-unique-term_id`
-
 This is pretty simple:
 ```diff
 diff --git a/myapp/models.py b/myapp/models.py

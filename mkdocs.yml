@@ -72,10 +72,10 @@ nav:
  - 'Review: git, Python, JSON': review.md
  - 'HTTP and REpresentational State Transfer (REST)': rest.md
  - 'The {json:api} specification': jsonapi.md
+ - 'Building our DJA project': building.md
+ - 'Authorizing REST operations Using OAuth 2.0': oauth2.md
  - 'Using django-oauth-toolkit as the AS': using_dot.md
  - 'Using Columbia OAuth 2.0 as the AS': using_oauth2.md
- - 'More About Using OAuth 2.0': oauth2.md
- - 'Building our DJA project': building.md
  - 'Modifying our DJA Project': modifying.md
  - 'Another Modification: Add an Instructor Model and additional relationship': another1.md
  - 'Database Backends': database.md

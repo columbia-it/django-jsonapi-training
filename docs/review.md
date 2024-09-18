@@ -78,40 +78,48 @@ item: ['a', 'b', None, True]
 red
 ```
 
-### Footnote: Geezer history of serialization
+### YAML is even more human-readable
 
-Data in "machine" format is represented in unique ways depending on the hardware architecture.
-For instance, integers can have an 8, 16, 32, or 64 bit
-[2's-complement](https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html)
-representation. Floating point numbers can be 32, 64 or 128-bits using representations
-that are vendor-proprietary or perhaps
-[IEEE floating point](https://www.cs.cornell.edu/~tomf/notes/cps104/floating.html).
-Furthermore, the order of bytes within words can be
-[big- or little-endian](https://en.wikipedia.org/wiki/Endianness).
+I like to think of [YAML](https://yaml.org/spec/1.2.2/) as the next step in human-readability
+of JSON documents. You will see YAML used in a few places in this project. Suffice it to say
+that a JSON document can be 100% converted to YAML and vice-versa[^1] and there are tools
+to do so. YAML and JSON documents can be used pretty much interchangeably.
 
-When early computer networks were created among heterogenous systems, their
-architectural differences were significant and standards were created
-to move these data "across the wire" -- as a serial stream of bits --
-and reconstruct them on the other end. Some of these early versions
-include [ntohs](https://linux.die.net/man/3/ntohs) and so on which
-converted between network and host byte order.
+[^1]: One exception is that YAML allows adding comments to the document and JSON doesn't.
 
-Later on, higher-level representations such as
-[ASN.1](https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One)
-were developed to similarly serialize/deserialize more complex objects using
-a variety of encoding rules such as
-[BER](https://en.wikipedia.org/wiki/X.690#BER_encoding).
+??? Note "Ancient history of serialization"
+	Data in "machine" format is represented in unique ways depending on the hardware architecture.
+	For instance, integers can have an 8, 16, 32, or 64 bit
+	[2's-complement](https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html)
+	representation. Floating point numbers can be 32, 64 or 128-bits using representations
+	that are vendor-proprietary or perhaps
+	[IEEE floating point](https://www.cs.cornell.edu/~tomf/notes/cps104/floating.html).
+	Furthermore, the order of bytes within words can be
+	[big- or little-endian](https://en.wikipedia.org/wiki/Endianness).
 
-The problem with all these binary encodings is that a human can't
-decode them by just looking at them. As storage and networks became
-cheaper and faster, plain text string serializations, based on text markup
-languages, became popular, including XML (maybe not so easy:-) and, later,
-JSON.
-One of the things that has made JSON so popular is it is really easy
-for a person to read and write.
+	When early computer networks were created among heterogenous systems, their
+	architectural differences were significant and standards were created
+	to move these data "across the wire" -- as a serial stream of bits --
+	and reconstruct them on the other end. Some of these early versions
+	include [ntohs](https://linux.die.net/man/3/ntohs) and so on which
+	converted between network and host byte order.
 
-Of course, the pendulum swings back, the amounts of data exchanged over
-the network become massive, and some compact binary serialization
-formats are back such as [Avro](https://en.wikipedia.org/wiki/Apache_Avro) --
-which looks a lot like ASN.1 BER, DER and so on!
+	Later on, higher-level representations such as
+	[ASN.1](https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One)
+	were developed to similarly serialize/deserialize more complex objects using
+	a variety of encoding rules such as
+	[BER](https://en.wikipedia.org/wiki/X.690#BER_encoding).
+
+	The problem with all these binary encodings is that a human can't
+	decode them by just looking at them. As storage and networks became
+	cheaper and faster, plain text string serializations, based on text markup
+	languages, became popular, including XML (maybe not so easy:-) and, later,
+	JSON.
+	One of the things that has made JSON so popular is it is really easy
+	for a person to read and write.
+
+	Of course, the pendulum swings back, the amounts of data exchanged over
+	the network become massive, and some compact binary serialization
+	formats are back such as [Avro](https://en.wikipedia.org/wiki/Apache_Avro) --
+	which looks a lot like ASN.1 BER, DER and so on!
 

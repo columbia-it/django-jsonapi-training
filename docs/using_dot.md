@@ -71,8 +71,10 @@ Here are the settings.py changes:
  }
 ```
 
-(The "introspection" scope has special meaning for DOT only: It's how a client can get authorized to use the
-token introspection endpoint.)
+!!! Note
+    The "introspection" scope has special meaning for DOT only: It's how a client can get authorized to use the
+    token introspection endpoint. However, DOT currently does not have a way to restrict which clients
+	can request any scope, [including "introspection"](https://github.com/jazzband/django-oauth-toolkit/issues/1451).
 
 
 ## Adding the DOT URLs
@@ -94,6 +96,8 @@ index e784527..518a691 100644
  urlpatterns += staticfiles_urlpatterns()
 ```
 
+These are the endpoints defined by `oauth2_provider.urls` (with the "/o" prefix as shown above):
+
 | OAuth2/OIDC endpoint | URL |
 | -------------------- | --- |
 | authorization        | /o/authorize/ |
@@ -105,11 +109,11 @@ index e784527..518a691 100644
 ## Adding Users
 
 When using the [Columbia AS](using_oauth2.md), users are members of the user community and show up with a Django
-[request.user](https://docs.djangoproject.com/en/3.1/topics/auth/default/) of _UNI_@columbia.edu. When using DOT,
+[request.user](https://docs.djangoproject.com/en/3.1/topics/auth/default/) of `<uni>@columbia.edu`. When using DOT,
 you need to create users in the
 [Django Authentication System](https://docs.djangoproject.com/en/3.1/topics/auth/default/#using-the-django-authentication-system).
 Since we've configured user `admin` in our app, you can go to http://localhost:8000/admin/ and login as the superuser
-that we created with `manage.py createsuperuser` (see [building](building.md#do-initial-migration-and-superuser-account-setup)).
+that we created with `manage.py createsuperuser` in [Building our DJA Project](building.md#do-initial-migration-and-superuser-account-setup)).
 
 To save manual clicking around, you can load a few users (including the superuser) from a fixture:
 
@@ -132,15 +136,16 @@ See http://localhost:8000/admin/auth/ for these details:
 
 ## Adding our OAuth 2 Client
 
-To save manual clicking around, you can load the clients shown below from a fixture:
+To save manual clicking around, you can load the clients (DOT calls these _applications_)
+shown below from a fixture:
 
 ```text
 (env) django-training$ ./manage.py loaddata myapp/fixtures/oauth2.yaml
 Installed 2 object(s) from 1 fixture(s)
 ```
 
-DOT calls clients "applications". Let's add one. Go to http://localhost:8000/admin/oauth2_provider/application/
-and select Add Application. DOT offers up a random string for the client ID and secret, but let's overwrite them
+Let's add one. Go to http://localhost:8000/admin/oauth2_provider/application/
+and select `Add Application`. DOT offers up a random string for the client ID and secret, but let's overwrite them
 with our demo values:
 
 ![DOT create new client](./media/dot1.png "create a new client")
@@ -152,15 +157,16 @@ the Access Token. We'll create one, copying the example client name and secret f
 
 ![DOT create new introspection client](./media/dot5.png "create a new introspection client")
 
-(When using client credentials for the introspection client, it appears there's no need for `introspection` scope
-mentioned earlier; that appears to be a holdover from prior behavior which required a granted Bearer Access Token
-rather than the more common approach of using Basic Auth to authenticate introspection.)
+!!! Note
+    When using client credentials for the introspection client, it appears there's no need for `introspection` scope
+    mentioned earlier; that appears to be a holdover from prior behavior which required a granted Bearer Access Token
+    rather than the more common approach of using Basic Auth to authenticate introspection.) See https://github.com/jazzband/django-oauth-toolkit/issues/1451.
 
 ## Get an OAuth 2.0 token
 
 You'll need to configure Postman for OAuth 2.0. 
 
-![Postman get new access token display](./media/imageX.png "get an access token")
+![Postman get new access token display](./media/postman_new_access_token.png "get an access token")
 
 You can cut-n-paste the above from here:
 
@@ -177,7 +183,7 @@ Scope: auth-columbia demo-djt-sla-bronze read openid profile email https://api.c
 Client Authentication: Send as Basic Auth header
 ```
 
-You'll see a Django Admin Login screen popup:
+You'll see a Django Admin Login screen popup. Enter `user1` and `user1password1`:
 
 ![Djano Admin login display](./media/dot2.png "Django Admin login")
 
@@ -241,7 +247,7 @@ DOT returns these claims in the ID Token (Use https://jwt.io to easily decode th
 }
 ```
 
-Whereas [[Columbia AS](using_oauth2.md)](using_oauth2.md) returns quite a bit more:
+Whereas [Columbia AS](using_oauth2.md) returns quite a bit more:
 ```json
 {
   "sub": "ac45@columbia.edu",
@@ -345,7 +351,7 @@ ID number for the `sub`:
 ```
 It appears that extending the ID Token is somewhat related to the Userinfo response, even without extending Userinfo.
 
-Here's what the [[Columbia AS](using_oauth2.md)](using_oauth2.md) returns for Userinfo:
+Here's what the [Columbia AS](using_oauth2.md) returns for Userinfo:
 ```json
 {
     "sub": "ac45@columbia.edu",

@@ -314,6 +314,7 @@ SPECTACULAR_SETTINGS = {
         "clientSecret": "demo_djt_web_secret",
         "usePkceWithAuthorizationCodeGrant": True,
     },
+    "SORT_OPERATIONS": False,
     "OAUTH2_FLOWS": [ "authorizationCode", "clientCredentials", ],
     "OAUTH2_AUTHORIZATION_URL": "http://localhost:8000/o/authorize/" if OAUTH2_SERVER == 'self' else OAUTH2_SERVER + '/as/introspect.oauth2',
     "OAUTH2_TOKEN_URL": "http://localhost:8000/o/token/" if OAUTH2_SERVER == 'self' else OAUTH2_SERVER + '/as/token.oauth2',

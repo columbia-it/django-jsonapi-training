@@ -64,13 +64,16 @@ mkdocs==1.1.2
 
 * In `mkdocs.yml` add the document hierarchy that is in `docs/index.rst`.
 
-## Viewing MkDocs-generate content locally
+## Viewing MkDocs-generated content locally
 
 This is easily accomplished:
 
 ```
-$ mkdocs serve  # and open http://127.0.0.1/8000
+tox -e livedocs  # and open http://localhost:9000
 ```
+
+!!! Note
+    The default port for `mkdocs serve` is 8000 which is also what we use for our django app.
 
 ## Publishing to RTD
 
@@ -90,15 +93,18 @@ version: 2
 # sphinx:
 #   configuration: docs/conf.py
 
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.12"
+
 # Build documentation with MkDocs
 mkdocs:
   configuration: mkdocs.yml
 
 # Optionally set the version of Python and requirements required to build your docs
 python:
-  version: 3.7
   install:
     - requirements: docs/requirements-mkdocs.txt
-#   - requirements: docs/requirements.txt
 ```
 

@@ -117,7 +117,7 @@ system’s
 
 You may also want to take a look at [Git for Windows](https://gitforwindows.org/).
 
-### PyCharm of VSCode
+### PyCharm or VSCode
 
 PyCharm is an IDE for Python development (among other things). This instruction applies to
 both macOS and Windows.
@@ -193,7 +193,7 @@ pyenv global  3.12.2 3.11.8 3.10.13
 ```
 
 #### Installation under Mojave and XCode 10
-*This may not longer be a problem*
+*This may no longer be a problem*
 
 See [this issue](https://github.com/pyenv/pyenv/issues/1219)
 where pyenv install complains about missing zlib. Here’s a workaround:

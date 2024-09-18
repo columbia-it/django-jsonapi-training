@@ -4,8 +4,9 @@ When playing around with our demo app, the default sqlite3 is plenty. Before mov
 you'll want to use a
 ["real" database](https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DATABASE-ENGINE).
 
-**N.B.** We've deprecated use of Microsoft SQL Server due to lack of support for the django database backend library.
-You should use MySQL, including the AWS Aurora Serverless MySQL flavor.
+!!! Note
+    We've deprecated use of Microsoft SQL Server due to lack of support for the django database backend library.
+    You should use MySQL, including the AWS Aurora Serverless MySQL flavor, or Postscrypt, if you prefer.
 
 ## Running a local database server
 
@@ -24,7 +25,7 @@ if os.environ.get('MYSQL_HOST', None):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('MYSQL_DB','tsc'),
+            'NAME': os.environ.get('MYSQL_DB','training'),
             'USER': os.environ.get('MYSQL_USER','admin'),
             'PASSWORD': password,
             'HOST': os.environ['MYSQL_HOST'],
@@ -65,6 +66,8 @@ You can install a MacOS MySQL server and client using homebrew:
 (env) django-training$ mysqladmin -u root create foo
 (env) django-training$ mysql -uroot foo
 ```
+
+For Windows see https://dev.mysql.com/downloads/mysql/.
 
 ## database CLI tools
 
@@ -256,5 +259,5 @@ ALTER TABLE `myapp_instructor_course_terms` ADD CONSTRAINT `myapp_instructor_cou
 COMMIT;
 ```
 
-As you can sess, Django's database layer hides the differences between different backend databases, so you can
+As you can see, Django's database layer hides the differences between different backend databases, so you can
 focus on what's important.

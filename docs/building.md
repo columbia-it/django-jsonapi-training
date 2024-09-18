@@ -32,8 +32,8 @@ Initialized empty Git repository in /Users/alan/src/django-jsonapi-training/.git
 
 ### Set up virtualenv
 ```console
-django-jsonapi-training$ python3 -m venv env
-django-jsonapi-training$ source env/bin/activate
+django-jsonapi-training$ python3 -m venv venv
+django-jsonapi-training$ source venv/bin/activate
 ```
 
 ### Install required packages
@@ -46,10 +46,9 @@ is here, but, in practice, you would build up this list over time as you develop
 - **Django REST Framework** (DRF) makes it easy to write RESTful APIs.
 - **Django REST Framework JSON API** (DJA) extends DRF to use the
   {json:api} format.
-- **Django OAuth Toolkit** (DOT) adds an OAuth 2.0-based security layer.
+- **Django OAuth Toolkit** (DOT) adds an [OAuth 2.0-based](oauth2.md) security layer.
 - **Django CORS Middleware** is needed for OAuth
   [Cross-Origin Resource Sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
-- **Django REST condition** allows for boolean composition of DRF view permissions.
 - **Django Filter** for filtering results using the {json:api} `filter` query parameter.
 - **PyYAML** for YAML file utilities.
 - **tox** for automated unit tests, etc.
@@ -61,7 +60,7 @@ Following is an example of "manually" adding the packages, one at a time, but yo
 would more likely use `pip install -r requirements.txt` as [shown below](#freeze-python-package-requirements).
 
 ```console
-(env) django-jsonapi-training$ pip install django
+(venv) django-jsonapi-training$ pip install django
 Collecting django
   Using cached https://files.pythonhosted.org/packages/32/ab/22530cc1b2114e6067eece94a333d6c749fa1c56a009f0721e51c181ea53/Django-2.1.2-py3-none-any.whl
 Collecting pytz (from django)
@@ -70,7 +69,7 @@ Installing collected packages: pytz, django
 Successfully installed django-2.1.2 pytz-2018.6
 You are using pip version 10.0.1, however version 18.1 is available.
 You should consider upgrading via the 'pip install --upgrade pip' command.
-(env) django-jsonapi-training$ pip install --upgrade pip
+(venv) django-jsonapi-training$ pip install --upgrade pip
 Collecting pip
   Using cached https://files.pythonhosted.org/packages/c2/d7/90f34cb0d83a6c5631cf71dfe64cc1054598c843a92b400e55675cc2ac37/pip-18.1-py2.py3-none-any.whl
 Installing collected packages: pip
@@ -78,7 +77,7 @@ Installing collected packages: pip
     Uninstalling pip-10.0.1:
       Successfully uninstalled pip-10.0.1
 Successfully installed pip-18.1
-(env) django-jsonapi-training$ pip install django-debug-toolbar
+(venv) django-jsonapi-training$ pip install django-debug-toolbar
 Collecting django-debug-toolbar
   Downloading https://files.pythonhosted.org/packages/97/c6/523fc2ca98119d21c709bbc47217b1d5fd17c6f9449ef32490889363d97d/django_debug_toolbar-1.10.1-py2.py3-none-any.whl (207kB)
     100% |████████████████████████████████| 215kB 3.6MB/s 
@@ -88,95 +87,8 @@ Requirement already satisfied: Django>=1.11 in ./env/lib/python3.6/site-packages
 Requirement already satisfied: pytz in ./env/lib/python3.6/site-packages (from Django>=1.11->django-debug-toolbar) (2018.6)
 Installing collected packages: sqlparse, django-debug-toolbar
 Successfully installed django-debug-toolbar-1.10.1 sqlparse-0.2.4
-(env) django-jsonapi-training$ pip install djangorestframework
-Collecting djangorestframework
-  Downloading https://files.pythonhosted.org/packages/99/0b/d37a5a96c5d301e23adcabcc2f3fa659fb34e6308590f95ebb50cdbe98a1/djangorestframework-3.9.0-py2.py3-none-any.whl (924kB)
-    100% |████████████████████████████████| 931kB 4.8MB/s 
-Installing collected packages: djangorestframework
-Successfully installed djangorestframework-3.9.0
-(env) django-jsonapi-training$ pip install djangorestframework-jsonapi
-Collecting djangorestframework-jsonapi
-  Downloading https://files.pythonhosted.org/packages/a8/cc/82bc28e584f38354eb0b803d683d8caf51161986baf70f1bb65c55cdcd24/djangorestframework_jsonapi-2.6.0-py2.py3-none-any.whl (195kB)
-    100% |████████████████████████████████| 204kB 3.8MB/s 
-Requirement already satisfied: djangorestframework>=3.6.3 in ./env/lib/python3.6/site-packages (from djangorestframework-jsonapi) (3.9.0)
-Requirement already satisfied: django>=1.11 in ./env/lib/python3.6/site-packages (from djangorestframework-jsonapi) (2.1.2)
-Collecting six (from djangorestframework-jsonapi)
-  Downloading https://files.pythonhosted.org/packages/67/4b/141a581104b1f6397bfa78ac9d43d8ad29a7ca43ea90a2d863fe3056e86a/six-1.11.0-py2.py3-none-any.whl
-Collecting inflection>=0.3.0 (from djangorestframework-jsonapi)
-  Downloading https://files.pythonhosted.org/packages/d5/35/a6eb45b4e2356fe688b21570864d4aa0d0a880ce387defe9c589112077f8/inflection-0.3.1.tar.gz
-Requirement already satisfied: pytz in ./env/lib/python3.6/site-packages (from django>=1.11->djangorestframework-jsonapi) (2018.6)
-Installing collected packages: six, inflection, djangorestframework-jsonapi
-  Running setup.py install for inflection ... done
-Successfully installed djangorestframework-jsonapi-2.6.0 inflection-0.3.1 six-1.11.0
-(env) django-jsonapi-training$ pip install tox tox-pip-extensions
-Collecting tox
-  Downloading https://files.pythonhosted.org/packages/8f/c3/64bade66e6188a0dc02689392d5c782a9eb6648b54ddc2db034aa495b6a2/tox-3.5.2-py2.py3-none-any.whl (52kB)
-    100% |████████████████████████████████| 61kB 4.7MB/s 
-Collecting tox-pip-extensions
-  Downloading https://files.pythonhosted.org/packages/c5/51/7ccde9fb69a49d5e850fd98c80b9d57806abd148cab70697870988347325/tox_pip_extensions-1.4.1-py2.py3-none-any.whl
-Collecting py<2,>=1.4.17 (from tox)
-  Downloading https://files.pythonhosted.org/packages/3e/c7/3da685ef117d42ac8d71af525208759742dd235f8094221fdaafcd3dba8f/py-1.7.0-py2.py3-none-any.whl (83kB)
-    100% |████████████████████████████████| 92kB 5.8MB/s 
-Collecting virtualenv>=1.11.2 (from tox)
-  Downloading https://files.pythonhosted.org/packages/b6/30/96a02b2287098b23b875bc8c2f58071c35d2efe84f747b64d523721dc2b5/virtualenv-16.0.0-py2.py3-none-any.whl (1.9MB)
-    100% |████████████████████████████████| 1.9MB 5.8MB/s 
-Collecting pluggy<1,>=0.3.0 (from tox)
-  Downloading https://files.pythonhosted.org/packages/1c/e7/017c262070af41fe251401cb0d0e1b7c38f656da634cd0c15604f1f30864/pluggy-0.8.0-py2.py3-none-any.whl
-Collecting toml>=0.9.4 (from tox)
-  Downloading https://files.pythonhosted.org/packages/a2/12/ced7105d2de62fa7c8fb5fce92cc4ce66b57c95fb875e9318dba7f8c5db0/toml-0.10.0-py2.py3-none-any.whl
-Collecting filelock<4,>=3.0.0 (from tox)
-  Downloading https://files.pythonhosted.org/packages/b4/fe/5ca16d167849b980925d3bd706cda266c7435dcf21675c546374da207654/filelock-3.0.9-py3-none-any.whl
-Requirement already satisfied: setuptools>=30.0.0 in ./env/lib/python3.6/site-packages (from tox) (39.0.1)
-Requirement already satisfied: six<2,>=1.0.0 in ./env/lib/python3.6/site-packages (from tox) (1.11.0)
-Installing collected packages: py, virtualenv, pluggy, toml, filelock, tox, tox-pip-extensions
-Successfully installed filelock-3.0.9 pluggy-0.8.0 py-1.7.0 toml-0.10.0 tox-3.5.2 tox-pip-extensions-1.4.1 virtualenv-16.0.0
-(env) django-jsonapi-training$ pip install django-filter
-Collecting django-filter
-  Downloading https://files.pythonhosted.org/packages/6a/8b/8517167a0adc45ce94d0873efb9487dd4cdeff7e10f96e837ad3d58f5837/django_filter-2.0.0-py3-none-any.whl (69kB)
-    100% |████████████████████████████████| 71kB 3.9MB/s 
-Requirement already satisfied: Django>=1.11 in ./env/lib/python3.6/site-packages (from django-filter) (2.1.2)
-Requirement already satisfied: pytz in ./env/lib/python3.6/site-packages (from Django>=1.11->django-filter) (2018.6)
-Installing collected packages: django-filter
-Successfully installed django-filter-2.0.0
-(env) django-jsonapi-training$ pip install django-oauth-toolkit
-Collecting django-oauth-toolkit
-  Downloading https://files.pythonhosted.org/packages/57/6a/42c5c2ac5bcae09559f29ab0ff8afb2ee94ca9a0816eae0b475944f86684/django_oauth_toolkit-1.2.0-py2.py3-none-any.whl (46kB)
-    100% |████████████████████████████████| 51kB 4.7MB/s 
-Collecting oauthlib>=2.0.3 (from django-oauth-toolkit)
-  Downloading https://files.pythonhosted.org/packages/e6/d1/ddd9cfea3e736399b97ded5c2dd62d1322adef4a72d816f1ed1049d6a179/oauthlib-2.1.0-py2.py3-none-any.whl (121kB)
-    100% |████████████████████████████████| 122kB 7.1MB/s 
-Collecting requests>=2.13.0 (from django-oauth-toolkit)
-  Downloading https://files.pythonhosted.org/packages/f1/ca/10332a30cb25b627192b4ea272c351bce3ca1091e541245cccbace6051d8/requests-2.20.0-py2.py3-none-any.whl (60kB)
-    100% |████████████████████████████████| 61kB 6.6MB/s 
-Requirement already satisfied: django>=2.0 in ./env/lib/python3.6/site-packages (from django-oauth-toolkit) (2.1.2)
-Collecting urllib3<1.25,>=1.21.1 (from requests>=2.13.0->django-oauth-toolkit)
-  Downloading https://files.pythonhosted.org/packages/8c/4b/5cbc4cb46095f369117dcb751821e1bef9dd86a07c968d8757e9204c324c/urllib3-1.24-py2.py3-none-any.whl (117kB)
-    100% |████████████████████████████████| 122kB 8.8MB/s 
-Collecting chardet<3.1.0,>=3.0.2 (from requests>=2.13.0->django-oauth-toolkit)
-  Downloading https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl (133kB)
-    100% |████████████████████████████████| 143kB 7.3MB/s 
-Collecting idna<2.8,>=2.5 (from requests>=2.13.0->django-oauth-toolkit)
-  Downloading https://files.pythonhosted.org/packages/4b/2a/0276479a4b3caeb8a8c1af2f8e4355746a97fab05a372e4a2c6a6b876165/idna-2.7-py2.py3-none-any.whl (58kB)
-    100% |████████████████████████████████| 61kB 9.3MB/s 
-Collecting certifi>=2017.4.17 (from requests>=2.13.0->django-oauth-toolkit)
-  Downloading https://files.pythonhosted.org/packages/56/9d/1d02dd80bc4cd955f98980f28c5ee2200e1209292d5f9e9cc8d030d18655/certifi-2018.10.15-py2.py3-none-any.whl (146kB)
-    100% |████████████████████████████████| 153kB 9.0MB/s 
-Requirement already satisfied: pytz in ./env/lib/python3.6/site-packages (from django>=2.0->django-oauth-toolkit) (2018.6)
-Installing collected packages: oauthlib, urllib3, chardet, idna, certifi, requests, django-oauth-toolkit
-Successfully installed certifi-2018.10.15 chardet-3.0.4 django-oauth-toolkit-1.2.0 idna-2.7 oauthlib-2.1.0 requests-2.20.0 urllib3-1.24
-(env) django-jsonapi-training$ pip install django-cors-middleware
-Collecting django-cors-middleware
-  Downloading https://files.pythonhosted.org/packages/33/d8/23f4b1249021f0192a3d6f263c29b46637c1f03ab41608ed8477d992550d/django-cors-middleware-1.3.1.tar.gz
-Installing collected packages: django-cors-middleware
-  Running setup.py install for django-cors-middleware ... done
-Successfully installed django-cors-middleware-1.3.1
-(env) django-jsonapi-training$ pip install Pyyaml
-Collecting Pyyaml
-  Downloading https://files.pythonhosted.org/packages/9e/a3/1d13970c3f36777c583f136c136f804d70f500168edc1edea6daa7200769/PyYAML-3.13.tar.gz (270kB)
-    100% |████████████████████████████████| 276kB 6.1MB/s 
-Installing collected packages: Pyyaml
-  Running setup.py install for Pyyaml ... done
-Successfully installed Pyyaml-3.13
+(venv) django-jsonapi-training$ pip install djangorestframework
+...
 ```
 
 ### Freeze Python package requirements
@@ -187,8 +99,8 @@ Next time you or someone else works on a clone of your project, all the precedin
 `pip install -r requirements.txt`.
 
 ```console
-(env) django-jsonapi-training$ pip freeze >requirements.txt 
-(env) django-jsonapi-training$ cat requirements.txt 
+(venv) django-jsonapi-training$ pip freeze >requirements.txt 
+(venv) django-jsonapi-training$ cat requirements.txt 
 certifi==2018.10.15
 chardet==3.0.4
 Django==2.1.2
@@ -226,8 +138,8 @@ We want to ignore our virtualenv directory, and various output files created by 
 compiled python and so on.
 
 ```console
-(env) django-jsonapi-training$ cat >.gitignore
-env/
+(venv) django-jsonapi-training$ cat >.gitignore
+venv/
 *.pyc
 db.sqlite3
 .idea/
@@ -249,9 +161,9 @@ start:
 1. Create the Django superuser account.
 
 ```console
-(env) django-jsonapi-training$ django-admin startproject training .
-(env) django-jsonapi-training$ django-admin startapp myapp
-(env) django-jsonapi-training$ ./manage.py migrate
+(venv) django-jsonapi-training$ django-admin startproject training .
+(venv) django-jsonapi-training$ django-admin startapp myapp
+(venv) django-jsonapi-training$ ./manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, sessions
 Running migrations:
@@ -270,7 +182,7 @@ Running migrations:
   Applying auth.0008_alter_user_username_max_length... OK
   Applying auth.0009_alter_user_last_name_max_length... OK
   Applying sessions.0001_initial... OK
-(env) django-jsonapi-training$ ./manage.py createsuperuser
+(venv) django-jsonapi-training$ ./manage.py createsuperuser
 Username (leave blank to use 'ac45'): admin
 Email address: 
 Password: admin123 
@@ -285,9 +197,9 @@ Let's look at what's been created. We'll ignore the `env` directory as that's wh
 lives, including all the Python packages in `env/lib/python3.6/site-packages/`.
 
 ```console
-(env) django-jsonapi-training$ ls
+(venv) django-jsonapi-training$ ls
 db.sqlite3        env/              manage.py*        myapp/            requirements.txt  training/
-(env) django-jsonapi-training$ tree myapp training
+(venv) django-jsonapi-training$ tree myapp training
 myapp
 ├── __init__.py
 ├── admin.py
@@ -308,7 +220,7 @@ training
 └── wsgi.py
 
 2 directories, 14 files
-(env) django-jsonapi-training$ git status
+(venv) django-jsonapi-training$ git status
 On branch master
 
 No commits yet
@@ -323,8 +235,8 @@ Untracked files:
 	training/
 
 nothing added to commit but untracked files present (use "git add" to track)
-(env) django-jsonapi-training$ git add .
-(env) django-jsonapi-training$ git status
+(venv) django-jsonapi-training$ git add .
+(venv) django-jsonapi-training$ git status
 On branch master
 
 No commits yet
@@ -347,7 +259,7 @@ Changes to be committed:
 	new file:   training/urls.py
 	new file:   training/wsgi.py
 
-(env) django-jsonapi-training$ git commit -m "initial project"
+(venv) django-jsonapi-training$ git commit -m "initial project"
 [master (root-commit) f6c154d] initial project
  14 files changed, 221 insertions(+)
  create mode 100644 .gitignore
@@ -364,14 +276,13 @@ Changes to be committed:
  create mode 100644 training/settings.py
  create mode 100644 training/urls.py
  create mode 100644 training/wsgi.py
-(env) django-jsonapi-training$ git log
+(venv) django-jsonapi-training$ git log
 commit f6c154d15771c01e3034a75024b308d0db36ae8d (HEAD -> master)
 Author: Alan Crosswell <alan@columbia.edu>
 Date:   Fri Oct 26 16:36:49 2018 -0400
 
     initial project
 
-(env) django-jsonapi-training$ git tag initial
 ```
 
 You can now use the above commit as a template to start future projects if you like.
@@ -386,18 +297,7 @@ src$ cd django-jsonapi-training
 django-jsonapi-training$ git checkout initial
 ```
 
-If you want to follow along, you can uses the various git tags to check out pieces of the project.
-However, many of these intermediate versions have now been replaced. It's probably better to simply
-skip ahead and go to the latest code.
-
-!!! note
-    We'll indicate the git tags like this in the documentation.
-
-    `GIT TAG: initial`
-
 ## Edit Settings to add DRF, DJA, OAuth, Debug, etc.
-
-`GIT TAG: settings`
 
 An initial version of `training/settings.py` is created by
 `django-admin startproject` and `django-admin startapp`. It's full of comments suggesting changes. 
@@ -611,8 +511,6 @@ index 52940b5..a8dcdb6 100644
 
 ## Define Models
 
-`GIT TAG: models`
-
 Generally, you need to have an application architecture sketched out in advance. This includes a data model.
 You can start by sketching your entity-relationship diagrams on a whiteboard or use a modeling tool to generate a
 [UML](https://en.wikipedia.org/wiki/Unified_Modeling_Language)
@@ -623,12 +521,11 @@ and then pretend you designed them first using the `django-extensions` package. 
 ./manage.py graph_models -g -S --disable-abstract-fields -E -o docs/media/initial-uml.png myapp
 ```
 
-Here's our model with the CommonModel off to the side to make things more readable:
+Here's our model with the CommonModel (which is "copied" by all models) off to the side to make things more readable:
 
 ![UML diagram of data model](./media/initial-uml.png "UML diagram of data model")
 
 `django-admin startapp` created a starter `myapp/models.py`. Now add some actual model definitions to it.
-These are just like in "vanilla" Django.
 
 We're going to:
 
@@ -706,8 +603,6 @@ class CourseTerm(CommonModel):
 ```
 
 ## Define Serializers
-
-`GIT TAG: serializers`
 
 Serializers render the Models in the "wire" format, which is JSON, and specifically {json:api},
 so we import our serializers from `rest_framework_json_api.serializers`.
@@ -976,8 +871,6 @@ index 32604cb..beb962c 100644
 
 ## Define URL routing and Views 
 
-`GIT TAG: views`
-
 A view function is defined for each HTTP endpoint in the app. DRF uses Class-based views (CBV) in which
 the ViewSet class has an `as_view()` function that returns a view function. The HTTP endpoints are
 defined in the `urlpatterns` list in `urls.py` and reference the CBV's in `views.py`.
@@ -1112,8 +1005,6 @@ class CourseTermRelationshipView(RelationshipView):
 
 ## Migrate the newly-installed apps.
 
-`GIT TAG: migrations`
-
 Now we'll make sure our database is in sync with the newly-defined app models and then apply migrations
 that include those for Django core and various add-on packages as well as `myapp`.
 
@@ -1122,13 +1013,13 @@ let's override DEBUG for the time being to reduce the noise.
 Recall that the `DJANGO_DEBUG` environment variable is used to customize `settings.DEBUG`.)
 
 ```console
-(env) django-jsonapi-training$ export DJANGO_DEBUG=false
-(env) django-jsonapi-training$ ./manage.py makemigrations
+(venv) django-jsonapi-training$ export DJANGO_DEBUG=false
+(venv) django-jsonapi-training$ ./manage.py makemigrations
 Migrations for 'myapp':
   myapp/migrations/0001_initial.py
     - Create model Course
     - Create model CourseTerm
-(env) django-jsonapi-training$ ./manage.py migrate
+(venv) django-jsonapi-training$ ./manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, myapp, oauth2_provider, sessions
 Running migrations:
@@ -1158,15 +1049,13 @@ Running migrations:
 
 Anytime things are feeling confusing, remove the sqlite3 database and re-migrate.
 ```console
-(env) django-training$ rm db.sqlite3
-(env) django-training$ /manage.py makemigrations
-(env) django-training$ /manage.py migrate
-(env) django-training$ /manage.py createsuperuser
+(venv) django-training$ rm db.sqlite3
+(venv) django-training$ /manage.py makemigrations
+(venv) django-training$ /manage.py migrate
+(venv) django-training$ /manage.py createsuperuser
 ```
 
 ## Add some test data
-
-`GIT TAG: fixtures`
 
 See `client/loader.py` which loads some data found at
 [opendataservice.columbia.edu](http://opendataservice.columbia.edu/).
@@ -1176,7 +1065,7 @@ A small subset of this data is available in a
 in `myapp/fixtures/testcases.yaml` which can be
 conveniently loaded into the database as follows:
 ```console
-(env) django-jsonapi-training$ ./manage.py loaddata myapp/fixtures/testcases.yaml
+(venv) django-jsonapi-training$ ./manage.py loaddata myapp/fixtures/testcases.yaml
 Installed 28 object(s) from 1 fixture(s)
 ```
 
@@ -1187,7 +1076,7 @@ A much larger test dataset (best not used with sqlite3) is in
 Now let's run the server and see what happens.
 
 ```console
-(env) django-jsonapi-training$ ./manage.py runserver
+(venv) django-jsonapi-training$ ./manage.py runserver
 Performing system checks...
 
 System check identified no issues (0 silenced).
@@ -1210,15 +1099,13 @@ application.
 
 ## Adding Authentication and Authorization
 
-`GIT TAG: view-permissions`
-
 To make life easy, we started the example above with no 
 [authentication](#authentication-authentication_classes) (identifying clients)
 or [authorization](#authorization-permission_classes) (permission to GET, POST, PATCH, DELETE resources).
 Let's add them in to `views.py`:
 
-1. We'll use [OAuth 2.0](#more-about-using-oauth-20) to authenticate clients:
-   - The client app can have a live person using it, using the Authorization Code or Implicit grant type, or, 
+1. We'll use [OAuth 2.0](oauth2.md) to authenticate clients:
+   - The client app can have a live person using it, using the Authorization Code grant type, or, 
    - it can be a program, using the Client Credentials grant.
    
    These are indicated by the use of a Columbia-specific OAuth 2.0 scope configuration:
@@ -1234,7 +1121,7 @@ Let's add them in to `views.py`:
    HTTP Basic Auth and Session cookies.
    
 1. Additional OAuth 2.0 scopes are used to authorize those clients (CRUD: `create`, `read`, `update`, `delete`)
-   as well as app-specific scopes such as `demo-netphone-admin`. (TODO: change this to a meaningful name!)
+   as well as app-specific scopes such as `demo-netphone-admin`.
    _N.B. These are all Columbia-specific scope configurations._
 
 1. As an **alternative** to OAuth 2.0 scopes for permissions, using DRF's bitwise operators, 
@@ -1245,6 +1132,10 @@ Let's add them in to `views.py`:
    will likely do the `or`s and `and`s differently.
    
 Lot's more can be done with Django's permission system such as adding object and/or field-level permissions.
+
+!!! Note
+    A lot of the permissions configuration has changed in the latest version(s) of the app, so some of
+	the above may no longer work.
 
 ```diff
 diff --git a/myapp/views.py b/myapp/views.py
@@ -1269,20 +1160,20 @@ index 3fbc325..57897c8 100644
 +    'HEAD': [['read']],
 +    'OPTIONS': [['read']],
 +    'POST': [
-+        ['auth-columbia', 'demo-netphone-admin', 'create'],
-+        ['auth-none', 'demo-netphone-admin', 'create'],
++        ['auth-columbia', 'demo-djt-sla-bronze', 'create'],
++        ['auth-none', 'demo-djt-sla-bronze', 'create'],
 +    ],
 +    # 'PUT': [
-+    #     ['auth-columbia', 'demo-netphone-admin', 'update'],
-+    #     ['auth-none', 'demo-netphone-admin', 'update'],
++    #     ['auth-columbia', 'demo-djt-sla-bronze', 'update'],
++    #     ['auth-none', 'demo-djt-sla-bronze', 'update'],
 +    # ],
 +    'PATCH': [
-+        ['auth-columbia', 'demo-netphone-admin', 'update'],
-+        ['auth-none', 'demo-netphone-admin', 'update'],
++        ['auth-columbia', 'demo-djt-sla-bronze', 'update'],
++        ['auth-none', 'demo-djt-sla-bronze', 'update'],
 +    ],
 +    'DELETE': [
-+        ['auth-columbia', 'demo-netphone-admin', 'delete'],
-+        ['auth-none', 'demo-netphone-admin', 'delete'],
++        ['auth-columbia', 'demo-djt-sla-bronze', 'delete'],
++        ['auth-none', 'demo-djt-sla-bronze', 'delete'],
 +    ],
 +}
 +
@@ -1381,6 +1272,9 @@ previously-added `admin` superuser:
 
 ![Postman basic auth](./media/postman-auth-basic.png "Using basic auth user 'admin' and password 'admin123'")
  
+!!! Note
+    In the latest version of the app, only OAuth2 is configured; You can set up the [internal DOT OAuth2 server](using_dot.md)
+	to to this. TODO: Fix the documentation to match!
 
 ## Pagination, Sorting and Sparse Fieldsets
 
@@ -1448,8 +1342,6 @@ See `settings.py` for where the `REST_FRAMEWORK` default classes are configured.
 You can also add these classes on a per-view basis using, for example, the `.pagination_class` attribute.
  
 ## Configure additional Filter Backends
-
-`GIT TAG: views-filter`
 
 As you may have noticed in `settings.py`, we've added several Filter Backends: 
 - [`rest_framework_json_api.filters.QueryParameterValidationFilter`](https://django-rest-framework-json-api.readthedocs.io/en/stable/usage.html#queryparametervalidationfilter)
@@ -1855,8 +1747,6 @@ Resulting in:
 
 ### via the Serializer
 
-`GIT TAG: serializers-lastmod`
-
 Say we want to prevent the client from updating who the `last_mod_user_name` was or when the `last_mod_date`
 happened. This example _silently_ overrides the serializer `create` and `update` methods to use the authenticated
 user and current date when updating the underlying Model. Let's mark those fields read-only as well.
@@ -1936,15 +1826,13 @@ We're going to get rid of the starter `tests.py` that was created by `django-adm
 make a test suite module instead.
 
 ```console
-(env) django-jsonapi-training$ git rm myapp/tests.py 
+(venv) django-jsonapi-training$ git rm myapp/tests.py 
 rm 'myapp/tests.py'
-(env) django-jsonapi-training$ mkdir myapp/tests
-(env) django-jsonapi-training$ touch myapp/tests/__init__.py
+(venv) django-jsonapi-training$ mkdir myapp/tests
+(venv) django-jsonapi-training$ touch myapp/tests/__init__.py
 ``` 
 
 ### Test Models 
-
-`GIT TAG: test-models`
 
 Let's start with the basics and make sure our Models make sense. Django has a nice testing framework that,
 by default, makes a new in-memory sqlite database each time a test suite is run. This guarantees that the
@@ -2075,7 +1963,7 @@ class CourseTestCase(TestCase):
 Let's run those tests:
 
 ```console
-(env) django-jsonapi-training$ ./manage.py test
+(venv) django-jsonapi-training$ ./manage.py test
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).
 .E..
@@ -2137,8 +2025,6 @@ It's always good to write some negative tests to make sure expected errors actua
 `test_dup_fail()` we see that it failed on a uniqueness constraint, which is an expected error. So let's update
 the test code to check for the error:
 
-`GIT TAG: test-models-IntegrityError`
-
 ```python
     def test_dup_fail(self):
         with self.assertRaises(IntegrityError):
@@ -2155,7 +2041,7 @@ the test code to check for the error:
 ```
 
 ```console
-(env) django-jsonapi-training$ ./manage.py test
+(venv) django-jsonapi-training$ ./manage.py test
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).
 ....
@@ -2172,7 +2058,7 @@ One of the cool things about Python is you can drop into the Python shell and in
 things:
 
 ```console
-(env) django-jsonapi-training$ python
+(venv) django-jsonapi-training$ python
 Python 3.6.6 (default, Jul 27 2018, 14:31:43) 
 [GCC 4.2.1 Compatible Apple LLVM 9.1.0 (clang-902.0.39.2)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
@@ -2192,7 +2078,7 @@ You can use the Django shell to do the same, making sure all the "stuff" configu
 is properly loaded:
 
 ```console
-(env) django-jsonapi-training$ ./manage.py shell
+(venv) django-jsonapi-training$ ./manage.py shell
 Python 3.6.6 (default, Jul 27 2018, 14:31:43) 
 [GCC 4.2.1 Compatible Apple LLVM 9.1.0 (clang-902.0.39.2)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
@@ -2328,10 +2214,6 @@ Also, one test fails, exercising a bug in the current DJA 2.6.0 release. We'll g
 
 ## Use Tox to automate testing
 
-`GIT TAG: tox`
-
-`GIT TAG: requirements-bandit-safety`
-
 ### The `tox.ini`
 Add a `tox.ini`
 to automate testing for coding style standards as well as running the tests
@@ -2404,7 +2286,7 @@ Before we can use `tox`, a couple other things are needed:
 ### Run `tox`
 
 ```console
-(env) django-jsonapi-training$ tox
+(venv) django-jsonapi-training$ tox
 GLOB sdist-make: /Users/alan/src/django-jsonapi-training/setup.py
 py36 create: /Users/alan/src/django-jsonapi-training/.tox/py36
 py36 bootstrap: venv-update>=2.1.3
@@ -2429,7 +2311,6 @@ Above we see a couple of `flake8` errors that have to be fixed before the tests 
 2. `myapp/tests/test_views.py` also has an unused `import`.
 3. Let's use that `expectedFailure` import and label the failing test so we can move on.
 
-`GIT TAG: tox-flake8-expectedFailure`
 
 ```diff
 diff --git a/myapp/admin.py b/myapp/admin.py
@@ -2661,8 +2542,6 @@ remove from the project.
 
 ## Using unreleased packages
 
-`GIT TAG: requirements-pre-release`
-
 Sometimes we'll run into a bug or want to use a new feature in one of the packages we rely on, that
 is available but hasn't been released yet. It's actually pretty easy to do this via updates to
 `requirements.txt`. Simply replace a package name and version dependency with a git reference. 
@@ -2706,7 +2585,7 @@ Let's clean up our world and try again:
 3. Run the tests and see we now have an _unexpected_ success.
 
 ```console
-(env) django-jsonapi-training$ deactivate
+(venv) django-jsonapi-training$ deactivate
 django-jsonapi-training$ rm -r env 
 django-jsonapi-training$ tox -e devenv
 devenv create: /Users/alan/src/django-jsonapi-training/env
@@ -2721,7 +2600,7 @@ _________________________________________________ summary ______________________
   devenv: commands succeeded
   congratulations :)
 django-jsonapi-training$ source env/bin/activate
-(env) django-jsonapi-training$ ./manage.py test
+(venv) django-jsonapi-training$ ./manage.py test
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).
 ..........ss...u...

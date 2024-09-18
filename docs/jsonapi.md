@@ -35,11 +35,7 @@ Even if you don't know about this media type, the "+json" on the end
 says it's fundamentally JSON-serialized so, even if you don't know what
 *vnd.api* is, a JSON parser will still be able to read it.
 
-You may want to take a look at the {json:api} response
-[schema](http://jsonapi.org/schema) which is written in
-JSON using the [JSON-schema.org](http://json-schema.org/)
-notation (although the [text description](http://jsonapi.org/format/) is easier to
-understand).
+See the {json:api}[format](http://jsonapi.org/format/) for full details.
 
 ## Resources, Relationships
 
@@ -94,11 +90,11 @@ says the *filter* parameter is reserved but we've chosen to follow the
 GET
 [http://127.0.0.1:8000/v1/courses/?filter[course_identifier]=ANTH3160V](http://127.0.0.1:8000/v1/courses/?filter[course_identifier]=ANTH3160V)
 
-Filters work on *course_identifier*.
+filters the courses collection for matches on *course_identifier*.
 
 ## Sorting
 
-Sorting using the *sort* query parameter can be ascending or descending:
+Sorting using the *sort* query parameter can be ascending or descending (indicated by a minus-sign in front of the field name):
 
 GET
 [http://127.0.0.1:8000/v1/courses/?sort=-course_name,course_number](http://127.0.0.1:8000/v1/courses/?sort=-course_name,course_number)
@@ -112,13 +108,16 @@ want to see a few of them. This is requested using the
 GET
 [http://127.0.0.1:8000/v1/courses/?fields[courses]=course_name](http://127.0.0.1:8000/v1/courses/?fields[courses]=course_name)
 
+will only return the the `course_name` attribute (along with the mandatory `type` and `id`) for each item in the collection.
+
+
 ## Installing Postman
 
 Postman is a powerful tool for testing HTTP. We'll be using it extensively to test our APIs.
 If you don't already have it, install Postman. You can get it at
 [https://www.getpostman.com/](https://www.getpostman.com/).
 
-For the record, here's an example of a GET of the first page of the `courses` collection, paginated with two
+Here's an example of a GET of the first page of the `courses` collection, paginated with two
 courses per page and with the referenced `course_terms` related data included in the compound document, avoiding
 the need for subsequent HTTP requests to get that information.
 
@@ -348,7 +347,7 @@ GET
 While we mostly GET data, every now and then we will need to create
 (POST) or update (PATCH) it. A POST creates a new object, so you are
 posting to the collection URL. Since we want the system to automatically
-assign the new UUID we don't include that in the request body. For
+assign the new unique `id` we don't include that in the request body. For
 example:
 
 POST `http://127.0.0.1:8000/v1/courses/` with a `Content-type: application/vnd.api+json` header and a

@@ -1,33 +1,43 @@
-# More About Using OAuth 2.0
+# Authorizing REST API operations using OAuth 2.0
 
-Review the [CU-STD-INTR-001: OAuth 2.0 Scope
-Standard](https://docs.google.com/document/d/13XW4-L_j9CCeB6jAPjPHK6V5-rMpcBUiF90RIAK0f6Y/edit#heading=h.tlbkpm4wjg60):
+## The Authorization Bearer Header
+
+Our API requests will each have an `Authorization: Bearer <token>` header for stateless authorization.
+The process by which that `<token>` is generated is described here. The next two chapters
+will describe the mechanics of implementing an Authorization Server (AS)
+using [django-oauth-toolkit](using_dot.md) or using Columbia's [existing OAuth2](using_oauth2.md) service.
+
 
 ![Flows diagram](./media/image2.png "OAuth 2.0 flows diagram")
 
 
-N.B. OAuth 2.0 is largely *unrelated* to OAuth 1.0; it's not just an upgrade, but a totally
-new protocol.  Many [LTI](https://andyfmiller.com/2013/02/10/does-lti-use-oauth/)
-APIs are based on OAuth 1.0. Different thing entirely.
+!!! Note
+    OAuth 2.0 is largely *unrelated* to OAuth 1.0; it's not just an upgrade, but a totally
+    new protocol.  Many [LTI](https://andyfmiller.com/2013/02/10/does-lti-use-oauth/)
+    APIs are based on OAuth 1.0. Different thing entirely.
 
 ## Dramatis Personae
 
 The players in the world of OAuth 2.0 are:
 
 **User:** The user is the human who logs in the usual way via a browser (e.g. using CAS in our case).
-The user login is generally initiated by the client making a request of the AS (below).
+The user login is generally initiated by the _client_ making a request of the AS (below).
 
-**Client:** The client app operates on behalf of the user. Since it's frequently referred to
+**Client:** The client app operates on behalf of the _user_. Since it's frequently referred to
 as just the "client", it is sometimes confused with the user, but it isn't. It is the app
 that the user is authorizing to act on her behalf, sometimes even when the user is no longer present.
 
 **Resource Server (RS):** The resource server is the "backend" (in our cast RESTful Django) server.
-It uses information passed by the client (an Access Token) to see if the resources it manages are
+It uses information passed by the _client_ (an Access Token) to see if the resources it manages are
 permitted to be manipulated using the HTTP methods. This information is usually validated using
 Access Token *introspection*, described below.
 
 **Authorization Server (AS):** This is the central control point. All clients and RS's talk to the
 AS to get and validate a *Token*. Clients and RS's are registered in advance with the AS.
+
+!!! Note
+    OpenID Connect (OIDC), an extension of OAuth 2, adds some more features such as _ID tokens_
+	and _claims_. 
 
 More on these roles below.
 
@@ -75,11 +85,14 @@ casual users ("Bronze" SLA) might be rate limited to a farily low number while a
 integration might perform an unlimited number of calls per second ("Gold" SLA).
 
 Use of SLA scopes is our primary means of *binding* a particular Client to a specific Resource Server;
-the Client is registered in the AS with permission to request the given RS SLA Scope. This further
+the Client is registered in the AS with permission to request the given RS SLA Scope[^1]. This further
 requires that the RS confirm that scope is present in the Access Token when it
 [introspects](#register-resource-server-for-token-introspection) it. (This is comparable and an
 alternative to the use of an [API key](https://en.wikipedia.org/wiki/Application_programming_interface_key).)
 
+[^1]:
+    django-oauth-toolkit (DOT) does not currently allow a given client (called an _application_) to be
+	restricted to which scopes it can request. Our Columbia AS does have this feature.
 
 ### Authentication Selector Scopes
 
@@ -148,6 +161,10 @@ It is authorized using the *access_token* meaning anybody that has the *access_t
 can retrieve this information. This can be used in the event that an **id_token**
 was not returned to the Client, for example.
 
+Review the [CU-STD-INTR-001: OAuth 2.0 Scope
+Standard](https://docs.google.com/document/d/13XW4-L_j9CCeB6jAPjPHK6V5-rMpcBUiF90RIAK0f6Y/edit#heading=h.tlbkpm4wjg60)
+for more details.
+
 ## What kind of client is it?
 
 No matter the OAuth 2.0 "style", the Resource Server (RS) is always
@@ -198,25 +215,24 @@ in the Authorization header. The resource server decides what actions
 are authorized based on the scopes associated with the token, which it
 learns from token introspection. It can also make decisions based on the
 identity of the user, in the cases where a user was identified
-(Authorization Code or Implicit grants) as this is exposed by the
+(Authorization Code grant) as this is exposed by the
 introspection (and userinfo) endpoints.
 
 Resource server designers need to decide:
 
-1. Is a human user approval required vs. a trusted server.
+1. Is a human user approval required vs. a trusted server?
 2. On a per-REST method and resource basis, what scopes are required to
-   implement the action (coarse-grained authorization).
+   implement the action (coarse-grained authorization)?
 3. What additional security decisions need to be made based on the
-   logged-in user and/or data (fine-grained authorization).
+   logged-in user and/or data (fine-grained authorization)?
 
 One should attempt to be "RESTful" in designing application security:
 Base permissions on HTTP methods and resources. Using a modeling
 language like OAS 3.0 can help. See
 [Documenting the API in OAS 3.0](documenting-api.md), and the
-equivalent Django
-[permission_classes](building.md#adding-authentication-and-authorization).
+Django [permission_classes](building.md#adding-authentication-and-authorization).
 
-## Registering with the AS
+## Registering with the Columbia AS
 ### Register Resource Server for Token Introspection
 
 The Resource Server must be a registered client with the OAuth 2.0
@@ -241,19 +257,23 @@ about when registering a client are:
 
 #### Client is operating on behalf of an end user
 
-1.  Is it a fully in-browser (javascript) app? If so, it will likely be using
-    the ~~Implicit~~[^1] Authorization Code grant type (with no password) and will require a user to log in,
+1.  Is it a fully in-browser (javascript) Single-page app (SPA)? If so, it will likely be using
+    the ~~Implicit~~[^2] Authorization Code grant type (with no password) and will require a user to log in,
     using the auth-columbia scope selector.
 2.  What scopes should the app be allowed to request on behalf of the
     user and what scopes are required by its Resource Server?
 3.  Should the end-user scope-approval page be presented or bypassed? In
-    most cases, this will be bypassed.
+    most cases, this will be bypassed for our enterprise apps.
+
+[^2]: Single-page App (SPA) use of Implicit grants is [deprecated](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#name-implicit-grant)
+      in favor of Authorization Code (with no password)
+	  and [PKCE](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#name-pkce).
+	  Note: Be aware that any SPA that uses Authorization Code can be inspected by the browser user
+	  to identify the _client id_ and _client secret_ (if any), so the authorization really depends
+	  on OIDC claims.
 
 #### Client is a server
 
 In this case, the app should be registered with permission to request
 the **auth-none** and additional scopes.
 
-[^1]: SPA use of Implicit grants is [deprecated](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#name-implicit-grant)
-      in favor of Authorization Code (with no password)
-	  and [PKCE](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#name-pkce).

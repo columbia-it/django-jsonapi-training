@@ -71,10 +71,11 @@ Example: `GET /api/v1/widgets?sort=-name,+qty`
 
 The HTTP `Accept` header lists what (prioritized) content types the
 requestor will accept. We'll keep it simple and only
-accept one response type: `Accept: application/json`
+accept one response type: `Accept: application/vnd.api+json`
+in the demo app.
 
 The HTTP Content-Type header specifies the format of the response:
-`Content-type: application/json`
+`Content-type: application/vnd.api+json`
 
 ### Authentication and Authorization
 
@@ -129,8 +130,10 @@ results in a new registration object identified as:
 
 ### HATEOAS: Hypermedia As The Engine Of Application State.
 
-Given a starting URL, a client app *should* be able to discover everything it needs
-without any separate external documentation of the interface.
+Hypermedia As The Engine Of Application State ([HATEOAS](https://en.wikipedia.org/wiki/HATEOAS))
+means that given a starting URL, a client app *should* be able to discover everything it needs
+without any separate external documentation of the interface. This is typically accomplished with
+URLs embedded in each REST API response that refer one to the, for example, next related item.
 
 
 ### Avoid REST anti-patterns
@@ -140,6 +143,9 @@ common of these anti-patterns is turning a REST API endpoint into a SOAP-like en
 a remote method call. For example, `POST /v1/courses/01ca197f-c00c-4f24-a743-091b62f1d500/enroll`.
 You can immediately tell this is an anti-pattern because "enroll" is used here as a verb
 and RESTful resources should only be nouns.
+
+Read more about REST anti-patterns [here](https://www.infoq.com/articles/rest-anti-patterns/)
+and [here](https://marcelocure.medium.com/rest-anti-patterns-b128597f5430).
 
 ### A good REST pattern
 

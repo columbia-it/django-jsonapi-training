@@ -1,5 +1,4 @@
 # Adding OIDC 1.0 Claims
-`GIT TAG: claims`
 
 At Columbia we've implemented a custom OIDC claim that is provided when the scope
 `https://api.columbia.edu/scope/group` is requested. Let's use this claim
@@ -108,7 +107,9 @@ results in replacing some of the DOT models with our own for which we'll define 
 
 We start by dropping the `oauth2_provider` models from the database using a *zero* reverse migration.
 This will clobber any cached Access Tokens -- which is not a terrible thing as they'll
-get re-cached the next time they are presented in the Authorization Bearer header.
+get re-cached the next time they are presented in the Authorization Bearer header.[^1]
+
+[^1]: However, it will also clobber any Applications, etc. so be careful if doing this in production.
 
 ```text
 (env) django-training$ ./manage.py migrate oauth2_provider zero
@@ -340,7 +341,7 @@ CREATE INDEX "oauth_myaccesstoken_user_id_af7b1a7f" ON "oauth_myaccesstoken"(
 To actually get the UserInfo result cached with the result of the Access Token introspection,
 extend DRF's BasePermission class to cache a UserInfo response as part of its associated Access Token: 
 
-See [oauth/oauth2_introspection.py](https://github.com/columbia-it/django-jsonapi-training/tree/master/oauth/oauth2_introspection.py)
+See [oauth/oauth2_introspection.py]({{view_uri}}/oauth/oauth2_introspection.py)
 
 ### Automated filling in OAUTH2_CONFIG
 

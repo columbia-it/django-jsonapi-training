@@ -192,61 +192,9 @@ The Meta objects are also missing.
 </tr>
 </table>
 
-### Breaks on RelationShipViews
+### RelationShipViews are incomplete
 
-
-The following paths had to be removed in order to get a schema to generate:
-
-```python
-    # course relationships:
-    path('v1/courses/<pk>/relationships/<related_field>/',
-        views.CourseRelationshipView.as_view(),
-        name='course-relationships'),
-    # course_terms relationships
-    path('v1/course_terms/<pk>/relationships/<related_field>/',
-        views.CourseTermRelationshipView.as_view(),
-        name='course_term-relationships'),
-    # person relationships
-    path('v1/people/<pk>/relationships/<related_field>/',
-        views.PersonRelationshipView.as_view(),
-        name='person-relationships'),
-    # instructor relationships
-    path('v1/instructors/<pk>/relationships/<related_field>/',
-        views.InstructorRelationshipView.as_view(),
-        name='instructor-relationships'),
-```
-
-
-Here's the traceback with attemping `manage.py spectacular`:
-```
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/drf_spectacular/management/commands/spectacular.py", line 72, in handle
-    schema = generator.get_schema(request=None, public=True)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/drf_spectacular/generators.py", line 285, in get_schema
-    paths=self.parse(request, public),
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/drf_spectacular/generators.py", line 256, in parse
-    operation = view.schema.get_operation(
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/drf_spectacular_jsonapi/schemas/openapi.py", line 48, in get_operation
-    return super().get_operation(path, path_regex, path_prefix, method, registry)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/drf_spectacular/openapi.py", line 96, in get_operation
-    tags = self.get_tags()
-           ^^^^^^^^^^^^^^^
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/drf_spectacular_jsonapi/schemas/openapi.py", line 143, in get_tags
-    return [get_resource_name(context={"view": self.view})]
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/rest_framework_json_api/utils.py", line 51, in get_resource_name
-    resource_name = view.resource_name
-                    ^^^^^^^^^^^^^^^^^^
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/rest_framework_json_api/views.py", line 422, in get_resource_name
-    instance = getattr(self.get_object(), self.get_related_field_name())
-                       ^^^^^^^^^^^^^^^^^
-  File "/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/rest_framework/generics.py", line 92, in get_object
-    assert lookup_url_kwarg in self.kwargs, (
-AssertionError: Expected view CourseTermRelationshipView to be called with a URL keyword argument named "pk". Fix your URL conf, or set the `.lookup_field` attribute on the view correctly.
-```
+TODO: No longer breaks on RelationShipViews but the example response looks incomplete.
 
 ### Related field not handled
 
@@ -264,13 +212,6 @@ Warning: operationId "course_terms_retrieve" has collisions [('/v1/course_terms/
 Warning: operationId "courses_retrieve" has collisions [('/v1/courses/{id}/', 'get'), ('/v1/courses/{id}/{related_field}/', 'get')]. resolving with numeral suffixes.
 Warning: operationId "instructors_retrieve" has collisions [('/v1/instructors/{id}/', 'get'), ('/v1/instructors/{id}/{related_field}/', 'get')]. resolving with numeral suffixes.
 Warning: operationId "people_retrieve" has collisions [('/v1/people/{id}/', 'get'), ('/v1/people/{id}/{related_field}/', 'get')]. resolving with numeral suffixes.
-```
-
-### Does not (yet) support non-model serializers
-
-```
-/Users/ac45/src/django-jsonapi-training/venv/lib/python3.12/site-packages/drf_spectacular_jsonapi/schemas/utils.py:14: UserWarning: Can't resolve primary key for non model serializers.
-  warn(message="Can't resolve primary key for non model serializers.")
 ```
 
 ## Quality of parameters in OAS schema
@@ -291,8 +232,6 @@ http://127.0.0.1:8000/v1/courses/?fields[courses]=course_terms,school_bulletin_p
 ```
 
 Similarly, `include` enumerates the possible values to include.
-
-Contrast this with the DJA implementation which generically describes the `fields` and `include` parameters.
 
 Filters are also complete and differ from the DJA implementation only in that the conventional
 Django double-underscore is used, e.g. `filter[course_terms__term_identifier__lt]` vs. the DJA

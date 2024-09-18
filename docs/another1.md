@@ -17,8 +17,6 @@ or more Instructors. We'll:
 ## Instructor model
 This model is ManyToMany with CourseTerm.
 
-`GIT TAG: instructor`
-
 ![UML diagram of data model](./media/instructor-uml.png "UML diagram of data model")
 
 ```python
