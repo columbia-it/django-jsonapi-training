@@ -7,7 +7,7 @@ project documentation using Markdown files.
 
 ## MkDocs vs. Sphinx
 
-[Sphinx](sphinx.md) is the initial tool I decided to use for documenting this project.
+Sphinx is the initial tool I decided to use for documenting this project.
 I've since been experimenting with the [Backstage](backstage.md) developer portal
 which uses MkDocs for their [TechDocs](https://backstage.io/docs/features/techdocs/techdocs-overview)
 tool so I figured I'd experiment with MkDocs.

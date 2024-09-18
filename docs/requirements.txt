@@ -1,2 +1,0 @@
-# bring in requirements for my app (excepting the optional database):
--r../requirements-django.txt
