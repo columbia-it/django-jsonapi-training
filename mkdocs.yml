@@ -83,6 +83,7 @@ nav:
  - 'Adding OIDC 1.0 Claims': oidc.md
  - 'MkDocs Documentation': mkdocs.md
  - 'Documenting the API with OAS 3': documenting-api.md
+ - 'A single page app (SPA) client': angular.md
  - 'Backstage developer portal': backstage.md
  - 'Deploying to Production': deploying.md
  - 'Using AWS API Gateway': aws_api_gw.md
