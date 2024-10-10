@@ -1,1 +1,9 @@
-<p>course works!</p>
+<section class="course">
+  <h2 class="course-heading"><a [routerLink]="['/details', course.id]">
+  <img
+    class="course-icon"
+    src="../assets/classroom.svg"
+    alt="classroom icon"
+  />
+  {{course.course_identifier}}</a></h2> {{course.course_name}}
+</section>
