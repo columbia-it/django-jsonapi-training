@@ -14,10 +14,26 @@ import { CoursesService } from '../courses.service';
 export class CatalogComponent {
   title = 'catalog';
   courseList: Course[] = [];
+  filteredCourseList: Course[] = [];
   coursesService: CoursesService = inject(CoursesService);
 
   constructor() {
-    this.courseList = this.coursesService.getAllCourses();
+    this.coursesService.getAllCourses().then((courseList: Course[]) => {
+      this.courseList = courseList;
+      this.filteredCourseList = this.courseList;
+      }
+    )
   }
 
+  filterResults(text: string) {
+    if (!text) {
+      this.filteredCourseList = this.courseList;
+      return;
+    }
+
+    this.filteredCourseList = this.courseList.filter((course) =>
+      course?.course_name.toLowerCase().includes(text.toLowerCase()),
+    );
+
+  }
 }

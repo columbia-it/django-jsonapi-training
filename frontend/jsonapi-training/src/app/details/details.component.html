@@ -13,4 +13,16 @@
     <p class="course-school-bulletin-prefix-code"> Bulletin Prefix: {{course?.school_bulletin_prefix_code}}</p>
     <p class="course-suffix-two"> Suffix two: {{course?.suffix_two}}</p>
   </section>
+  <!-- TODO: make this into add a CourseTerm -->
+  <section class="course-apply">
+    <h2 class="section-heading">Do something</h2>
+    <form [formGroup]="applyForm" (submit)="submitCourse()">
+      <label for="name">Course Name</label>
+      <input id="name" type="text" formControlName="name" />
+      <label for="description">Description</label>
+      <input id="description" type="text" formControlName="description" />
+      <button type="submit" class="primary">Submit</button>
+    </form>
+  </section>
+
 </article>
