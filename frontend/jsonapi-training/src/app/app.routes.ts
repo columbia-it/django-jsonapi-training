@@ -1,8 +1,9 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 import { CatalogComponent } from './catalog/catalog.component';
-import {DetailsComponent } from './details/details.component';
+import { DetailsComponent } from './details/details.component';
 
-export const routes: Routes = [
+const routes: Routes = [
   {
     path: '',
     component: CatalogComponent,
@@ -14,3 +15,14 @@ export const routes: Routes = [
     title: 'Course details'
   },
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, {
+    useHash: true,
+    scrollPositionRestoration: 'enabled', // appears not to work...
+  })],
+
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
