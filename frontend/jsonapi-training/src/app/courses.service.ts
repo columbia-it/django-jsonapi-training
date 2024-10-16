@@ -1,23 +1,30 @@
 import { Injectable } from '@angular/core';
+import { Datastore } from './datastore.service';
 import { Course } from './course';
+import { JsonApiQueryData} from 'angular2-jsonapi';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesService {
 
-  constructor() {
-  }
-  protected url = 'http://localhost:3000/courses';
+  constructor(private datastore: Datastore) { }
 
-  async getAllCourses(): Promise<Course[]> {
-    const data = await fetch(this.url);
-    return (await data.json()) ?? [];
+  getAllCourses() {
+    this.datastore.findAll(Course, {
+        page: { size: 10, number: 1 },
+        filter: {
+          title: 'Courses',
+        },
+    }).subscribe(
+        (courses: JsonApiQueryData<Course>) => console.log(courses.getModels())
+    );
   }
 
-  async getCourseById(id: string): Promise<Course | undefined> {
-    const data = await fetch(`${this.url}/${id}`);
-    return (await data.json()) ?? {};
+  getCourseById(id: string) {
+    this.datastore.findRecord(Course, id).subscribe(
+      (course: Course) => console.log(course)
+    );
   }
 
   submitCourse(name: string, description: string) {

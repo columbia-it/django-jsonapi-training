@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
-
+import { JsonApiModule } from 'angular2-jsonapi';
 
 
 @NgModule({
@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app.routes';
     CommonModule,
     BrowserModule,
     AppRoutingModule,
+    JsonApiModule,
   ],
   bootstrap: [AppComponent]
 })

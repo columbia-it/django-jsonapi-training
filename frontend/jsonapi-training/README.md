@@ -1,3 +1,21 @@
+# PORTING NOTES
+
+Trying to use Ivy compiler by rebuilding angular2-jsonapi.
+It appears that https://github.com/ghidoz/angular2-jsonapi has abandoned work.
+https://github.com/michalkotas/angular2-jsonapi seems to have picked it up and updated it to support
+Angular 14+.
+I cloned that and have been trying to upgrade package versions. See https://github.com/n2ygk/angular2-jsonapi/tree/npm-updates.
+
+In building this I did:
+```
+npm run build
+```
+and then update package.json with this line:
+```json
+    "angular2-jsonapi": "file:../../../angular2-jsonapi/dist/angular2-jsonapi",
+```
+and do another `npm i`.
+
 # JsonapiTraining
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.7.
