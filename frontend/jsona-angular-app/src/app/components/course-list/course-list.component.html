@@ -1,11 +1,11 @@
 <h2>Course List</h2>
 <ul>
   <li *ngFor="let course of courses">
-    {{ course.name }} - {{ course.description }}
+    {{ course.course_identifier }}: {{ course.course_name }}
   </li>
 </ul>
 
 <h3>Add New Course</h3>
-<input [(ngModel)]="newCourse.name" placeholder="Name">
-<input [(ngModel)]="newCourse.description" placeholder="Description">
+<input [(ngModel)]="newCourse.course_name" placeholder="Name">
+<input [(ngModel)]="newCourse.course_description" placeholder="Description">
 <button (click)="addCourse()">Add Course</button>

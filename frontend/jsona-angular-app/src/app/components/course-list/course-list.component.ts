@@ -8,7 +8,15 @@ import { Course } from '../../models/course.model';
 })
 export class CourseListComponent implements OnInit {
   courses: Course[] = [];
-  newCourse: Course = { course_id: '', name: '', description: '' };
+  newCourse: Course = {
+    course_identifier: '',
+    course_name: '',
+    course_description: '',
+    course_number: '',
+    school_bulletin_prefix_code: '',
+    suffix_two: '',
+    subject_area_code: ''
+  };
 
   constructor(private courseService: CourseService) {}
 
@@ -21,7 +29,15 @@ export class CourseListComponent implements OnInit {
   addCourse() {
     this.courseService.createCourse(this.newCourse).subscribe((course) => {
       this.courses.push(course);
-      this.newCourse = { course_id: '', name: '', description: '' };
+      this.newCourse = {
+        course_identifier: '',
+        course_name: '',
+        course_description: '',
+        course_number: '',
+        school_bulletin_prefix_code: '',
+        suffix_two: '',
+        subject_area_code: ''
+      };
     });
   }
 }

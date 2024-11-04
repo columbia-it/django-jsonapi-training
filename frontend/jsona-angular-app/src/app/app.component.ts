@@ -3,7 +3,10 @@ import { CourseService } from './services/course.service';
 
 @Component({
   selector: 'app-root',
-  template: `<p>{{ data | json }}</p>`
+  template: `
+    <h1>Courses</h1>
+    <app-course-list></app-course-list>
+  `
 })
 export class AppComponent implements OnInit {
   data: any;
