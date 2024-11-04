@@ -9,7 +9,7 @@ import { Jsona } from 'jsona';
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = 'http://localhost:8000/courses';
+  private apiUrl = 'http://localhost:8000/v1/courses/';
   private jsona = new Jsona();
 
   constructor(private http: HttpClient) {}
@@ -31,9 +31,10 @@ export class CourseService {
     );
   }
 
+  // for the time being, get a new token via postman and then copy it here:
   private getHttpOptions() {
     return {
-      headers: new HttpHeaders({ 'Content-Type': 'application/vnd.api+json' })
+      headers: new HttpHeaders({ 'Content-Type': 'application/vnd.api+json', 'Authorization': 'Bearer ubjJVVdwGo8NulBqctCAKgVdIfFyzW' })
     };
   }
 }
