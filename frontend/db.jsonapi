@@ -1,0 +1,388 @@
+{"courses": {
+    "links": {
+        "first": "http://127.0.0.1:8000/v1/courses/?page%5Bnumber%5D=1",
+        "last": "http://127.0.0.1:8000/v1/courses/?page%5Bnumber%5D=448",
+        "next": "http://127.0.0.1:8000/v1/courses/?page%5Bnumber%5D=2",
+        "prev": null
+    },
+    "data": [
+        {
+            "type": "courses",
+            "id": "c823b5de-6018-4878-80e9-932d20eaa18a",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "CEFKX9",
+                "suffix_two": "00",
+                "subject_area_code": "ENGB",
+                "course_number": "00217",
+                "course_identifier": "ENGL3189X",
+                "course_name": "POSTMODERNISM",
+                "course_description": "POSTMODERNISM"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "a1d34785-cc25-4c1c-9806-9d05a98068c7"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/c823b5de-6018-4878-80e9-932d20eaa18a/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/c823b5de-6018-4878-80e9-932d20eaa18a/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/c823b5de-6018-4878-80e9-932d20eaa18a/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "e92164fc-4d87-4a27-867a-bd05c1a5d108",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "XCEFK9",
+                "suffix_two": "00",
+                "subject_area_code": "PSYB",
+                "course_number": "00241",
+                "course_identifier": "PSYC1138X",
+                "course_name": "SOCIAL PSYCHOLOGY-LEC",
+                "course_description": "SOCIAL PSYCHOLOGY-LEC"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "70034667-3159-4f0d-9158-a7e256d37931"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/e92164fc-4d87-4a27-867a-bd05c1a5d108/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/e92164fc-4d87-4a27-867a-bd05c1a5d108/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/e92164fc-4d87-4a27-867a-bd05c1a5d108/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "2b205052-a329-40ee-b5eb-1e8bd2fcc941",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "X",
+                "suffix_two": "00",
+                "subject_area_code": "ENGB",
+                "course_number": "00252",
+                "course_identifier": "ENGL3907X",
+                "course_name": "SR SEM: SHORT FICT AMER WOMEN",
+                "course_description": "SR SEM: SHORT FICT AMER WOMEN"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "881fd75c-fca9-4492-b46d-9cf786ac8675"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/2b205052-a329-40ee-b5eb-1e8bd2fcc941/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/2b205052-a329-40ee-b5eb-1e8bd2fcc941/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/2b205052-a329-40ee-b5eb-1e8bd2fcc941/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "e9decab5-c806-4a60-ae97-000c91d0c7b9",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "CEFKX",
+                "suffix_two": "00",
+                "subject_area_code": "ANTB",
+                "course_number": "00267",
+                "course_identifier": "ANTH1009V",
+                "course_name": "INTRO TO LANGUAGE & CULTURE",
+                "course_description": "INTRO TO LANGUAGE & CULTURE"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "1d56cd36-86a7-47b1-8cb6-d495b5ce1011"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/e9decab5-c806-4a60-ae97-000c91d0c7b9/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/e9decab5-c806-4a60-ae97-000c91d0c7b9/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/e9decab5-c806-4a60-ae97-000c91d0c7b9/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "6844f209-8b57-4504-995c-2fc6641436c3",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "XCEFK9",
+                "suffix_two": "00",
+                "subject_area_code": "RELB",
+                "course_number": "00269",
+                "course_identifier": "RELI3314V",
+                "course_name": "THE QUR'AN:A COMPAR PERSPECTV",
+                "course_description": "THE QUR'AN:A COMPAR PERSPECTV"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "49cba2ec-5a50-4716-ab50-3587fb66372f"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/6844f209-8b57-4504-995c-2fc6641436c3/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/6844f209-8b57-4504-995c-2fc6641436c3/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/6844f209-8b57-4504-995c-2fc6641436c3/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "85f35510-d603-414f-92f9-eb0356b51f71",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "RXCEIGFKU",
+                "suffix_two": "00",
+                "subject_area_code": "WSTB",
+                "course_number": "00295",
+                "course_identifier": "WMST4302W",
+                "course_name": "2ND WAVE & JEWISH WOMEN'S ART",
+                "course_description": "JEWSH WMN ARTSTC RESP 1939-90"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "86d6f2fe-8b9f-4550-bbf6-d33ea383fa6d"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/85f35510-d603-414f-92f9-eb0356b51f71/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/85f35510-d603-414f-92f9-eb0356b51f71/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/85f35510-d603-414f-92f9-eb0356b51f71/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "c7d863c5-fe2f-42df-ba8a-8f17504d4699",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "CEFKGRUXI",
+                "suffix_two": "00",
+                "subject_area_code": "ANTB",
+                "course_number": "00301",
+                "course_identifier": "ANTH2011X",
+                "course_name": "FIELD METHOD ARCHAEOLOGY",
+                "course_description": "FIELD METHOD ARCHAEOLO"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "9b601a89-3c0e-4bd9-bf2b-0a530f738fe9"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/c7d863c5-fe2f-42df-ba8a-8f17504d4699/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/c7d863c5-fe2f-42df-ba8a-8f17504d4699/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/c7d863c5-fe2f-42df-ba8a-8f17504d4699/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "6911e0d5-8abf-4bbd-937a-33ae2949d448",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "CEFKGRUXI",
+                "suffix_two": "00",
+                "subject_area_code": "ANTB",
+                "course_number": "00302",
+                "course_identifier": "ANTH2012X",
+                "course_name": "LAB METHODS ARCHAEOLOGY",
+                "course_description": "LAB METHODS ARCHAEOLOGY"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "08e07046-68a3-4388-bbc7-50d5ac091edf"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/6911e0d5-8abf-4bbd-937a-33ae2949d448/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/6911e0d5-8abf-4bbd-937a-33ae2949d448/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/6911e0d5-8abf-4bbd-937a-33ae2949d448/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "c905b170-9d9f-41fb-bfe4-5af6dfb871a0",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "XCEFK9",
+                "suffix_two": "00",
+                "subject_area_code": "URSB",
+                "course_number": "00350",
+                "course_identifier": "URBS3997V",
+                "course_name": "SR SEM:INTL TOPICS URB STUDIES",
+                "course_description": "SR SEM:INTL TOPICS URB STDIES"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "b9888866-5244-4601-aa03-a17a8d458b57"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/c905b170-9d9f-41fb-bfe4-5af6dfb871a0/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/c905b170-9d9f-41fb-bfe4-5af6dfb871a0/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/c905b170-9d9f-41fb-bfe4-5af6dfb871a0/"
+            }
+        },
+        {
+            "type": "courses",
+            "id": "c4a20c04-5426-49c4-a517-23cde9bd74c2",
+            "attributes": {
+                "effective_start_date": null,
+                "effective_end_date": null,
+                "last_mod_user_name": "admin",
+                "last_mod_date": "2018-10-07",
+                "school_bulletin_prefix_code": "RXCEIGFKU",
+                "suffix_two": "00",
+                "subject_area_code": "PLSB",
+                "course_number": "00352",
+                "course_identifier": "POLS4875W",
+                "course_name": "RUSSIA AND THE WEST",
+                "course_description": "RUSSIA AND THE WEST"
+            },
+            "relationships": {
+                "course_terms": {
+                    "meta": {
+                        "count": 1
+                    },
+                    "data": [
+                        {
+                            "type": "course_terms",
+                            "id": "3d3219d7-715b-4148-96a1-f360d69de238"
+                        }
+                    ],
+                    "links": {
+                        "self": "http://127.0.0.1:8000/v1/courses/c4a20c04-5426-49c4-a517-23cde9bd74c2/relationships/course_terms/",
+                        "related": "http://127.0.0.1:8000/v1/courses/c4a20c04-5426-49c4-a517-23cde9bd74c2/course_terms/"
+                    }
+                }
+            },
+            "links": {
+                "self": "http://127.0.0.1:8000/v1/courses/c4a20c04-5426-49c4-a517-23cde9bd74c2/"
+            }
+        }
+    ],
+    "meta": {
+        "pagination": {
+            "page": 1,
+            "pages": 448,
+            "count": 4472
+        }
+    }
+}
+}
