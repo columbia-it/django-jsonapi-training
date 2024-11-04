@@ -20,6 +20,14 @@ export class CourseService {
     );
   }
 
+  // Fetch a specific course by ID
+  getCourse(courseId: string): Observable<Course> {
+    const url = `${this.apiUrl}${courseId}/`;  // Construct URL with course ID
+    return this.http.get(url, this.getHttpOptions()).pipe(
+      map((response: any) => this.jsona.deserialize(response) as Course)
+    );
+  }
+
   createCourse(course: Course): Observable<Course> {
     const courseWithJsonApiType = { ...course, type: 'courses' };
     const serializedData = this.jsona.serialize({

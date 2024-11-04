@@ -4,8 +4,8 @@ import { CourseService } from './services/course.service';
 @Component({
   selector: 'app-root',
   template: `
-    <h1>Courses</h1>
-    <app-course-list></app-course-list>
+    <h1><a [routerLink]="['/courses']">Courses</a></h1>
+    <router-outlet></router-outlet>
   `
 })
 export class AppComponent implements OnInit {

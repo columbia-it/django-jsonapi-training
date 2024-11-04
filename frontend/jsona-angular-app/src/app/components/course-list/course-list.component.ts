@@ -9,6 +9,7 @@ import { Course } from '../../models/course.model';
 export class CourseListComponent implements OnInit {
   courses: Course[] = [];
   newCourse: Course = {
+    id: '',
     course_identifier: '',
     course_name: '',
     course_description: '',
@@ -30,6 +31,7 @@ export class CourseListComponent implements OnInit {
     this.courseService.createCourse(this.newCourse).subscribe((course) => {
       this.courses.push(course);
       this.newCourse = {
+        id: '',
         course_identifier: '',
         course_name: '',
         course_description: '',

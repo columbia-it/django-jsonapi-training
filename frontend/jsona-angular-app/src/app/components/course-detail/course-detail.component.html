@@ -1,0 +1,9 @@
+<h2>Course Details</h2>
+<div *ngIf="course">
+  <p><strong>Course Identifier:</strong> {{ course.course_identifier }}</p>
+  <p><strong>Name:</strong> {{ course.course_name }}</p>
+  <p><strong>Description:</strong> {{ course.course_description }}</p>
+</div>
+<div *ngIf="!course">
+  <p>Loading course details...</p>
+</div>

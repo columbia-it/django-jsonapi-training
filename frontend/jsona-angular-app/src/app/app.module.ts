@@ -6,22 +6,26 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { CourseListComponent } from './components/course-list/course-list.component';
+import { CourseDetailComponent } from './components/course-detail/course-detail.component';  // Import CourseDetailComponent
 
+// Define routes, including the new detail route
 const routes: Routes = [
   { path: '', redirectTo: '/courses', pathMatch: 'full' },
-  { path: 'courses', component: CourseListComponent }
+  { path: 'courses', component: CourseListComponent },
+  { path: 'courses/:id', component: CourseDetailComponent }  // Route for course detail
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    CourseListComponent
+    CourseListComponent,
+    CourseDetailComponent  // Declare CourseDetailComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes)  // Configure routing with RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

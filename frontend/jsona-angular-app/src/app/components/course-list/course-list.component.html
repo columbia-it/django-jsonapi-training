@@ -1,7 +1,8 @@
 <h2>Course List</h2>
 <ul>
   <li *ngFor="let course of courses">
-    {{ course.course_identifier }}: {{ course.course_name }}
+    <a [routerLink]="['/courses', course.id]">{{ course.course_identifier }}</a>:
+      {{ course.course_name }}
   </li>
 </ul>
 
