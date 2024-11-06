@@ -25,10 +25,3 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# An OAS-generated Angular frontend app
-
-This version of the frontend app uses @openapitools/openapi-generator-cli to
-use the spectacular-generated OpenAPI schema document as described here:
-
-https://www.kevinboosten.dev/how-i-use-an-openapi-spec-in-my-angular-projects
-
