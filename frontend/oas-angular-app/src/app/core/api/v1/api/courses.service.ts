@@ -11,7 +11,7 @@
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext 
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext
         }       from '@angular/common/http';
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
@@ -41,7 +41,7 @@ import { Configuration }                                     from '../configurat
 export class CoursesService {
 
     protected basePath = 'http://localhost:8000';
-    public defaultHeaders = new HttpHeaders();
+    public defaultHeaders = new HttpHeaders({ 'Content-Type': 'application/vnd.api+json', 'Authorization': 'Bearer qx12DIm5rOWfzrZaVJFZ5uHfNTGgy9' });
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
 
@@ -102,9 +102,9 @@ export class CoursesService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
+     * @param id
      * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param courseTermsRelationShips 
+     * @param courseTermsRelationShips
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -196,7 +196,7 @@ export class CoursesService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
+     * @param id
      * @param relatedField Pass in one of the possible relation types to get all related objects.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -276,9 +276,9 @@ export class CoursesService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
+     * @param id
      * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param courseTermsRelationShips 
+     * @param courseTermsRelationShips
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -370,7 +370,7 @@ export class CoursesService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
+     * @param id
      * @param relatedField Pass in one of the possible relation types to get all related objects.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -451,7 +451,7 @@ export class CoursesService {
 
     /**
      * A course of instruction. e.g. COMSW1002 Computing in Context
-     * @param courseRequest 
+     * @param courseRequest
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -540,7 +540,7 @@ export class CoursesService {
 
     /**
      * A course of instruction. e.g. COMSW1002 Computing in Context
-     * @param id 
+     * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -617,50 +617,50 @@ export class CoursesService {
     /**
      * A course of instruction. e.g. COMSW1002 Computing in Context
      * @param fieldsCourses endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter.
-     * @param filterCourseDescription 
-     * @param filterCourseDescriptionContains 
-     * @param filterCourseDescriptionGt 
-     * @param filterCourseDescriptionGte 
-     * @param filterCourseDescriptionIcontains 
-     * @param filterCourseDescriptionIexact 
+     * @param filterCourseDescription
+     * @param filterCourseDescriptionContains
+     * @param filterCourseDescriptionGt
+     * @param filterCourseDescriptionGte
+     * @param filterCourseDescriptionIcontains
+     * @param filterCourseDescriptionIexact
      * @param filterCourseDescriptionIn Multiple values may be separated by commas.
-     * @param filterCourseDescriptionLt 
-     * @param filterCourseDescriptionLte 
-     * @param filterCourseIdentifier 
-     * @param filterCourseIdentifierContains 
-     * @param filterCourseIdentifierGt 
-     * @param filterCourseIdentifierGte 
-     * @param filterCourseIdentifierIcontains 
-     * @param filterCourseIdentifierIexact 
+     * @param filterCourseDescriptionLt
+     * @param filterCourseDescriptionLte
+     * @param filterCourseIdentifier
+     * @param filterCourseIdentifierContains
+     * @param filterCourseIdentifierGt
+     * @param filterCourseIdentifierGte
+     * @param filterCourseIdentifierIcontains
+     * @param filterCourseIdentifierIexact
      * @param filterCourseIdentifierIn Multiple values may be separated by commas.
-     * @param filterCourseIdentifierLt 
-     * @param filterCourseIdentifierLte 
-     * @param filterCourseName 
-     * @param filterCourseNameContains 
-     * @param filterCourseNameIcontains 
-     * @param filterCourseNameIexact 
-     * @param filterCourseNumber 
-     * @param filterCourseTermsTermIdentifier 
-     * @param filterCourseTermsTermIdentifierGt 
-     * @param filterCourseTermsTermIdentifierGte 
+     * @param filterCourseIdentifierLt
+     * @param filterCourseIdentifierLte
+     * @param filterCourseName
+     * @param filterCourseNameContains
+     * @param filterCourseNameIcontains
+     * @param filterCourseNameIexact
+     * @param filterCourseNumber
+     * @param filterCourseTermsTermIdentifier
+     * @param filterCourseTermsTermIdentifierGt
+     * @param filterCourseTermsTermIdentifierGte
      * @param filterCourseTermsTermIdentifierIn Multiple values may be separated by commas.
-     * @param filterCourseTermsTermIdentifierLt 
-     * @param filterCourseTermsTermIdentifierLte 
-     * @param filterId 
-     * @param filterIdGt 
-     * @param filterIdGte 
+     * @param filterCourseTermsTermIdentifierLt
+     * @param filterCourseTermsTermIdentifierLte
+     * @param filterId
+     * @param filterIdGt
+     * @param filterIdGte
      * @param filterIdIn Multiple values may be separated by commas.
-     * @param filterIdLt 
-     * @param filterIdLte 
-     * @param filterSchoolBulletinPrefixCode 
-     * @param filterSchoolBulletinPrefixCodeRegex 
+     * @param filterIdLt
+     * @param filterIdLte
+     * @param filterSchoolBulletinPrefixCode
+     * @param filterSchoolBulletinPrefixCodeRegex
      * @param filterSearch A search term.
-     * @param filterSubjectAreaCode 
-     * @param filterSubjectAreaCodeGt 
-     * @param filterSubjectAreaCodeGte 
+     * @param filterSubjectAreaCode
+     * @param filterSubjectAreaCodeGt
+     * @param filterSubjectAreaCodeGte
      * @param filterSubjectAreaCodeIn Multiple values may be separated by commas.
-     * @param filterSubjectAreaCodeLt 
-     * @param filterSubjectAreaCodeLte 
+     * @param filterSubjectAreaCodeLt
+     * @param filterSubjectAreaCodeLte
      * @param include include query parameter to allow the client to customize which related resources should be returned.
      * @param pageNumber A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
@@ -932,8 +932,8 @@ export class CoursesService {
 
     /**
      * A course of instruction. e.g. COMSW1002 Computing in Context
-     * @param id 
-     * @param patchedCourseRequest 
+     * @param id
+     * @param patchedCourseRequest
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -1025,7 +1025,7 @@ export class CoursesService {
 
     /**
      * A course of instruction. e.g. COMSW1002 Computing in Context
-     * @param id 
+     * @param id
      * @param fieldsCourses endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter.
      * @param include include query parameter to allow the client to customize which related resources should be returned.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -1115,8 +1115,8 @@ export class CoursesService {
 
     /**
      * A course of instruction. e.g. COMSW1002 Computing in Context
-     * @param id 
-     * @param relatedField 
+     * @param id
+     * @param relatedField
      * @param fieldsCourses endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter.
      * @param include include query parameter to allow the client to customize which related resources should be returned.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

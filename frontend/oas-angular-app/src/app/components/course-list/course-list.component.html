@@ -1,0 +1,8 @@
+<h2>Course List</h2>
+Page {{ courses.meta.pagination.page }} (length {{courses.data.length }}) of {{ courses.meta.pagination.pages }}
+<ul>
+  <li *ngFor="let course of courses.data">
+    <a [routerLink]="['/courses', course.id]">{{ course.attributes.course_identifier }}</a>:
+      {{ course.attributes.course_name }}
+  </li>
+</ul>
