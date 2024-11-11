@@ -19,10 +19,10 @@ export class CourseDetailComponent implements OnInit {
     const courseId = this.route.snapshot.paramMap.get('id');
 
     if (courseId) {
-      this.coursesService.coursesRetrieve(courseId).subscribe(
+      this.coursesService.coursesRetrieve(courseId, [], ['course_terms']).subscribe(
 	(course) => {
 	  this.course = course;
-	  console.log(this.course)	
+	  console.log(this.course)
 	},
 	(error) => console.error('Error:', error)
       );

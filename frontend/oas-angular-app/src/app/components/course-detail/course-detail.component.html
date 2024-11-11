@@ -3,6 +3,15 @@
   <p><strong>Course Identifier:</strong> {{ course.data.attributes.course_identifier }}</p>
   <p><strong>Name:</strong> {{ course.data.attributes.course_name }}</p>
   <p><strong>Description:</strong> {{ course.data.attributes.course_description }}</p>
+  <div *ngIf="course.data.relationships.course_terms">
+    <p><strong>Terms offered:</strong>
+    <!-- iterate over included response for course_terms type -->
+    <ul *ngFor="let term of course.included">
+      <li *ngIf="term.type == 'course_terms'">
+        {{term.attributes.term_identifier}}
+      </li>
+  </ul>
+  </div>
 </div>
 <div *ngIf="!course">
   <p>Loading course details...</p>
