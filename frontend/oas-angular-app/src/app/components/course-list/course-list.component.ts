@@ -12,7 +12,8 @@ export class CourseListComponent implements OnInit {
   constructor(private coursesService: CoursesService) {}
 
   ngOnInit() {
-    this.coursesService.coursesList().subscribe(
+    // only get the fields we care to display
+    this.coursesService.coursesList(["course_identifier","course_name"]).subscribe(
       (courses) => {
 	this.courses = courses;
 	console.log(this.courses)	
