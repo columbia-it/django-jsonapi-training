@@ -41,7 +41,7 @@ import { Configuration }                                     from '../configurat
 export class CoursesService {
 
     protected basePath = 'http://localhost:8000';
-    public defaultHeaders = new HttpHeaders({ 'Content-Type': 'application/vnd.api+json', 'Authorization': 'Bearer qx12DIm5rOWfzrZaVJFZ5uHfNTGgy9' });
+    public defaultHeaders = new HttpHeaders({'Content-Type': 'application/vnd.api+json'});
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
 
