@@ -1,0 +1,7 @@
+<div>Welcome to home Route</div>
+
+<br />
+Is Authenticated: {{ isAuthenticated }}
+<br />
+Access Token: {{ accessToken | async | json }}
+<pre>{{ userData$ | async | json }}</pre>

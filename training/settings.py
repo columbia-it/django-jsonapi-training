@@ -256,6 +256,7 @@ OAUTH2_PROVIDER = {
     'OIDC_RSA_PRIVATE_KEY': oidc_key,
     'PKCE_REQUIRED': True,
     'OAUTH2_VALIDATOR_CLASS': 'myapp.oauth2_validator.CustomOAuth2Validator',
+    'ALLOWED_SCHEMES': ['https','http'],
 }
 
 # Use swappable models to extend the Access Token to include the userinfo claims.
@@ -311,7 +312,7 @@ SPECTACULAR_SETTINGS = {
     # this stuff gets added to SpectacularSwaggerView:
     "SWAGGER_UI_OAUTH2_CONFIG": {
         "clientId": "demo_djt_web_client",
-        "clientSecret": "demo_djt_web_secret",
+        # "clientSecret": "demo_djt_web_secret",
         "usePkceWithAuthorizationCodeGrant": True,
     },
     "SORT_OPERATIONS": False,

@@ -178,7 +178,7 @@ Callback URL: https://www.getpostman.com/oauth2/callback
 Auth URL: http://localhost:8000/authorize/
 Access Token URL: http://localhost:8000/token/
 Client ID: demo_djt_web_client
-Client Secret: demo_djt_web_secret
+Client Secret: (NONE)
 Scope: auth-columbia demo-djt-sla-bronze read openid profile email https://api.columbia.edu/scope/group
 Client Authentication: Send as Basic Auth header
 ```

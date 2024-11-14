@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CoursesService, Course } from './core/api/v1';
+import { Component, OnInit, inject } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-root',
@@ -7,17 +7,15 @@ import { CoursesService, Course } from './core/api/v1';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  data: any;
-
-  constructor(private coursesService: CoursesService) {
-  }
+  private readonly oidcSecurityService = inject(OidcSecurityService);
 
   ngOnInit() {
-    // I think this is vestigial code
-    this.coursesService.coursesList().subscribe(
-      (response) => (this.data = response),
-      (error) => console.error('Error:', error)
-    );
-    console.log(this.data)
+    this.oidcSecurityService
+      .checkAuth()
+      .subscribe(
+        ({ isAuthenticated, userData, accessToken, idToken, configId }) => {
+          console.log('callback authenticated', isAuthenticated);
+        }
+      );
   }
 }
