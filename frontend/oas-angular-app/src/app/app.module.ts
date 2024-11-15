@@ -18,12 +18,22 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { ProtectedComponent } from './protected/protected.component';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 
-// export function apiConfigFactory(): Configuration {
-//   const params: ConfigurationParameters = {
-//     basePath: "http://localhost:8000",
-//   }
-//   return new Configuration(params);
-// }
+export function apiConfigFactory(): Configuration {
+  const oidcSecurityService = inject(OidcSecurityService);
+  var conf: any = null; // I'm sure this is not the right way to do this.
+  oidcSecurityService.getAccessToken().subscribe((token) => {
+    conf = new Configuration({
+      basePath: "http://localhost:8000",
+      credentials: {'oauth2': token}
+    });
+    console.log('token:' + token);
+    console.log('conf:');
+    console.log(conf);
+  });
+  console.log('conf outer:');
+  console.log(conf);
+  return conf;
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,24 +50,11 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
     CommonModule,
     BrowserModule,
     AppRoutingModule,
-    ApiModule,
+    ApiModule.forRoot(apiConfigFactory),
     HttpClientModule,
     AuthConfigModule,
   ],
-  providers: [
-  {
-    provide: Configuration,
-    useFactory: (authService: OidcSecurityService) => new Configuration(
-      {
-        basePath: "http://localhost:8000",
-        //credentials: { 'oauth2': authService.getAccessToken.bind(authService) }
-        credentials: { 'oauth2': 'bb0CKaLe03tapg2yjKm2g0URirtfuV' }
-      }
-    ),
-    deps: [OidcSecurityService],
-    multi: false
-      }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
