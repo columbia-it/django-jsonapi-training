@@ -9,6 +9,23 @@
     <ul *ngFor="let term of course.included">
       <li *ngIf="term.type == 'course_terms'">
         {{term.attributes.term_identifier}}
+        <ul *ngFor="let inst of term.relationships.instructors.data">
+          <li>
+            instructor {{inst.id }}
+            <div *ngIf="instructors[inst.id] as instructor">
+              <!-- instructor -> person is singular but is delivered in an include array -->
+              <p *ngIf="instructor.included[0] as person">
+                Instructor: {{ person.attributes.name }}
+              </p>
+            </div>
+            <div *ngIf="!instructors[inst.id]">
+              <p>Loading instructor details...</p>
+            </div>
+          </li>
+        </ul>
+        <p *ngIf="!term.relationships.instructors.data.length">
+          No instructor(s) listed.
+        </p>
       </li>
   </ul>
   </div>
