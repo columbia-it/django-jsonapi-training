@@ -8,3 +8,18 @@ div.autodoc-members {
   padding-left: 20px;
   margin-bottom: 15px;
 }
+
+.highlighttable {
+    background-color: #2d2d2d; /* Dark background for the whole table */
+    color: #f8f8f2;           /* Light text */
+    border-radius: 5px;       /* Rounded corners */
+    border: 1px solid #444;   /* Optional border */
+    font-family: "Fira Code", monospace; /* Monospace font */
+    font-size: 14px;          /* Adjust font size */
+    overflow: auto;           /* Allow scrolling for long blocks */
+    margin-bottom: 1.5em;     /* Add spacing below code blocks */
+}
+
+.highlighttable .linenos {
+    display: none;
+}

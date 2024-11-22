@@ -30,6 +30,7 @@ export class NavigationComponent implements OnInit {
   }
 
   logout() {
+    console.log('logoff')
     this.oidcSecurityService
       .logoff()
       .subscribe((result) => console.log(result));

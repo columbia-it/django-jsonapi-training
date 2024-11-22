@@ -6,7 +6,7 @@
     "client_id": "demo_djt_web_client",
     "user": null,
     "redirect_uris": "https://www.getpostman.com/oauth2/callback\r\nhttp://127.0.0.1/api/schema/swagger-ui/oauth2-redirect.html\r\nhttp://localhost:8000/oauth2-redirect.html\r\nhttp://127.0.0.1:8000/oauth2-redirect.html\r\nhttp://localhost:4200",
-    "post_logout_redirect_uris": "",
+    "post_logout_redirect_uris": "http://localhost:4200",
     "client_type": "public",
     "authorization_grant_type": "authorization-code",
     "client_secret": "",
