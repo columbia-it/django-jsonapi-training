@@ -8,6 +8,11 @@ import { AppComponent } from './app.component';
 import { ApiModule, Configuration, ConfigurationParameters } from './core/api/v1';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { CourseListComponent } from './components/course-list/course-list.component';
 import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 import { AuthConfigModule } from './auth/auth-config.module';
@@ -54,6 +59,11 @@ export function apiConfigFactory(): Configuration {
     ApiModule.forRoot(apiConfigFactory),
     HttpClientModule,
     FormsModule,
+    BrowserAnimationsModule,  // Required for Material animations
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
     AuthConfigModule,
   ],
   providers: [],

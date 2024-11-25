@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+
+
+input[matInput] {
+  border: 1px solid blue; /* Visualize the matInput boundaries */
+  color: black; /* Ensure text is visible */
+  font-size: 16px; /* Set a default font size */
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 16px;
+}

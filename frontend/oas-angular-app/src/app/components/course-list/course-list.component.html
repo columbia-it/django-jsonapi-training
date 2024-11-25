@@ -1,12 +1,26 @@
 <h2>Course List</h2>
-<div>
+<mat-form-field class="search-field" appearance="outline">
+  <mat-label>Search courses</mat-label>
   <input
-    type="text"
-    placeholder="Search courses"
+    matInput
     [(ngModel)]="searchFilter"
     (keydown.enter)="onSearchFilterChange()" />
-    <button *ngIf="searchFilter" (click)="clearSearch()" style="padding: 0 5px;">X</button>
-</div>
+  <button
+    mat-icon-button
+    matSuffix
+    aria-label="Search"
+    (click)="onSearchFilterChange()">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button
+    *ngIf="searchFilter"
+    mat-icon-button
+    matSuffix
+    aria-label="Clear"
+    (click)="clearSearch()">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
 
 <div *ngIf="courses">
   Page {{ courses.meta.pagination.page }} (length {{courses.data.length }}) of {{ courses.meta.pagination.pages }}
