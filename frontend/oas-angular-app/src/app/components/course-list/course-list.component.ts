@@ -9,6 +9,7 @@ import { CoursesService } from '../../core/api/v1';
 export class CourseListComponent implements OnInit {
   courses: any | null = null;
   searchFilter: string = '';
+  displayedColumns: string[] = ['identifier', 'name', 'description']; // Columns to display in the table
 
   constructor(private coursesService: CoursesService) {}
 
@@ -19,7 +20,7 @@ export class CourseListComponent implements OnInit {
   loadCourses() {
     // only get the fields we care to display
     this.coursesService.coursesList({
-      fieldsCourses: ["course_identifier", "course_name"],
+      fieldsCourses: ["course_identifier", "course_name", "course_description"],
       filterSearch: this.searchFilter,
       pageSize: 20
     }).subscribe(

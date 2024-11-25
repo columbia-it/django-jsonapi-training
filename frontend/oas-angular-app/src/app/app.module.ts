@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
 import { CourseListComponent } from './components/course-list/course-list.component';
 import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 import { AuthConfigModule } from './auth/auth-config.module';
@@ -63,6 +64,7 @@ export function apiConfigFactory(): Configuration {
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatTableModule,
     MatIconModule,
     AuthConfigModule,
   ],

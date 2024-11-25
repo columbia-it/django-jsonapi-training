@@ -23,14 +23,38 @@
 </mat-form-field>
 
 <div *ngIf="courses">
-  Page {{ courses.meta.pagination.page }} (length {{courses.data.length }}) of {{ courses.meta.pagination.pages }}
-  <ul>
-    <li *ngFor="let course of courses.data">
-      <a [routerLink]="['/courses', course.id]">{{ course.attributes.course_identifier }}</a>:
-      {{ course.attributes.course_name }}
-    </li>
-  </ul>
+  <p>Page {{ courses.meta.pagination.page }} (length {{ courses.data.length }}) of {{ courses.meta.pagination.pages }}</p>
+
+  <table mat-table [dataSource]="courses.data" class="mat-mdc-table dense">
+    <!-- Course Identifier Column -->
+    <ng-container matColumnDef="identifier" class="mat-column-identifier">
+      <th mat-header-cell *matHeaderCellDef> Course Number </th>
+      <td mat-cell *matCellDef="let course">
+        <a [routerLink]="['/courses', course.id]">{{ course.attributes.course_identifier }}</a>
+      </td>
+    </ng-container>
+
+    <!-- Course Name Column -->
+    <ng-container matColumnDef="name" class="mat-column-name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let course">{{ course.attributes.course_name }}</td>
+    </ng-container>
+
+    <!-- Course Description Column -->
+    <ng-container matColumnDef="description" class="mat-column-description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let course" >
+        <!-- only show the description when it differs from the name -->
+        {{ course.attributes.course_description !== course.attributes.course_name ? course.attributes.course_description : ''}}</td>
+    </ng-container>
+
+    <!-- Table Header -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <!-- Table Rows -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
 </div>
+
 <div *ngIf="!courses">
   <p>Loading...</p>
 </div>
