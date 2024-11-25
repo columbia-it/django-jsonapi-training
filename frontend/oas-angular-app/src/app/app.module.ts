@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 
 import { ApiModule, Configuration, ConfigurationParameters } from './core/api/v1';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { CourseListComponent } from './components/course-list/course-list.component';
 import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 import { AuthConfigModule } from './auth/auth-config.module';
@@ -52,6 +53,7 @@ export function apiConfigFactory(): Configuration {
     AppRoutingModule,
     ApiModule.forRoot(apiConfigFactory),
     HttpClientModule,
+    FormsModule,
     AuthConfigModule,
   ],
   providers: [],

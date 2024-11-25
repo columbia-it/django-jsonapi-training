@@ -1,4 +1,13 @@
 <h2>Course List</h2>
+<div>
+  <input
+    type="text"
+    placeholder="Search courses"
+    [(ngModel)]="searchFilter"
+    (keydown.enter)="onSearchFilterChange()" />
+    <button *ngIf="searchFilter" (click)="clearSearch()" style="padding: 0 5px;">X</button>
+</div>
+
 <div *ngIf="courses">
   Page {{ courses.meta.pagination.page }} (length {{courses.data.length }}) of {{ courses.meta.pagination.pages }}
   <ul>

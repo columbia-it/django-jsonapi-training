@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CoursesService, Course } from '../../core/api/v1';
+import { CoursesService } from '../../core/api/v1';
 
 @Component({
   selector: 'app-course-list',
@@ -7,21 +7,35 @@ import { CoursesService, Course } from '../../core/api/v1';
   styleUrl: './course-list.component.css'
 })
 export class CourseListComponent implements OnInit {
-  courses: any;
+  courses: any | null = null;
+  searchFilter: string = '';
 
   constructor(private coursesService: CoursesService) {}
 
   ngOnInit() {
+    this.loadCourses();
+  }
+
+  loadCourses() {
     // only get the fields we care to display
     this.coursesService.coursesList({
-        fieldsCourses: ["course_identifier", "course_name"],
-        pageSize: 20
+      fieldsCourses: ["course_identifier", "course_name"],
+      filterSearch: this.searchFilter,
+      pageSize: 20
     }).subscribe(
       (courses) => {
-	this.courses = courses;
-	console.log(this.courses)
+        this.courses = courses;
+        console.log(this.courses)
       },
       (error) => console.error('Error:', error)
     );
   }
+  onSearchFilterChange() {
+    this.loadCourses();
+  }
+  clearSearch() {
+    this.searchFilter = ''; // Reset the search filter
+    this.loadCourses();     // Reload courses without filter
+  }
+
 }
