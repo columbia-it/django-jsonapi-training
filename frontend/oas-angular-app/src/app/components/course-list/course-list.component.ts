@@ -13,10 +13,13 @@ export class CourseListComponent implements OnInit {
 
   ngOnInit() {
     // only get the fields we care to display
-    this.coursesService.coursesList(["course_identifier","course_name"]).subscribe(
+    this.coursesService.coursesList({
+        fieldsCourses: ["course_identifier", "course_name"],
+        pageSize: 20
+    }).subscribe(
       (courses) => {
 	this.courses = courses;
-	console.log(this.courses)	
+	console.log(this.courses)
       },
       (error) => console.error('Error:', error)
     );

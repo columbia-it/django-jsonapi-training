@@ -30,6 +30,32 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface PeopleRelationshipsCreate0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'instructor' | 'student';
+    arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner> | null;
+}
+
+export interface PeopleRelationshipsDestroy0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'instructor' | 'student';
+}
+
+export interface PeopleRelationshipsPartialUpdate0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'instructor' | 'student';
+    arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner> | null;
+}
+
+export interface PeopleRelationshipsRetrieve0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'instructor' | 'student';
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -98,22 +124,23 @@ export class StudentsService {
 
     /**
      * View for people.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public peopleRelationshipsCreate(id: string, relatedField: 'instructor' | 'student', arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PeopleRelationShipsResponse>;
-    public peopleRelationshipsCreate(id: string, relatedField: 'instructor' | 'student', arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PeopleRelationShipsResponse>>;
-    public peopleRelationshipsCreate(id: string, relatedField: 'instructor' | 'student', arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PeopleRelationShipsResponse>>;
-    public peopleRelationshipsCreate(id: string, relatedField: 'instructor' | 'student', arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public peopleRelationshipsCreate(requestParameters?: PeopleRelationshipsCreate0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PeopleRelationShipsResponse>;
+    public peopleRelationshipsCreate(requestParameters?: PeopleRelationshipsCreate0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PeopleRelationShipsResponse>>;
+    public peopleRelationshipsCreate(requestParameters?: PeopleRelationshipsCreate0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PeopleRelationShipsResponse>>;
+    public peopleRelationshipsCreate(requestParameters?: PeopleRelationshipsCreate0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling peopleRelationshipsCreate.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling peopleRelationshipsCreate.');
         }
+        const arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner = requestParameters?.arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -192,18 +219,19 @@ export class StudentsService {
 
     /**
      * View for people.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public peopleRelationshipsDestroy(id: string, relatedField: 'instructor' | 'student', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public peopleRelationshipsDestroy(id: string, relatedField: 'instructor' | 'student', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public peopleRelationshipsDestroy(id: string, relatedField: 'instructor' | 'student', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public peopleRelationshipsDestroy(id: string, relatedField: 'instructor' | 'student', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public peopleRelationshipsDestroy(requestParameters?: PeopleRelationshipsDestroy0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public peopleRelationshipsDestroy(requestParameters?: PeopleRelationshipsDestroy0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public peopleRelationshipsDestroy(requestParameters?: PeopleRelationshipsDestroy0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public peopleRelationshipsDestroy(requestParameters?: PeopleRelationshipsDestroy0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling peopleRelationshipsDestroy.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling peopleRelationshipsDestroy.');
         }
@@ -272,22 +300,23 @@ export class StudentsService {
 
     /**
      * View for people.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public peopleRelationshipsPartialUpdate(id: string, relatedField: 'instructor' | 'student', arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PeopleRelationShipsResponse>;
-    public peopleRelationshipsPartialUpdate(id: string, relatedField: 'instructor' | 'student', arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PeopleRelationShipsResponse>>;
-    public peopleRelationshipsPartialUpdate(id: string, relatedField: 'instructor' | 'student', arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PeopleRelationShipsResponse>>;
-    public peopleRelationshipsPartialUpdate(id: string, relatedField: 'instructor' | 'student', arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner?: Array<CourseTermsRelationShipsOneOf1Inner1> | Array<PeopleRelationShipsOneOfInner>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public peopleRelationshipsPartialUpdate(requestParameters?: PeopleRelationshipsPartialUpdate0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PeopleRelationShipsResponse>;
+    public peopleRelationshipsPartialUpdate(requestParameters?: PeopleRelationshipsPartialUpdate0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PeopleRelationShipsResponse>>;
+    public peopleRelationshipsPartialUpdate(requestParameters?: PeopleRelationshipsPartialUpdate0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PeopleRelationShipsResponse>>;
+    public peopleRelationshipsPartialUpdate(requestParameters?: PeopleRelationshipsPartialUpdate0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling peopleRelationshipsPartialUpdate.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling peopleRelationshipsPartialUpdate.');
         }
+        const arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner = requestParameters?.arrayCourseTermsRelationShipsOneOf1Inner1ArrayPeopleRelationShipsOneOfInner;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -366,18 +395,19 @@ export class StudentsService {
 
     /**
      * View for people.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public peopleRelationshipsRetrieve(id: string, relatedField: 'instructor' | 'student', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PeopleRelationShipsResponse>;
-    public peopleRelationshipsRetrieve(id: string, relatedField: 'instructor' | 'student', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PeopleRelationShipsResponse>>;
-    public peopleRelationshipsRetrieve(id: string, relatedField: 'instructor' | 'student', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PeopleRelationShipsResponse>>;
-    public peopleRelationshipsRetrieve(id: string, relatedField: 'instructor' | 'student', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public peopleRelationshipsRetrieve(requestParameters?: PeopleRelationshipsRetrieve0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PeopleRelationShipsResponse>;
+    public peopleRelationshipsRetrieve(requestParameters?: PeopleRelationshipsRetrieve0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PeopleRelationShipsResponse>>;
+    public peopleRelationshipsRetrieve(requestParameters?: PeopleRelationshipsRetrieve0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PeopleRelationShipsResponse>>;
+    public peopleRelationshipsRetrieve(requestParameters?: PeopleRelationshipsRetrieve0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling peopleRelationshipsRetrieve.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling peopleRelationshipsRetrieve.');
         }

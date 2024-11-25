@@ -30,6 +30,58 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface CourseTermsRelationshipsCreate0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade';
+    courseTermsRelationShips?: CourseTermsRelationShips;
+}
+
+export interface CourseTermsRelationshipsDestroy0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade';
+}
+
+export interface CourseTermsRelationshipsPartialUpdate0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade';
+    courseTermsRelationShips?: CourseTermsRelationShips;
+}
+
+export interface CourseTermsRelationshipsRetrieve0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade';
+}
+
+export interface InstructorsRelationshipsCreate0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'person' | 'Instructor_course_terms+';
+    instructorsRelationShips?: InstructorsRelationShips;
+}
+
+export interface InstructorsRelationshipsDestroy0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'person' | 'Instructor_course_terms+';
+}
+
+export interface InstructorsRelationshipsPartialUpdate0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'person' | 'Instructor_course_terms+';
+    instructorsRelationShips?: InstructorsRelationShips;
+}
+
+export interface InstructorsRelationshipsRetrieve0RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'person' | 'Instructor_course_terms+';
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -98,22 +150,23 @@ export class InstructorCourseTermsService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param courseTermsRelationShips 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public courseTermsRelationshipsCreate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
-    public courseTermsRelationshipsCreate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsCreate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsCreate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public courseTermsRelationshipsCreate(requestParameters?: CourseTermsRelationshipsCreate0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
+    public courseTermsRelationshipsCreate(requestParameters?: CourseTermsRelationshipsCreate0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsCreate(requestParameters?: CourseTermsRelationshipsCreate0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsCreate(requestParameters?: CourseTermsRelationshipsCreate0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling courseTermsRelationshipsCreate.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling courseTermsRelationshipsCreate.');
         }
+        const courseTermsRelationShips = requestParameters?.courseTermsRelationShips;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -192,18 +245,19 @@ export class InstructorCourseTermsService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public courseTermsRelationshipsDestroy(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public courseTermsRelationshipsDestroy(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public courseTermsRelationshipsDestroy(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public courseTermsRelationshipsDestroy(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public courseTermsRelationshipsDestroy(requestParameters?: CourseTermsRelationshipsDestroy0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public courseTermsRelationshipsDestroy(requestParameters?: CourseTermsRelationshipsDestroy0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public courseTermsRelationshipsDestroy(requestParameters?: CourseTermsRelationshipsDestroy0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public courseTermsRelationshipsDestroy(requestParameters?: CourseTermsRelationshipsDestroy0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling courseTermsRelationshipsDestroy.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling courseTermsRelationshipsDestroy.');
         }
@@ -272,22 +326,23 @@ export class InstructorCourseTermsService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param courseTermsRelationShips 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public courseTermsRelationshipsPartialUpdate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
-    public courseTermsRelationshipsPartialUpdate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsPartialUpdate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsPartialUpdate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public courseTermsRelationshipsPartialUpdate(requestParameters?: CourseTermsRelationshipsPartialUpdate0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
+    public courseTermsRelationshipsPartialUpdate(requestParameters?: CourseTermsRelationshipsPartialUpdate0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsPartialUpdate(requestParameters?: CourseTermsRelationshipsPartialUpdate0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsPartialUpdate(requestParameters?: CourseTermsRelationshipsPartialUpdate0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling courseTermsRelationshipsPartialUpdate.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling courseTermsRelationshipsPartialUpdate.');
         }
+        const courseTermsRelationShips = requestParameters?.courseTermsRelationShips;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -366,18 +421,19 @@ export class InstructorCourseTermsService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public courseTermsRelationshipsRetrieve(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
-    public courseTermsRelationshipsRetrieve(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsRetrieve(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsRetrieve(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public courseTermsRelationshipsRetrieve(requestParameters?: CourseTermsRelationshipsRetrieve0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
+    public courseTermsRelationshipsRetrieve(requestParameters?: CourseTermsRelationshipsRetrieve0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsRetrieve(requestParameters?: CourseTermsRelationshipsRetrieve0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsRetrieve(requestParameters?: CourseTermsRelationshipsRetrieve0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling courseTermsRelationshipsRetrieve.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling courseTermsRelationshipsRetrieve.');
         }
@@ -447,22 +503,23 @@ export class InstructorCourseTermsService {
 
     /**
      * View for instructors.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param instructorsRelationShips 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public instructorsRelationshipsCreate(id: string, relatedField: 'person' | 'Instructor_course_terms+', instructorsRelationShips?: InstructorsRelationShips, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<InstructorsRelationShipsResponse>;
-    public instructorsRelationshipsCreate(id: string, relatedField: 'person' | 'Instructor_course_terms+', instructorsRelationShips?: InstructorsRelationShips, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InstructorsRelationShipsResponse>>;
-    public instructorsRelationshipsCreate(id: string, relatedField: 'person' | 'Instructor_course_terms+', instructorsRelationShips?: InstructorsRelationShips, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InstructorsRelationShipsResponse>>;
-    public instructorsRelationshipsCreate(id: string, relatedField: 'person' | 'Instructor_course_terms+', instructorsRelationShips?: InstructorsRelationShips, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public instructorsRelationshipsCreate(requestParameters?: InstructorsRelationshipsCreate0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<InstructorsRelationShipsResponse>;
+    public instructorsRelationshipsCreate(requestParameters?: InstructorsRelationshipsCreate0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InstructorsRelationShipsResponse>>;
+    public instructorsRelationshipsCreate(requestParameters?: InstructorsRelationshipsCreate0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InstructorsRelationShipsResponse>>;
+    public instructorsRelationshipsCreate(requestParameters?: InstructorsRelationshipsCreate0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling instructorsRelationshipsCreate.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling instructorsRelationshipsCreate.');
         }
+        const instructorsRelationShips = requestParameters?.instructorsRelationShips;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -541,18 +598,19 @@ export class InstructorCourseTermsService {
 
     /**
      * View for instructors.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public instructorsRelationshipsDestroy(id: string, relatedField: 'person' | 'Instructor_course_terms+', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public instructorsRelationshipsDestroy(id: string, relatedField: 'person' | 'Instructor_course_terms+', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public instructorsRelationshipsDestroy(id: string, relatedField: 'person' | 'Instructor_course_terms+', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public instructorsRelationshipsDestroy(id: string, relatedField: 'person' | 'Instructor_course_terms+', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public instructorsRelationshipsDestroy(requestParameters?: InstructorsRelationshipsDestroy0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public instructorsRelationshipsDestroy(requestParameters?: InstructorsRelationshipsDestroy0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public instructorsRelationshipsDestroy(requestParameters?: InstructorsRelationshipsDestroy0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public instructorsRelationshipsDestroy(requestParameters?: InstructorsRelationshipsDestroy0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling instructorsRelationshipsDestroy.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling instructorsRelationshipsDestroy.');
         }
@@ -621,22 +679,23 @@ export class InstructorCourseTermsService {
 
     /**
      * View for instructors.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param instructorsRelationShips 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public instructorsRelationshipsPartialUpdate(id: string, relatedField: 'person' | 'Instructor_course_terms+', instructorsRelationShips?: InstructorsRelationShips, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<InstructorsRelationShipsResponse>;
-    public instructorsRelationshipsPartialUpdate(id: string, relatedField: 'person' | 'Instructor_course_terms+', instructorsRelationShips?: InstructorsRelationShips, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InstructorsRelationShipsResponse>>;
-    public instructorsRelationshipsPartialUpdate(id: string, relatedField: 'person' | 'Instructor_course_terms+', instructorsRelationShips?: InstructorsRelationShips, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InstructorsRelationShipsResponse>>;
-    public instructorsRelationshipsPartialUpdate(id: string, relatedField: 'person' | 'Instructor_course_terms+', instructorsRelationShips?: InstructorsRelationShips, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public instructorsRelationshipsPartialUpdate(requestParameters?: InstructorsRelationshipsPartialUpdate0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<InstructorsRelationShipsResponse>;
+    public instructorsRelationshipsPartialUpdate(requestParameters?: InstructorsRelationshipsPartialUpdate0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InstructorsRelationShipsResponse>>;
+    public instructorsRelationshipsPartialUpdate(requestParameters?: InstructorsRelationshipsPartialUpdate0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InstructorsRelationShipsResponse>>;
+    public instructorsRelationshipsPartialUpdate(requestParameters?: InstructorsRelationshipsPartialUpdate0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling instructorsRelationshipsPartialUpdate.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling instructorsRelationshipsPartialUpdate.');
         }
+        const instructorsRelationShips = requestParameters?.instructorsRelationShips;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -715,18 +774,19 @@ export class InstructorCourseTermsService {
 
     /**
      * View for instructors.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public instructorsRelationshipsRetrieve(id: string, relatedField: 'person' | 'Instructor_course_terms+', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<InstructorsRelationShipsResponse>;
-    public instructorsRelationshipsRetrieve(id: string, relatedField: 'person' | 'Instructor_course_terms+', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InstructorsRelationShipsResponse>>;
-    public instructorsRelationshipsRetrieve(id: string, relatedField: 'person' | 'Instructor_course_terms+', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InstructorsRelationShipsResponse>>;
-    public instructorsRelationshipsRetrieve(id: string, relatedField: 'person' | 'Instructor_course_terms+', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public instructorsRelationshipsRetrieve(requestParameters?: InstructorsRelationshipsRetrieve0RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<InstructorsRelationShipsResponse>;
+    public instructorsRelationshipsRetrieve(requestParameters?: InstructorsRelationshipsRetrieve0RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InstructorsRelationShipsResponse>>;
+    public instructorsRelationshipsRetrieve(requestParameters?: InstructorsRelationshipsRetrieve0RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InstructorsRelationShipsResponse>>;
+    public instructorsRelationshipsRetrieve(requestParameters?: InstructorsRelationshipsRetrieve0RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling instructorsRelationshipsRetrieve.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling instructorsRelationshipsRetrieve.');
         }

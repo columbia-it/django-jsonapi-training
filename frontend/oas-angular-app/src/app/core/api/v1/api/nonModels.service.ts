@@ -26,6 +26,23 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface NonModelsListRequestParams {
+    /** endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter. */
+    fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>;
+    /** A search term. */
+    filterSearch?: string;
+    /** A page number within the paginated result set. */
+    pageNumber?: number;
+    /** Number of results to return per page. */
+    pageSize?: number;
+}
+
+export interface NonModelsRetrieveRequestParams {
+    id: string;
+    /** endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter. */
+    fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -94,17 +111,18 @@ export class NonModelsService {
 
     /**
      * We call this a NonModel but it\&#39;s really a model that has no backing database. This allows us to take advantage of all the model-based features.
-     * @param fieldsNonModels endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter.
-     * @param filterSearch A search term.
-     * @param pageNumber A page number within the paginated result set.
-     * @param pageSize Number of results to return per page.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public nonModelsList(fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>, filterSearch?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PaginatedNonModelList>;
-    public nonModelsList(fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>, filterSearch?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PaginatedNonModelList>>;
-    public nonModelsList(fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>, filterSearch?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PaginatedNonModelList>>;
-    public nonModelsList(fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>, filterSearch?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public nonModelsList(requestParameters?: NonModelsListRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PaginatedNonModelList>;
+    public nonModelsList(requestParameters?: NonModelsListRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PaginatedNonModelList>>;
+    public nonModelsList(requestParameters?: NonModelsListRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PaginatedNonModelList>>;
+    public nonModelsList(requestParameters?: NonModelsListRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const fieldsNonModels = requestParameters?.fieldsNonModels;
+        const filterSearch = requestParameters?.filterSearch;
+        const pageNumber = requestParameters?.pageNumber;
+        const pageSize = requestParameters?.pageSize;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fieldsNonModels) {
@@ -190,18 +208,19 @@ export class NonModelsService {
 
     /**
      * We call this a NonModel but it\&#39;s really a model that has no backing database. This allows us to take advantage of all the model-based features.
-     * @param id 
-     * @param fieldsNonModels endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public nonModelsRetrieve(id: string, fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<NonModelResponse>;
-    public nonModelsRetrieve(id: string, fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<NonModelResponse>>;
-    public nonModelsRetrieve(id: string, fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<NonModelResponse>>;
-    public nonModelsRetrieve(id: string, fieldsNonModels?: Array<'url' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'field1' | 'field2' | 'field3'>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public nonModelsRetrieve(requestParameters?: NonModelsRetrieveRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<NonModelResponse>;
+    public nonModelsRetrieve(requestParameters?: NonModelsRetrieveRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<NonModelResponse>>;
+    public nonModelsRetrieve(requestParameters?: NonModelsRetrieveRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<NonModelResponse>>;
+    public nonModelsRetrieve(requestParameters?: NonModelsRetrieveRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling nonModelsRetrieve.');
         }
+        const fieldsNonModels = requestParameters?.fieldsNonModels;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fieldsNonModels) {

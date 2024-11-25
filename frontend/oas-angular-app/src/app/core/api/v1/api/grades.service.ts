@@ -34,6 +34,73 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface CourseTermsRelationshipsCreate2RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade';
+    courseTermsRelationShips?: CourseTermsRelationShips;
+}
+
+export interface CourseTermsRelationshipsDestroy2RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade';
+}
+
+export interface CourseTermsRelationshipsPartialUpdate2RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade';
+    courseTermsRelationShips?: CourseTermsRelationShips;
+}
+
+export interface CourseTermsRelationshipsRetrieve2RequestParams {
+    id: string;
+    /** Pass in one of the possible relation types to get all related objects. */
+    relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade';
+}
+
+export interface GradesCreateRequestParams {
+    gradeRequest: GradeRequest;
+}
+
+export interface GradesDestroyRequestParams {
+    id: string;
+}
+
+export interface GradesListRequestParams {
+    /** endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter. */
+    fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>;
+    filterId?: string;
+    filterIdGt?: string;
+    filterIdGte?: string;
+    /** Multiple values may be separated by commas. */
+    filterIdIn?: Array<string>;
+    filterIdLt?: string;
+    filterIdLte?: string;
+    /** A search term. */
+    filterSearch?: string;
+    /** include query parameter to allow the client to customize which related resources should be returned. */
+    include?: Array<'course_terms' | 'person'>;
+    /** A page number within the paginated result set. */
+    pageNumber?: number;
+    /** Number of results to return per page. */
+    pageSize?: number;
+}
+
+export interface GradesPartialUpdateRequestParams {
+    id: string;
+    patchedGradeRequest: PatchedGradeRequest;
+}
+
+export interface GradesRetrieveRequestParams {
+    id: string;
+    /** endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter. */
+    fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>;
+    /** include query parameter to allow the client to customize which related resources should be returned. */
+    include?: Array<'course_terms' | 'person'>;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -102,22 +169,23 @@ export class GradesService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param courseTermsRelationShips 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public courseTermsRelationshipsCreate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
-    public courseTermsRelationshipsCreate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsCreate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsCreate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public courseTermsRelationshipsCreate(requestParameters?: CourseTermsRelationshipsCreate2RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
+    public courseTermsRelationshipsCreate(requestParameters?: CourseTermsRelationshipsCreate2RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsCreate(requestParameters?: CourseTermsRelationshipsCreate2RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsCreate(requestParameters?: CourseTermsRelationshipsCreate2RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling courseTermsRelationshipsCreate.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling courseTermsRelationshipsCreate.');
         }
+        const courseTermsRelationShips = requestParameters?.courseTermsRelationShips;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -196,18 +264,19 @@ export class GradesService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public courseTermsRelationshipsDestroy(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public courseTermsRelationshipsDestroy(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public courseTermsRelationshipsDestroy(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public courseTermsRelationshipsDestroy(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public courseTermsRelationshipsDestroy(requestParameters?: CourseTermsRelationshipsDestroy2RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public courseTermsRelationshipsDestroy(requestParameters?: CourseTermsRelationshipsDestroy2RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public courseTermsRelationshipsDestroy(requestParameters?: CourseTermsRelationshipsDestroy2RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public courseTermsRelationshipsDestroy(requestParameters?: CourseTermsRelationshipsDestroy2RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling courseTermsRelationshipsDestroy.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling courseTermsRelationshipsDestroy.');
         }
@@ -276,22 +345,23 @@ export class GradesService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
-     * @param courseTermsRelationShips 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public courseTermsRelationshipsPartialUpdate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
-    public courseTermsRelationshipsPartialUpdate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsPartialUpdate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsPartialUpdate(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', courseTermsRelationShips?: CourseTermsRelationShips, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public courseTermsRelationshipsPartialUpdate(requestParameters?: CourseTermsRelationshipsPartialUpdate2RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
+    public courseTermsRelationshipsPartialUpdate(requestParameters?: CourseTermsRelationshipsPartialUpdate2RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsPartialUpdate(requestParameters?: CourseTermsRelationshipsPartialUpdate2RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsPartialUpdate(requestParameters?: CourseTermsRelationshipsPartialUpdate2RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling courseTermsRelationshipsPartialUpdate.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling courseTermsRelationshipsPartialUpdate.');
         }
+        const courseTermsRelationShips = requestParameters?.courseTermsRelationShips;
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -370,18 +440,19 @@ export class GradesService {
 
     /**
      * View for course_terms.relationships
-     * @param id 
-     * @param relatedField Pass in one of the possible relation types to get all related objects.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public courseTermsRelationshipsRetrieve(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
-    public courseTermsRelationshipsRetrieve(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsRetrieve(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
-    public courseTermsRelationshipsRetrieve(id: string, relatedField: 'course' | 'Instructor_course_terms+' | 'instructors' | 'grade', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public courseTermsRelationshipsRetrieve(requestParameters?: CourseTermsRelationshipsRetrieve2RequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<CourseTermsRelationShipsResponse>;
+    public courseTermsRelationshipsRetrieve(requestParameters?: CourseTermsRelationshipsRetrieve2RequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsRetrieve(requestParameters?: CourseTermsRelationshipsRetrieve2RequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CourseTermsRelationShipsResponse>>;
+    public courseTermsRelationshipsRetrieve(requestParameters?: CourseTermsRelationshipsRetrieve2RequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling courseTermsRelationshipsRetrieve.');
         }
+        const relatedField = requestParameters?.relatedField;
         if (relatedField === null || relatedField === undefined) {
             throw new Error('Required parameter relatedField was null or undefined when calling courseTermsRelationshipsRetrieve.');
         }
@@ -451,14 +522,15 @@ export class GradesService {
 
     /**
      * A grade for a CourseTerm instance
-     * @param gradeRequest 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public gradesCreate(gradeRequest: GradeRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<GradeResponse>;
-    public gradesCreate(gradeRequest: GradeRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<GradeResponse>>;
-    public gradesCreate(gradeRequest: GradeRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<GradeResponse>>;
-    public gradesCreate(gradeRequest: GradeRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public gradesCreate(requestParameters?: GradesCreateRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<GradeResponse>;
+    public gradesCreate(requestParameters?: GradesCreateRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<GradeResponse>>;
+    public gradesCreate(requestParameters?: GradesCreateRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<GradeResponse>>;
+    public gradesCreate(requestParameters?: GradesCreateRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const gradeRequest = requestParameters?.gradeRequest;
         if (gradeRequest === null || gradeRequest === undefined) {
             throw new Error('Required parameter gradeRequest was null or undefined when calling gradesCreate.');
         }
@@ -540,14 +612,15 @@ export class GradesService {
 
     /**
      * A grade for a CourseTerm instance
-     * @param id 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public gradesDestroy(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public gradesDestroy(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public gradesDestroy(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public gradesDestroy(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public gradesDestroy(requestParameters?: GradesDestroyRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public gradesDestroy(requestParameters?: GradesDestroyRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public gradesDestroy(requestParameters?: GradesDestroyRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public gradesDestroy(requestParameters?: GradesDestroyRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling gradesDestroy.');
         }
@@ -616,24 +689,25 @@ export class GradesService {
 
     /**
      * A grade for a CourseTerm instance
-     * @param fieldsGrades endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter.
-     * @param filterId 
-     * @param filterIdGt 
-     * @param filterIdGte 
-     * @param filterIdIn Multiple values may be separated by commas.
-     * @param filterIdLt 
-     * @param filterIdLte 
-     * @param filterSearch A search term.
-     * @param include include query parameter to allow the client to customize which related resources should be returned.
-     * @param pageNumber A page number within the paginated result set.
-     * @param pageSize Number of results to return per page.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public gradesList(fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>, filterId?: string, filterIdGt?: string, filterIdGte?: string, filterIdIn?: Array<string>, filterIdLt?: string, filterIdLte?: string, filterSearch?: string, include?: Array<'course_terms' | 'person'>, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PaginatedGradeList>;
-    public gradesList(fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>, filterId?: string, filterIdGt?: string, filterIdGte?: string, filterIdIn?: Array<string>, filterIdLt?: string, filterIdLte?: string, filterSearch?: string, include?: Array<'course_terms' | 'person'>, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PaginatedGradeList>>;
-    public gradesList(fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>, filterId?: string, filterIdGt?: string, filterIdGte?: string, filterIdIn?: Array<string>, filterIdLt?: string, filterIdLte?: string, filterSearch?: string, include?: Array<'course_terms' | 'person'>, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PaginatedGradeList>>;
-    public gradesList(fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>, filterId?: string, filterIdGt?: string, filterIdGte?: string, filterIdIn?: Array<string>, filterIdLt?: string, filterIdLte?: string, filterSearch?: string, include?: Array<'course_terms' | 'person'>, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public gradesList(requestParameters?: GradesListRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<PaginatedGradeList>;
+    public gradesList(requestParameters?: GradesListRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<PaginatedGradeList>>;
+    public gradesList(requestParameters?: GradesListRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<PaginatedGradeList>>;
+    public gradesList(requestParameters?: GradesListRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const fieldsGrades = requestParameters?.fieldsGrades;
+        const filterId = requestParameters?.filterId;
+        const filterIdGt = requestParameters?.filterIdGt;
+        const filterIdGte = requestParameters?.filterIdGte;
+        const filterIdIn = requestParameters?.filterIdIn;
+        const filterIdLt = requestParameters?.filterIdLt;
+        const filterIdLte = requestParameters?.filterIdLte;
+        const filterSearch = requestParameters?.filterSearch;
+        const include = requestParameters?.include;
+        const pageNumber = requestParameters?.pageNumber;
+        const pageSize = requestParameters?.pageSize;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fieldsGrades) {
@@ -747,18 +821,19 @@ export class GradesService {
 
     /**
      * A grade for a CourseTerm instance
-     * @param id 
-     * @param patchedGradeRequest 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public gradesPartialUpdate(id: string, patchedGradeRequest: PatchedGradeRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<GradeResponse>;
-    public gradesPartialUpdate(id: string, patchedGradeRequest: PatchedGradeRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<GradeResponse>>;
-    public gradesPartialUpdate(id: string, patchedGradeRequest: PatchedGradeRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<GradeResponse>>;
-    public gradesPartialUpdate(id: string, patchedGradeRequest: PatchedGradeRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public gradesPartialUpdate(requestParameters?: GradesPartialUpdateRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<GradeResponse>;
+    public gradesPartialUpdate(requestParameters?: GradesPartialUpdateRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<GradeResponse>>;
+    public gradesPartialUpdate(requestParameters?: GradesPartialUpdateRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<GradeResponse>>;
+    public gradesPartialUpdate(requestParameters?: GradesPartialUpdateRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling gradesPartialUpdate.');
         }
+        const patchedGradeRequest = requestParameters?.patchedGradeRequest;
         if (patchedGradeRequest === null || patchedGradeRequest === undefined) {
             throw new Error('Required parameter patchedGradeRequest was null or undefined when calling gradesPartialUpdate.');
         }
@@ -840,19 +915,20 @@ export class GradesService {
 
     /**
      * A grade for a CourseTerm instance
-     * @param id 
-     * @param fieldsGrades endpoint return only specific fields in the response on a per-type basis by including a fields[TYPE] query parameter.
-     * @param include include query parameter to allow the client to customize which related resources should be returned.
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public gradesRetrieve(id: string, fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>, include?: Array<'course_terms' | 'person'>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<GradeResponse>;
-    public gradesRetrieve(id: string, fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>, include?: Array<'course_terms' | 'person'>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<GradeResponse>>;
-    public gradesRetrieve(id: string, fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>, include?: Array<'course_terms' | 'person'>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<GradeResponse>>;
-    public gradesRetrieve(id: string, fieldsGrades?: Array<'url' | 'course_term' | 'person' | 'effective_start_date' | 'effective_end_date' | 'last_mod_user_name' | 'last_mod_date' | 'credits' | 'grade_letter' | 'grade_value'>, include?: Array<'course_terms' | 'person'>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public gradesRetrieve(requestParameters?: GradesRetrieveRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<GradeResponse>;
+    public gradesRetrieve(requestParameters?: GradesRetrieveRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<GradeResponse>>;
+    public gradesRetrieve(requestParameters?: GradesRetrieveRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<GradeResponse>>;
+    public gradesRetrieve(requestParameters?: GradesRetrieveRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.api+json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const id = requestParameters?.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling gradesRetrieve.');
         }
+        const fieldsGrades = requestParameters?.fieldsGrades;
+        const include = requestParameters?.include;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fieldsGrades) {

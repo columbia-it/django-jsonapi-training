@@ -21,7 +21,10 @@ export class CourseDetailComponent implements OnInit {
     const courseId = this.route.snapshot.paramMap.get('id');
 
     if (courseId) {
-      this.coursesService.coursesRetrieve(courseId, [], ['course_terms']).subscribe(
+      this.coursesService.coursesRetrieve({
+        id: courseId,
+        include: ['course_terms']
+      }).subscribe(
 	(course) => {
 	  this.course = course;
 	  console.log(this.course)
@@ -43,7 +46,10 @@ export class CourseDetailComponent implements OnInit {
     instructorIds.forEach((id) => {
       const instructorId = id as string;
 
-      this.instructorsService.instructorsRetrieve(instructorId, [], ['person']).subscribe(
+      this.instructorsService.instructorsRetrieve({
+        id: instructorId,
+        include: ['person']
+      }).subscribe(
         (instructor) => (this.instructors[instructorId] = instructor),
         (error) => console.error(`Error fetching instructor ${id}:`, error)
       );

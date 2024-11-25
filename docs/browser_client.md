@@ -73,7 +73,7 @@ index 7b76dd3..9aaa370 100644
      "watch": "ng build --watch --configuration development",
 -    "test": "ng test"
 +    "test": "ng test",
-+    "generate:api": "openapi-generator-cli generate -p=removeOperationIdPrefix=true -i ../../docs/schemas/openapi.yaml -g typescript-angular -o src/app/core/api/v1"
++    "generate:api": "openapi-generator-cli generate -p=removeOperationIdPrefix=true -p=useSingleRequestParameter=true -i ../../docs/schemas/openapi.yaml -g typescript-angular -o src/app/core/api/v1"
    },
 ```
 
