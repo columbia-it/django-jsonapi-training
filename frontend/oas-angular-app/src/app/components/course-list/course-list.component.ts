@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CoursesService } from '../../core/api/v1';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-course-list',
@@ -11,7 +12,8 @@ export class CourseListComponent implements OnInit {
   computedTerms: { [courseId: string]: any[] } = {}; // Precomputed terms for each course
   searchFilter: string = '';
   displayedColumns: string[] = ['identifier', 'name', 'description', 'terms']; // Columns to display in the table
-
+  pageSize: number = 10; // Default page size
+  pageNumber: number = 1; // Default page number
   constructor(private coursesService: CoursesService) {}
 
   ngOnInit() {
@@ -24,8 +26,8 @@ export class CourseListComponent implements OnInit {
       fieldsCourses: ["course_identifier", "course_name", "course_description", "course_terms"],
       include: ["course_terms"],
       filterSearch: this.searchFilter,
-      pageNumber: 1,
-      pageSize: 20 // TODO fix this & add pagination
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize
     }).subscribe({
       next: (courses) => {
         this.courses = courses;
@@ -49,13 +51,21 @@ export class CourseListComponent implements OnInit {
     });
   }
   onSearchFilterChange() {
+    this.pageNumber = 1; // Reset to first page on new search
     this.loadCourses();
   }
   clearSearch() {
     this.searchFilter = ''; // Reset the search filter
-    this.loadCourses();     // Reload courses without filter
+    this.onSearchFilterChange();     // Reload courses without filter
   }
-
+  /**
+   * Handle page changes from the paginator.
+   */
+  onPageChange(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.pageNumber = event.pageIndex + 1; // pageIndex is 0-based, so add 1
+    this.loadCourses();
+  }
  /**
    * Retrieve precomputed terms for a course.
    */

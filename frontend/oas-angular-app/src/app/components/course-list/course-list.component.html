@@ -23,8 +23,6 @@
 </mat-form-field>
 
 <div *ngIf="courses">
-  <p>Page {{ courses.meta.pagination.page }} (length {{ courses.data.length }}) of {{ courses.meta.pagination.pages }}</p>
-
   <table mat-table [dataSource]="courses.data" class="mat-mdc-table dense">
     <!-- Course Identifier Column -->
     <ng-container matColumnDef="identifier" class="mat-column-identifier">
@@ -60,7 +58,15 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <!-- Table Rows -->
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
   </table>
+  <!-- Pagination -->
+  <mat-paginator
+    [length]="courses.meta.pagination.pages"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
 </div>
 
 <div *ngIf="!courses">

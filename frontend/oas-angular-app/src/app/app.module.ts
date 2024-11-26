@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { CourseListComponent } from './components/course-list/course-list.component';
 import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 import { AuthConfigModule } from './auth/auth-config.module';
@@ -66,6 +67,7 @@ export function apiConfigFactory(): Configuration {
     MatButtonModule,
     MatTableModule,
     MatIconModule,
+    MatPaginatorModule,
     AuthConfigModule,
   ],
   providers: [],
