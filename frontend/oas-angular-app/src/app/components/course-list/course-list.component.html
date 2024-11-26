@@ -48,6 +48,14 @@
         {{ course.attributes.course_description !== course.attributes.course_name ? course.attributes.course_description : ''}}</td>
     </ng-container>
 
+    <ng-container matColumnDef="terms" class="mat-column-terms">
+      <th mat-header-cell *matHeaderCellDef> Terms Offered </th>
+      <td mat-cell *matCellDef="let course" >
+        <div *ngFor="let term of getTermsForCourse(course)">
+          {{ term.attributes.term_identifier.substring(0,5) }}
+        </div>
+      </td>
+    </ng-container>
     <!-- Table Header -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <!-- Table Rows -->

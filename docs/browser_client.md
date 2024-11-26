@@ -292,3 +292,8 @@ export function apiConfigFactory(): Configuration {
     AuthConfigModule,
   ],
 ```
+
+## NOTES
+
+- The `sort` query parameter is missing from the generated OAS schema doc so it can't be used without
+  modifying the generated API.

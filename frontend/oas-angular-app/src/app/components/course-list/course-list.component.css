@@ -7,15 +7,22 @@
   font-size: 14px; /* Adjust font size as needed */}
 
 .mat-column-name {
-  max-width: 100px; /* Limit name column width */
-  white-space: nowrap;
+  max-width: 200px; /* Limit name column width */
+  white-space: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .mat-column-description {
-  max-width: 250px; /* Limit description column width */
-  white-space: nowrap;
+  max-width: 200px; /* Limit description column width */
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-terms {
+  max-width: 200px; /* Limit terms column width */
+  white-space: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
