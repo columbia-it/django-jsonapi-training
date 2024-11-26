@@ -24,10 +24,12 @@ export class CourseListComponent implements OnInit {
       fieldsCourses: ["course_identifier", "course_name", "course_description", "course_terms"],
       include: ["course_terms"],
       filterSearch: this.searchFilter,
+      pageNumber: 1,
       pageSize: 20 // TODO fix this & add pagination
-    }).subscribe(
-      (courses) => {
+    }).subscribe({
+      next: (courses) => {
         this.courses = courses;
+
         // Precompute terms for each course
         if (this.courses?.data && this.courses?.included) {
           this.courses.data.forEach((course: any) => {
@@ -35,10 +37,16 @@ export class CourseListComponent implements OnInit {
             this.computedTerms[course.id] = this.courses.included.filter((included: any) => termIds.includes(included.id));
           });
         }
-        console.log(this.courses)
+
+        console.log(this.courses);
       },
-      (error) => console.error('Error:', error)
-    );
+      error: (err) => {
+        console.error('Error:', err);
+      },
+      complete: () => {
+        console.log('Courses loading complete');
+      }
+    });
   }
   onSearchFilterChange() {
     this.loadCourses();

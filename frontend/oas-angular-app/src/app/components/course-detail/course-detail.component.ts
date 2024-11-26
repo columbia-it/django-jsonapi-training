@@ -24,14 +24,14 @@ export class CourseDetailComponent implements OnInit {
       this.coursesService.coursesRetrieve({
         id: courseId,
         include: ['course_terms']
-      }).subscribe(
-	(course) => {
-	  this.course = course;
-	  console.log(this.course)
-    this.loadInstructors();
-	},
-	(error) => console.error('Error:', error)
-      );
+      }).subscribe({
+        next: (course) => {
+          this.course = course;
+          console.log(this.course)
+          this.loadInstructors();
+        },
+        error: (error) => console.error('Error:', error)
+      });
     }
   }
 
@@ -49,10 +49,10 @@ export class CourseDetailComponent implements OnInit {
       this.instructorsService.instructorsRetrieve({
         id: instructorId,
         include: ['person']
-      }).subscribe(
-        (instructor) => (this.instructors[instructorId] = instructor),
-        (error) => console.error(`Error fetching instructor ${id}:`, error)
-      );
+      }).subscribe({
+        next: (instructor) => (this.instructors[instructorId] = instructor),
+        error: (error) => console.error(`Error fetching instructor ${id}:`, error)
+      });
     })
     console.log(this.instructors);
   }
