@@ -22,13 +22,15 @@
   </button>
 </mat-form-field>
 
-<div *ngIf="courses">
-  <table mat-table [dataSource]="courses.data" class="mat-mdc-table dense">
+<div #tableContainer style="overflow-y: auto; max-height: 400px;">
+  <table mat-table [dataSource]="courses?.data" class="mat-mdc-table dense">
     <!-- Course Identifier Column -->
     <ng-container matColumnDef="identifier" class="mat-column-identifier">
       <th mat-header-cell *matHeaderCellDef> Course Number </th>
       <td mat-cell *matCellDef="let course">
-        <a [routerLink]="['/courses', course.id]">{{ course.attributes.course_identifier }}</a>
+        <a (click)="onCourseClick(course.id)" [routerLink]="['/courses', course.id]">
+          {{ course.attributes.course_identifier }}
+        </a>
       </td>
     </ng-container>
 
@@ -60,15 +62,13 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
   </table>
-  <!-- Pagination -->
-  <mat-paginator
-    [length]="courses.meta.pagination.pages"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[5, 10, 25, 50]"
-    (page)="onPageChange($event)">
-  </mat-paginator>
 </div>
+<!-- Pagination -->
+<mat-paginator
+  [length]="courses?.meta.pagination.count || 0"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 25, 50]"
+  [showFirstLastButtons]="true"
+  (page)="onPageChange($event)">
+</mat-paginator>
 
-<div *ngIf="!courses">
-  <p>Loading...</p>
-</div>

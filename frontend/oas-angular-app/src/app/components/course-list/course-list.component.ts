@@ -1,25 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { CoursesService } from '../../core/api/v1';
-import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-course-list',
   templateUrl: './course-list.component.html',
   styleUrl: './course-list.component.css'
 })
-export class CourseListComponent implements OnInit {
+export class CourseListComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild('tableContainer') tableContainer!: ElementRef; // Access table container for scrolling
+
   courses: any | null = null;
   computedTerms: { [courseId: string]: any[] } = {}; // Precomputed terms for each course
   searchFilter: string = '';
   displayedColumns: string[] = ['identifier', 'name', 'description', 'terms']; // Columns to display in the table
   pageSize: number = 10; // Default page size
   pageNumber: number = 1; // Default page number
-  constructor(private coursesService: CoursesService) {}
+  scrollTop: number = 0; // Scroll position
+  constructor(private coursesService: CoursesService, private router: Router) {}
 
   ngOnInit() {
+    const savedState = sessionStorage.getItem('courseListState');
+    if (savedState) {
+      const {pageNumber, pageSize, scrollTop} = JSON.parse(savedState);
+      this.pageNumber = pageNumber || 1;
+      this.pageSize = pageSize || 10;
+      this.scrollTop = scrollTop || 0;
+    }
+
     this.loadCourses();
   }
-
+  ngAfterViewInit() {
+    // Ensure paginator is initialized before synchronization
+    if (this.paginator) {
+      console.log('Paginator initialized');
+      this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
+      this.paginator.pageSize = this.pageSize;
+    } else {
+      console.error('Paginator is not initialized');
+    }
+    // restore scroll position
+    if (this.tableContainer) {
+      console.log('has tableContainer');
+      this.tableContainer.nativeElement.scrollTop = this.scrollTop || 0; // Restore scroll position
+    } else {
+      console.error('no tableContainer');
+    }
+  }
   loadCourses() {
     // only get the fields we care to display
     this.coursesService.coursesList({
@@ -36,18 +65,22 @@ export class CourseListComponent implements OnInit {
         if (this.courses?.data && this.courses?.included) {
           this.courses.data.forEach((course: any) => {
             const termIds = course.relationships?.course_terms?.data.map((term: any) => term.id) || [];
-            this.computedTerms[course.id] = this.courses.included.filter((included: any) => termIds.includes(included.id));
+            this.computedTerms[course.id] = this.courses.included.filter((included: any) =>
+              termIds.includes(included.id)
+            );
           });
         }
 
-        console.log(this.courses);
+      // Update paginator after courses are loaded
+        if (this.paginator) {
+          console.log('Synchronizing paginator');
+          this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
+          this.paginator.pageSize = this.pageSize;
+        } else {
+          console.error('Paginator not available after loading courses');
+        }
       },
-      error: (err) => {
-        console.error('Error:', err);
-      },
-      complete: () => {
-        console.log('Courses loading complete');
-      }
+      error: (err) => console.error('Error:', err)
     });
   }
   onSearchFilterChange() {
@@ -61,11 +94,27 @@ export class CourseListComponent implements OnInit {
   /**
    * Handle page changes from the paginator.
    */
-  onPageChange(event: PageEvent) {
+  onPageChange(event: any) {
     this.pageSize = event.pageSize;
     this.pageNumber = event.pageIndex + 1; // pageIndex is 0-based, so add 1
     this.loadCourses();
   }
+
+  onCourseClick(courseId: string) {
+    // Save current state before navigation
+    sessionStorage.setItem(
+      'courseListState',
+      JSON.stringify({
+        pageNumber: this.paginator?.pageIndex + 1,
+        pageSize: this.paginator?.pageSize,
+        scrollTop: this.tableContainer?.nativeElement.scrollTop
+      })
+    );
+
+    // Navigate to the course detail
+    this.router.navigate(['/courses', courseId]);
+  }
+
  /**
    * Retrieve precomputed terms for a course.
    */

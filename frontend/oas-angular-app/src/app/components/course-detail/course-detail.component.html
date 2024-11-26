@@ -1,4 +1,5 @@
 <h2>Course Details</h2>
+<button mat-button (click)="goBack()">Back</button>
 <div *ngIf="course">
   <p><strong>Course Identifier:</strong> {{ course.data.attributes.course_identifier }}</p>
   <p><strong>Name:</strong> {{ course.data.attributes.course_name }}</p>

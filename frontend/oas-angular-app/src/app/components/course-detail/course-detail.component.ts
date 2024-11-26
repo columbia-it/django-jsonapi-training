@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CoursesService, InstructorsService } from '../../core/api/v1';
 
 @Component({
@@ -14,7 +14,8 @@ export class CourseDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private coursesService: CoursesService,
-    private instructorsService: InstructorsService
+    private instructorsService: InstructorsService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -35,6 +36,9 @@ export class CourseDetailComponent implements OnInit {
     }
   }
 
+  goBack() {
+    this.router.navigate(['/courses']);
+  }
   loadInstructors() {
     if (!this.course?.included) return;
     const instructorIds = new Set(
