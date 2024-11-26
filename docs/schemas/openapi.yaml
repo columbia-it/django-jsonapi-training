@@ -336,6 +336,33 @@ paths:
                 $ref: '#/components/schemas/PaginatedCourseList'
           description: ''
   /v1/courses/{id}/:
+    delete:
+      operationId: v1_courses_destroy
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - courses
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     patch:
       operationId: v1_courses_partial_update
       description: A course of instruction. e.g. COMSW1002 Computing in Context
@@ -444,33 +471,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/CourseResponse'
           description: ''
-    delete:
-      operationId: v1_courses_destroy
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - courses
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
   /v1/course_terms/:
     post:
       operationId: v1_course_terms_create
@@ -693,6 +693,35 @@ paths:
                 $ref: '#/components/schemas/PaginatedCourseTermList'
           description: ''
   /v1/course_terms/{id}/:
+    delete:
+      operationId: v1_course_terms_destroy
+      description: |-
+        A specific course term (year+semester) instance.
+        e.g. 20183COMSW1002
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - course_terms
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     patch:
       operationId: v1_course_terms_partial_update
       description: |-
@@ -803,35 +832,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/CourseTermResponse'
           description: ''
-    delete:
-      operationId: v1_course_terms_destroy
-      description: |-
-        A specific course term (year+semester) instance.
-        e.g. 20183COMSW1002
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - course_terms
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
   /v1/people/:
     post:
       operationId: v1_people_create
@@ -939,6 +939,33 @@ paths:
                 $ref: '#/components/schemas/PaginatedPersonList'
           description: ''
   /v1/people/{id}/:
+    delete:
+      operationId: v1_people_destroy
+      description: A person.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - people
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     patch:
       operationId: v1_people_partial_update
       description: A person.
@@ -1041,33 +1068,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/PersonResponse'
           description: ''
-    delete:
-      operationId: v1_people_destroy
-      description: A person.
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - people
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
   /v1/instructors/:
     post:
       operationId: v1_instructors_create
@@ -1251,6 +1251,33 @@ paths:
                 $ref: '#/components/schemas/PaginatedInstructorList'
           description: ''
   /v1/instructors/{id}/:
+    delete:
+      operationId: v1_instructors_destroy
+      description: An instructor.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - instructors
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     patch:
       operationId: v1_instructors_partial_update
       description: An instructor.
@@ -1354,33 +1381,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/InstructorResponse'
           description: ''
-    delete:
-      operationId: v1_instructors_destroy
-      description: An instructor.
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - instructors
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
   /v1/grades/:
     post:
       operationId: v1_grades_create
@@ -1527,6 +1527,33 @@ paths:
                 $ref: '#/components/schemas/PaginatedGradeList'
           description: ''
   /v1/grades/{id}/:
+    delete:
+      operationId: v1_grades_destroy
+      description: A grade for a CourseTerm instance
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - grades
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     patch:
       operationId: v1_grades_partial_update
       description: A grade for a CourseTerm instance
@@ -1633,33 +1660,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/GradeResponse'
           description: ''
-    delete:
-      operationId: v1_grades_destroy
-      description: A grade for a CourseTerm instance
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - grades
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
   /v1/non-models/:
     get:
       operationId: v1_non_models_list
@@ -2924,7 +2924,7 @@ components:
               required:
               - data
               description: A related resource object from type course_terms
-              title: course_terms
+              title: Course terms
     CourseRequest:
       type: object
       properties:
@@ -3038,7 +3038,7 @@ components:
                   required:
                   - data
                   description: A related resource object from type course_terms
-                  title: course_terms
+                  title: Course terms
       required:
       - data
     CourseResponse:
@@ -3123,7 +3123,7 @@ components:
               required:
               - data
               description: The identifier of the related object.
-              title: Resource Identifier
+              title: Course
               nullable: true
             instructors:
               type: object
@@ -3153,7 +3153,7 @@ components:
               required:
               - data
               description: A related resource object from type instructors
-              title: instructors
+              title: Instructors
     CourseTermRequest:
       type: object
       properties:
@@ -3234,7 +3234,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Course
                   nullable: true
                 instructors:
                   type: object
@@ -3264,7 +3264,7 @@ components:
                   required:
                   - data
                   description: A related resource object from type instructors
-                  title: instructors
+                  title: Instructors
       required:
       - data
     CourseTermResponse:
@@ -3366,7 +3366,7 @@ components:
               required:
               - data
               description: The identifier of the related object.
-              title: Resource Identifier
+              title: Course term
             person:
               type: object
               properties:
@@ -3390,7 +3390,7 @@ components:
               required:
               - data
               description: The identifier of the related object.
-              title: Resource Identifier
+              title: Person
           required:
           - course_term
           - person
@@ -3487,7 +3487,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Course term
                 person:
                   type: object
                   properties:
@@ -3511,7 +3511,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Person
               required:
               - course_term
               - person
@@ -3594,7 +3594,7 @@ components:
               required:
               - data
               description: A related resource object from type course_terms
-              title: course_terms
+              title: Course terms
             person:
               type: object
               properties:
@@ -3618,7 +3618,7 @@ components:
               required:
               - data
               description: The identifier of the related object.
-              title: Resource Identifier
+              title: Person
               nullable: true
     InstructorRequest:
       type: object
@@ -3691,7 +3691,7 @@ components:
                   required:
                   - data
                   description: A related resource object from type course_terms
-                  title: course_terms
+                  title: Course terms
                 person:
                   type: object
                   properties:
@@ -3715,7 +3715,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Person
                   nullable: true
       required:
       - data
@@ -3958,7 +3958,7 @@ components:
                   required:
                   - data
                   description: A related resource object from type course_terms
-                  title: course_terms
+                  title: Course terms
       required:
       - data
     PatchedCourseTermRequest:
@@ -4043,7 +4043,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Course
                   nullable: true
                 instructors:
                   type: object
@@ -4073,7 +4073,7 @@ components:
                   required:
                   - data
                   description: A related resource object from type instructors
-                  title: instructors
+                  title: Instructors
       required:
       - data
     PatchedGradeRequest:
@@ -4171,7 +4171,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Course term
                 person:
                   type: object
                   properties:
@@ -4195,7 +4195,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Person
               required:
               - course_term
               - person
@@ -4274,7 +4274,7 @@ components:
                   required:
                   - data
                   description: A related resource object from type course_terms
-                  title: course_terms
+                  title: Course terms
                 person:
                   type: object
                   properties:
@@ -4298,7 +4298,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Person
                   nullable: true
       required:
       - data
@@ -4376,7 +4376,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Instructor
                   nullable: true
       required:
       - data
@@ -4446,7 +4446,7 @@ components:
               required:
               - data
               description: The identifier of the related object.
-              title: Resource Identifier
+              title: Instructor
               nullable: true
     PersonRequest:
       type: object
@@ -4520,7 +4520,7 @@ components:
                   required:
                   - data
                   description: The identifier of the related object.
-                  title: Resource Identifier
+                  title: Instructor
                   nullable: true
       required:
       - data
