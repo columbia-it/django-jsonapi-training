@@ -7,12 +7,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ResourceIdentifier2 } from './resourceIdentifier2';
-import { ResourceIdentifier1 } from './resourceIdentifier1';
+import { Person1 } from './person1';
+import { CourseTerm } from './courseTerm';
 
 
 export interface GradeRelationships { 
-    course_term: ResourceIdentifier1;
-    person: ResourceIdentifier2;
+    course_term: CourseTerm;
+    person: Person1;
 }
 

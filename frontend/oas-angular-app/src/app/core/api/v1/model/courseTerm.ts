@@ -7,20 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CourseTermAttributes } from './courseTermAttributes';
-import { CourseTermTypeEnum } from './courseTermTypeEnum';
-import { CourseTermRelationships } from './courseTermRelationships';
+import { CourseTermData } from './courseTermData';
 
 
+/**
+ * The identifier of the related object.
+ */
 export interface CourseTerm { 
-    /**
-     * The [type](https://jsonapi.org/format/#document-resource-object-identification) member is used to describe resource objects that share common attributes and relationships.
-     */
-    type: CourseTermTypeEnum;
-    attributes?: CourseTermAttributes;
-    relationships?: CourseTermRelationships;
+    data: CourseTermData;
 }
-export namespace CourseTerm {
-}
-
 

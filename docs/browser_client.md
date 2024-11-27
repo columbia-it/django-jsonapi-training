@@ -295,5 +295,5 @@ export function apiConfigFactory(): Configuration {
 
 ## NOTES
 
-- The `sort` query parameter is missing from the generated OAS schema doc so it can't be used without
-  modifying the generated API. See https://github.com/jokiefer/drf-spectacular-json-api/discussions/28
+- The `sort` query parameter will not show up unless you add `ordering_fields` to the view definitions.
+  See https://github.com/jokiefer/drf-spectacular-json-api/discussions/28

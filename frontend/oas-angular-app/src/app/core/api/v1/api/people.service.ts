@@ -79,6 +79,8 @@ export interface PeopleListRequestParams {
     pageNumber?: number;
     /** Number of results to return per page. */
     pageSize?: number;
+    /** [list of fields to sort by](https://jsonapi.org/format/#fetching-sorting) */
+    sort?: Array<'name' | '-name'>;
 }
 
 export interface PeoplePartialUpdateRequestParams {
@@ -704,6 +706,7 @@ export class PeopleService {
         const include = requestParameters?.include;
         const pageNumber = requestParameters?.pageNumber;
         const pageSize = requestParameters?.pageSize;
+        const sort = requestParameters?.sort;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fieldsPeople) {
@@ -725,6 +728,10 @@ export class PeopleService {
         if (pageSize !== undefined && pageSize !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>pageSize, 'page[size]');
+        }
+        if (sort) {
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                [...sort].join(COLLECTION_FORMATS['csv']), 'sort');
         }
 
         let localVarHeaders = this.defaultHeaders;

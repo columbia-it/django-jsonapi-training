@@ -127,6 +127,8 @@ export interface CoursesListRequestParams {
     pageNumber?: number;
     /** Number of results to return per page. */
     pageSize?: number;
+    /** [list of fields to sort by](https://jsonapi.org/format/#fetching-sorting) */
+    sort?: Array<'course_name' | '-course_name' | 'course_identifier' | '-course_identifier' | 'course_number' | '-course_number' | 'subject_area_code' | '-subject_area_code' | 'school_bulletin_prefix_code' | '-school_bulletin_prefix_code'>;
 }
 
 export interface CoursesPartialUpdateRequestParams {
@@ -795,6 +797,7 @@ export class CoursesService {
         const include = requestParameters?.include;
         const pageNumber = requestParameters?.pageNumber;
         const pageSize = requestParameters?.pageSize;
+        const sort = requestParameters?.sort;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fieldsCourses) {
@@ -988,6 +991,10 @@ export class CoursesService {
         if (pageSize !== undefined && pageSize !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>pageSize, 'page[size]');
+        }
+        if (sort) {
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                [...sort].join(COLLECTION_FORMATS['csv']), 'sort');
         }
 
         let localVarHeaders = this.defaultHeaders;

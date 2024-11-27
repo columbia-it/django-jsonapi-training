@@ -7,10 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Instructor1 } from './instructor1';
+import { Instructor1Data } from './instructor1Data';
 
 
-export interface PatchedPersonRequestDataRelationships { 
-    instructor?: Instructor1 | null;
+/**
+ * The identifier of the related object.
+ */
+export interface Instructor1 { 
+    data: Instructor1Data;
 }
 

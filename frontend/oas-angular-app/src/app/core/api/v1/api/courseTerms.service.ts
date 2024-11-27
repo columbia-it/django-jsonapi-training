@@ -76,6 +76,8 @@ export interface CourseTermsListRequestParams {
     pageNumber?: number;
     /** Number of results to return per page. */
     pageSize?: number;
+    /** [list of fields to sort by](https://jsonapi.org/format/#fetching-sorting) */
+    sort?: Array<'term_identifier' | '-term_identifier' | 'audit_permitted_code' | '-audit_permitted_code' | 'exam_credit_flag' | '-exam_credit_flag'>;
 }
 
 export interface CourseTermsPartialUpdateRequestParams {
@@ -394,6 +396,7 @@ export class CourseTermsService {
         const include = requestParameters?.include;
         const pageNumber = requestParameters?.pageNumber;
         const pageSize = requestParameters?.pageSize;
+        const sort = requestParameters?.sort;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (fieldsCourseTerms) {
@@ -495,6 +498,10 @@ export class CourseTermsService {
         if (pageSize !== undefined && pageSize !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>pageSize, 'page[size]');
+        }
+        if (sort) {
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                [...sort].join(COLLECTION_FORMATS['csv']), 'sort');
         }
 
         let localVarHeaders = this.defaultHeaders;
