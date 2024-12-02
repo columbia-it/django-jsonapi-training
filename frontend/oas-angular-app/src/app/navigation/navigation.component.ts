@@ -1,38 +1,73 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+
+interface Tab {
+  label: string;
+  route?: string; // Route to navigate to
+  action?: () => void; // Action to perform for the tab
+}
 
 @Component({
   selector: 'app-navigation',
-  templateUrl: 'navigation.component.html',
-  styleUrls: ['navigation.component.css'],
+  templateUrl: './navigation.component.html',
+  styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
-  private readonly oidcSecurityService = inject(OidcSecurityService);
+  isAuthenticated: boolean = false;
 
-  isAuthenticated = false;
+  // Tabs configuration
+  tabs: Tab[] = [];
+  activeTabIndex: number = 0; // Default active tab index
 
-  ngOnInit() {
-    this.oidcSecurityService.isAuthenticated$.subscribe(
-      ({ isAuthenticated }) => {
-        this.isAuthenticated = isAuthenticated;
+  constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {}
 
-        console.warn('authenticated: ', isAuthenticated);
-      }
-    );
+  ngOnInit(): void {
+    // Subscribe to the authentication state
+    this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
+      this.isAuthenticated = isAuthenticated;
+
+      // Update tabs dynamically based on authentication state
+      this.updateTabs();
+    });
+
+    // Restore active tab index from sessionStorage
+    const savedTabIndex = sessionStorage.getItem('activeTabIndex');
+    this.activeTabIndex = savedTabIndex ? parseInt(savedTabIndex, 10) : 0;
+
+    // Initialize tabs
+    this.updateTabs();
   }
 
-  login() {
+  updateTabs(): void {
+    this.tabs = [
+      { label: 'Home', route: '/home' },
+      { label: 'Courses', route: '/courses' },
+      ...(this.isAuthenticated
+        ? [{ label: 'Logout', action: () => this.logout() }]
+        : []) // Only add "Logout" if authenticated
+    ];
+  }
+
+  logout(): void {
+    this.oidcSecurityService.logoff().subscribe(() => {
+      this.router.navigate(['/home']);
+    });
+  }
+
+  login(): void {
     this.oidcSecurityService.authorize();
   }
 
-  refreshSession() {
-    this.oidcSecurityService.authorize();
-  }
+  onTabChange(index: number): void {
+    const tab = this.tabs[index];
+    this.activeTabIndex = index; // Save the active tab index
+    sessionStorage.setItem('activeTabIndex', String(index)); // Persist the active tab index
 
-  logout() {
-    console.log('logoff')
-    this.oidcSecurityService
-      .logoff()
-      .subscribe((result) => console.log(result));
+    if (tab.route) {
+      this.router.navigate([tab.route]);
+    } else if (tab.action) {
+      tab.action();
+    }
   }
 }
