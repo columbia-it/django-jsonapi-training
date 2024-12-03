@@ -62,7 +62,7 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
     this.peopleService.peopleList({
       fieldsPeople: ['name', 'instructor'],
       include: ['instructor'],
-      filterSearch: this.searchFilter,
+      ...(this.searchFilter.trim() && { filterSearch: this.searchFilter }),
       pageNumber: this.pageNumber,
       pageSize: this.pageSize
     }).subscribe({
@@ -77,7 +77,7 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
     this.instructorsService.instructorsList({
       fieldsInstructors: ['person', 'course_terms'],
       include: ['course_terms', 'person'],
-      filterSearch: this.searchFilter,
+      ...(this.searchFilter.trim() && { filterSearch: this.searchFilter }),
       pageNumber: this.pageNumber,
       pageSize: this.pageSize
     }).subscribe({

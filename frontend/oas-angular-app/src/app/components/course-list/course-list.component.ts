@@ -54,7 +54,7 @@ export class CourseListComponent implements OnInit, AfterViewInit {
     this.coursesService.coursesList({
       fieldsCourses: ["course_identifier", "course_name", "course_description", "course_terms"],
       include: ["course_terms"],
-      filterSearch: this.searchFilter,
+      ...(this.searchFilter.trim() && { filterSearch: this.searchFilter }),
       pageNumber: this.pageNumber,
       pageSize: this.pageSize
     }).subscribe({
