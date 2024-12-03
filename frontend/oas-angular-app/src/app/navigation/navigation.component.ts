@@ -43,6 +43,7 @@ export class NavigationComponent implements OnInit {
     this.tabs = [
       { label: 'Home', route: '/home' },
       { label: 'Courses', route: '/courses' },
+      { label: 'Instructors', route: '/instructors' },
       ...(this.isAuthenticated
         ? [{ label: 'Logout', action: () => this.logout() }]
         : []) // Only add "Logout" if authenticated
