@@ -1,0 +1,13 @@
+.mat-column-name {
+  max-width: 40px; /* Limit name column width */
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-terms {
+  max-width: 200px; /* Limit terms column width */
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

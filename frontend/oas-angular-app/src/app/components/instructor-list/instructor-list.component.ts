@@ -16,7 +16,7 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
   computedTerms: { [courseId: string]: any[] } = {}; // Precomputed terms for each instructor
   computedPeople: { [personId: string]: any[] } = {}; // Precompute person for each instructor
   searchFilter: string = '';
-  displayedColumns: string[] = ['id', 'name'];
+  displayedColumns: string[] = ['name', 'terms'];
   pageSize: number = 10; // Default page size
   pageNumber: number = 1; // Default page number
   scrollTop: number = 0; // Scroll position

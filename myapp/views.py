@@ -310,7 +310,11 @@ class InstructorViewSet(CourseBaseViewSet):
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
     filterset_class = InstructorFilterSet
-    search_fields = ("person__name", "course_terms__course__course_name")
+    search_fields = (
+        "person__name",
+        "course_terms__course__course_name",
+        "course_terms__course__course_identifier"
+    )
 
 
 class GradeViewSet(CourseBaseViewSet):
