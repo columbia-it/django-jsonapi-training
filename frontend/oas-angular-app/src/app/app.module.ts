@@ -17,6 +17,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CachingInterceptor } from './services/caching.interceptor';
+
 import { CourseListComponent } from './components/course-list/course-list.component';
 import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 import { AuthConfigModule } from './auth/auth-config.module';
@@ -75,7 +78,9 @@ export function apiConfigFactory(): Configuration {
     MatTabsModule,
     AuthConfigModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
