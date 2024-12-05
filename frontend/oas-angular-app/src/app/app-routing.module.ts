@@ -35,8 +35,8 @@ const appRoutes: Routes = [
     //   import('./components/course-list/course-list.component').then((m) => m.CourseListComponent),
     // canLoad: [AutoLoginPartialRoutesGuard],
   },
-  { path: 'courses/:id', component: CourseDetailComponent },
-  { path: 'instructors', component: InstructorListComponent },
+  { path: 'courses/:id', component: CourseDetailComponent, canActivate: [AutoLoginPartialRoutesGuard] },
+  { path: 'instructors', component: InstructorListComponent, canActivate: [AutoLoginPartialRoutesGuard] },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'callback', component: CallbackComponent },
 ];
