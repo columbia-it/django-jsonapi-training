@@ -28,7 +28,7 @@
     <ng-container matColumnDef="identifier" class="mat-column-identifier">
       <th mat-header-cell *matHeaderCellDef> Course Number </th>
       <td mat-cell *matCellDef="let course">
-        <a (click)="onCourseClick(course.id)" [routerLink]="['/courses', course.id]">
+        <a (click)="onCourseClick(course.id)" [routerLink]="['/courses', course.id]" [queryParams]="{ origin: '/courses' }">
           {{ course.attributes.course_identifier }}
         </a>
       </td>

@@ -40,7 +40,10 @@
       <th mat-header-cell *matHeaderCellDef> Classes<br>term:  course </th>
       <td mat-cell *matCellDef="let instructor" >
         <div *ngFor="let term of getTermsForInstructor(instructor)">
-          {{ term.attributes.term_identifier.substring(0,5) }}: {{ term.attributes.term_identifier.substring(5) }}
+          <a (click)="onCourseClick(instructor.id)"
+             [routerLink]="['/courses',term.relationships.course.data.id]" [queryParams]="{ origin: '/instructors' }">
+            {{ term.attributes.term_identifier.substring(0,5) }}: {{ term.attributes.term_identifier.substring(5) }}
+          </a>
         </div>
       </td>
     </ng-container>

@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { InstructorsService, PeopleService } from '../../core/api/v1';
+import { InstructorsService } from '../../core/api/v1';
 @Component({
   selector: 'app-instructor-list',
   templateUrl: './instructor-list.component.html',
@@ -23,9 +23,8 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
 
   constructor(
     private instructorsService: InstructorsService,
-    private peopleService: PeopleService,
-    private router: Router) {
-  }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     const savedState = sessionStorage.getItem('instructorListState');
@@ -43,36 +42,21 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Ensure paginator is initialized before synchronization
     if (this.paginator) {
-      console.log('Paginator initialized');
+      console.log('instructor Paginator initialized');
       this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
       this.paginator.pageSize = this.pageSize;
     } else {
-      console.error('Paginator is not initialized');
+      console.error('instructor Paginator is not initialized');
     }
     // restore scroll position
     if (this.tableContainer) {
-      console.log('has tableContainer');
+      console.log('instructor has tableContainer');
       this.tableContainer.nativeElement.scrollTop = this.scrollTop || 0; // Restore scroll position
     } else {
-      console.error('no tableContainer');
+      console.error('instructor no tableContainer');
     }
   }
 
-  loadIPeople() {
-    this.peopleService.peopleList({
-      fieldsPeople: ['name', 'instructor'],
-      include: ['instructor'],
-      ...(this.searchFilter.trim() && { filterSearch: this.searchFilter }),
-      pageNumber: this.pageNumber,
-      pageSize: this.pageSize
-    }).subscribe({
-      next: (people) => {
-        this.people = people;
-        console.log(this.people);
-      },
-      error: (err) => console.error('Error:', err)
-    });
-  }
   loadInstructors() {
     this.instructorsService.instructorsList({
       fieldsInstructors: ['person', 'course_terms'],
@@ -107,7 +91,7 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
           this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
           this.paginator.pageSize = this.pageSize;
         } else {
-          console.error('Paginator not available after loading courses');
+          console.error('Paginator not available after loading instructor');
         }
       },
       error: (err) => console.error('Error:', err)
@@ -139,5 +123,13 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
     return this.computedPeople[instructor.id] || [];
   }
 
-
+  onCourseClick(courseId: string) {
+    sessionStorage.setItem(
+      'instructorListState',
+      JSON.stringify({
+        pageNumber: this.paginator?.pageIndex + 1,
+        pageSize: this.paginator?.pageSize,
+        scrollTop: this.tableContainer?.nativeElement.scrollTop
+      }));
+  }
 }

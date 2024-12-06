@@ -10,6 +10,7 @@ import { CoursesService, InstructorsService } from '../../core/api/v1';
 export class CourseDetailComponent implements OnInit {
   course: any;
   instructors: { [key: string]: any } = {};
+  origin: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -20,6 +21,8 @@ export class CourseDetailComponent implements OnInit {
 
   ngOnInit() {
     const courseId = this.route.snapshot.paramMap.get('id');
+    this.origin = this.route.snapshot.queryParamMap.get('origin');
+    console.log('course-detail init origin', this.route.snapshot.queryParams);
 
     if (courseId) {
       this.coursesService.coursesRetrieve({
@@ -37,7 +40,8 @@ export class CourseDetailComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/courses']);
+    console.log('goBack origin:', this.origin);
+    this.router.navigate([this.origin ? this.origin : '/home']);
   }
   loadInstructors() {
     if (!this.course?.included) return;

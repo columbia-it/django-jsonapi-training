@@ -27,14 +27,7 @@ const appRoutes: Routes = [
     component: ForbiddenComponent,
     canActivate: [AutoLoginPartialRoutesGuard],
   },
-  {
-    path: 'courses',
-    component: CourseListComponent,
-    canActivate: [AutoLoginPartialRoutesGuard],
-    // loadChildren: () =>
-    //   import('./components/course-list/course-list.component').then((m) => m.CourseListComponent),
-    // canLoad: [AutoLoginPartialRoutesGuard],
-  },
+  { path: 'courses', component: CourseListComponent, canActivate: [AutoLoginPartialRoutesGuard] },
   { path: 'courses/:id', component: CourseDetailComponent, canActivate: [AutoLoginPartialRoutesGuard] },
   { path: 'instructors', component: InstructorListComponent, canActivate: [AutoLoginPartialRoutesGuard] },
   { path: 'unauthorized', component: UnauthorizedComponent },
