@@ -36,6 +36,7 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { ProtectedComponent } from './protected/protected.component';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { InstructorListComponent } from './components/instructor-list/instructor-list.component';
+import { PeopleListComponent } from './components/people-list/people-list.component';
 
 export function apiConfigFactory(): Configuration {
   const oidcSecurityService = inject(OidcSecurityService);
@@ -64,7 +65,8 @@ export function apiConfigFactory(): Configuration {
     NavigationComponent,
     UnauthorizedComponent,
     ProtectedComponent,
-    InstructorListComponent
+    InstructorListComponent,
+    PeopleListComponent
   ],
   imports: [
     CommonModule,

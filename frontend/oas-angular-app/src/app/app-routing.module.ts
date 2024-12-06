@@ -9,6 +9,7 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { CourseListComponent } from './components/course-list/course-list.component';
 import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 import { InstructorListComponent } from './components/instructor-list/instructor-list.component';
+import { PeopleListComponent } from './components/people-list/people-list.component';
 
 const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -30,6 +31,7 @@ const appRoutes: Routes = [
   { path: 'courses', component: CourseListComponent, canActivate: [AutoLoginPartialRoutesGuard] },
   { path: 'courses/:id', component: CourseDetailComponent, canActivate: [AutoLoginPartialRoutesGuard] },
   { path: 'instructors', component: InstructorListComponent, canActivate: [AutoLoginPartialRoutesGuard] },
+  { path: 'people', component: PeopleListComponent, canActivate: [AutoLoginPartialRoutesGuard] },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'callback', component: CallbackComponent },
 ];
