@@ -255,7 +255,7 @@ OAUTH2_PROVIDER = {
     'OIDC_ENABLED': True if oidc_key else False,
     'OIDC_RSA_PRIVATE_KEY': oidc_key,
     "OIDC_RP_INITIATED_LOGOUT_ENABLED": True,
-    "OIDC_RP_INITIATED_LOGOUT_ALWAYS_PROMPT": True,
+    "OIDC_RP_INITIATED_LOGOUT_ALWAYS_PROMPT": False,
     'PKCE_REQUIRED': True,
     'OAUTH2_VALIDATOR_CLASS': 'myapp.oauth2_validator.CustomOAuth2Validator',
     'ALLOWED_SCHEMES': ['https','http'],

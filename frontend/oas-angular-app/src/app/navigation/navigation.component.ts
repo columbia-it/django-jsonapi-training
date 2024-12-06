@@ -45,20 +45,7 @@ export class NavigationComponent implements OnInit {
       { label: 'Courses', route: '/courses' },
       { label: 'Instructors', route: '/instructors' },
       { label: 'People', route: '/people' },
-      ...(this.isAuthenticated
-        ? [{ label: 'Logout', action: () => this.logout() }]
-        : []) // Only add "Logout" if authenticated
     ];
-  }
-
-  logout(): void {
-    this.oidcSecurityService.logoff().subscribe(() => {
-      this.router.navigate(['/home']);
-    });
-  }
-
-  login(): void {
-    this.oidcSecurityService.authorize();
   }
 
   onTabChange(index: number): void {

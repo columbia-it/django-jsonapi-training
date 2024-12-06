@@ -20,7 +20,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule} from '@angular/material/toolbar';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CachingInterceptor } from './services/caching.interceptor';
@@ -37,6 +38,8 @@ import { ProtectedComponent } from './protected/protected.component';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { InstructorListComponent } from './components/instructor-list/instructor-list.component';
 import { PeopleListComponent } from './components/people-list/people-list.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ConfirmLogoutDialogComponent } from './components/confirm-logout-dialog/confirm-logout-dialog.component';
 
 export function apiConfigFactory(): Configuration {
   const oidcSecurityService = inject(OidcSecurityService);
@@ -66,7 +69,8 @@ export function apiConfigFactory(): Configuration {
     UnauthorizedComponent,
     ProtectedComponent,
     InstructorListComponent,
-    PeopleListComponent
+    PeopleListComponent,
+    ConfirmLogoutDialogComponent
   ],
   imports: [
     CommonModule,
@@ -88,6 +92,8 @@ export function apiConfigFactory(): Configuration {
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatToolbarModule,
+    MatMenuModule,
+    MatDialogModule,
     AuthConfigModule,
   ],
   providers: [
