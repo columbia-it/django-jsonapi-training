@@ -1,0 +1,28 @@
+.mat-column-name {
+  max-width: 40px; /* Limit name column width */
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.green-icon {
+  color: green;
+  /* Optional: Adjust the size */
+  font-size: 24px;
+}
+
+.red-icon {
+  color: red;
+  /* Optional: Adjust the size */
+  font-size: 24px;
+}
+
+.green-checkbox .mat-checkbox-inner-container {
+  background-color: green;
+  border-color: green;
+}
+
+.green-checkbox.mat-checkbox-checked .mat-checkbox-background {
+  background-color: green;
+  border-color: green;
+}

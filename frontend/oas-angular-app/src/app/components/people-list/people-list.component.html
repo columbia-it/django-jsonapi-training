@@ -1,1 +1,59 @@
-<p>people-list works!</p>
+<h2>People List</h2>
+<mat-form-field class="search-field" appearance="outline">
+  <mat-label>Search people (by name)</mat-label>
+  <input
+    matInput
+    [(ngModel)]="searchFilter"
+    (keydown.enter)="onSearchFilterChange()" />
+  <button
+    mat-icon-button
+    matSuffix
+    aria-label="Search"
+    (click)="onSearchFilterChange()">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button
+    *ngIf="searchFilter"
+    mat-icon-button
+    matSuffix
+    aria-label="Clear"
+    (click)="clearSearch()">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
+<div #tableContainer style="overflow-y: auto; max-height: 400px;">
+  <table mat-table [dataSource]="people?.data" class="mat-mdc-table dense">
+    <!-- person Name Column -->
+    <ng-container matColumnDef="name" class="mat-column-name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let person">{{ person.attributes.name }}</td>
+    </ng-container>
+    <!-- isInstructor column -->
+    <ng-container matColumnDef="isInstructor">
+      <th mat-header-cell *matHeaderCellDef> Instructor </th>
+      <td mat-cell *matCellDef="let person">
+        <ng-container *ngIf="person.relationships.instructor.data; else noIcon">
+          <mat-icon class="green-icon">check_circle</mat-icon>
+        </ng-container>
+        <ng-template #noIcon>
+          <mat-icon class="red-icon">cancel</mat-icon>
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <!-- Table Header -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <!-- Table Rows -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</div>
+<!-- Pagination -->
+<mat-paginator
+  [length]="people?.meta.pagination.count || 0"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 25, 50]"
+  [showFirstLastButtons]="true"
+  (page)="onPageChange($event)">
+</mat-paginator>
+
