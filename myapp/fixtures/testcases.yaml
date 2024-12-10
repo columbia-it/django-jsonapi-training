@@ -371,6 +371,22 @@
   pk: b3e1d967-e886-4797-aaf2-8dbe669ceb07
   fields: {effective_start_date: null, effective_end_date: null, last_mod_user_name: null,
     last_mod_date: 2018-12-05, name: Alexander Hamilton}
+- model: myapp.person
+  pk: 147fe724-f3a3-4558-9dfc-805bea5f3f73
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: user1
+    last_mod_date: 2024-12-03
+    name: Edwin Howard Armstrong
+- model: myapp.person
+  pk: 3bff3486-bf76-461f-afac-0b778da61e47
+  fields:
+    effective_start_date: null
+    effective_end_date: null
+    last_mod_user_name: user1
+    last_mod_date: 2024-12-03
+    name: Randy Runyon
 - model: myapp.instructor
   pk: 0a879dc6-63d4-4a79-aae6-63ee2b379b32
   fields:

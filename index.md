@@ -34,6 +34,7 @@ Otherwise, you can just view these documentation source files:
  - ['Deploying to Production'](docs/deploying.md)
  - ['Using AWS API Gateway'](docs/aws_api_gw.md)
  - ['A Command Line Client'](docs/cli_client.md)
+ - ['A Browser Client'](docs/browser_client.md)
  - ['Help Wanted'](docs/help.md)
  - 'Code Reference':
      - ['Models'](docs/api_models.md)

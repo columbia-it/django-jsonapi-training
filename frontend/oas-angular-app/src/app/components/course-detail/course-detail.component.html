@@ -1,0 +1,74 @@
+<div *ngIf="course; else loading">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ course.data.attributes.course_name }}</mat-card-title>
+      <mat-card-subtitle>
+        Course Identifier: {{ course.data.attributes.course_identifier }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p>{{ course.data.attributes.course_description }}</p>
+
+      <div *ngIf="course.data.relationships.course_terms">
+        <h2 class="mat-headline-6">Terms Offered</h2>
+        <mat-accordion [multi]="true">
+          <!-- Expansion panels -->
+          <ng-container *ngFor="let term of course.included">
+            <ng-container *ngIf="term.type === 'course_terms'">
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Term: {{ term.attributes.term_identifier.substring(0,5) }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div
+                  *ngIf="
+                    term.relationships.instructors.data.length > 0;
+                    else noInstructors
+                  "
+                >
+                  <mat-list>
+                    <mat-list-item
+                      *ngFor="let inst of term.relationships.instructors.data"
+                    >
+                      <div
+                        *ngIf="
+                          instructors[inst.id] as instructor;
+                          else loadingInstructor
+                        "
+                      >
+                        <p *ngIf="instructor.included[0] as person">
+                          Instructor: {{ person.attributes.name }}
+                        </p>
+                      </div>
+                      <ng-template #loadingInstructor>
+                        <p>Loading instructor details...</p>
+                      </ng-template>
+                    </mat-list-item>
+                  </mat-list>
+                </div>
+
+                <ng-template #noInstructors>
+                  <p>No instructor(s) listed.</p>
+                </ng-template>
+              </mat-expansion-panel>
+            </ng-container>
+          </ng-container>
+        </mat-accordion>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="goBack()">Back</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    <p>Loading course details...</p>
+  </div>
+</ng-template>

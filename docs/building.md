@@ -1340,7 +1340,11 @@ The result should look like this:
 
 See `settings.py` for where the `REST_FRAMEWORK` default classes are configured.
 You can also add these classes on a per-view basis using, for example, the `.pagination_class` attribute.
- 
+!!! Note
+    Add the `ordering_fields` attribute to your classes to identify which fields should be available for
+    sorting. (See also [Documenting the API](documenting-api.md) in which the ordering fields need to
+    be specifically identified.)
+
 ## Configure additional Filter Backends
 
 As you may have noticed in `settings.py`, we've added several Filter Backends: 
@@ -1745,7 +1749,7 @@ Resulting in:
 
 ## Advanced topic: Adding the `last_mod_user_name` to the Model
 
-### via the Serializer
+### Via the Serializer
 
 Say we want to prevent the client from updating who the `last_mod_user_name` was or when the `last_mod_date`
 happened. This example _silently_ overrides the serializer `create` and `update` methods to use the authenticated
@@ -1792,7 +1796,7 @@ index 4075d9c..cabd404 100644
 
 (hint: there's a mistake above. Can you find it?)
 
-### via the Model
+### Via the Model
 
 The serializer is probably **not** the right place for "business logic" in general as it allows Model
 manipulation to bypass that logic. It should probably

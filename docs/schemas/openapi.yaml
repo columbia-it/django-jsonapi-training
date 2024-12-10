@@ -315,6 +315,26 @@ paths:
         description: Number of results to return per page.
         schema:
           type: integer
+      - name: sort
+        required: false
+        in: query
+        description: '[list of fields to sort by](https://jsonapi.org/format/#fetching-sorting)'
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - course_name
+            - -course_name
+            - course_identifier
+            - -course_identifier
+            - course_number
+            - -course_number
+            - subject_area_code
+            - -subject_area_code
+            - school_bulletin_prefix_code
+            - -school_bulletin_prefix_code
+        explode: false
       tags:
       - courses
       security:
@@ -336,33 +356,6 @@ paths:
                 $ref: '#/components/schemas/PaginatedCourseList'
           description: ''
   /v1/courses/{id}/:
-    delete:
-      operationId: v1_courses_destroy
-      description: A course of instruction. e.g. COMSW1002 Computing in Context
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - courses
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
     patch:
       operationId: v1_courses_partial_update
       description: A course of instruction. e.g. COMSW1002 Computing in Context
@@ -406,6 +399,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/CourseResponse'
           description: ''
+    delete:
+      operationId: v1_courses_destroy
+      description: A course of instruction. e.g. COMSW1002 Computing in Context
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - courses
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     get:
       operationId: v1_courses_retrieve
       description: A course of instruction. e.g. COMSW1002 Computing in Context
@@ -672,6 +692,22 @@ paths:
         description: Number of results to return per page.
         schema:
           type: integer
+      - name: sort
+        required: false
+        in: query
+        description: '[list of fields to sort by](https://jsonapi.org/format/#fetching-sorting)'
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - term_identifier
+            - -term_identifier
+            - audit_permitted_code
+            - -audit_permitted_code
+            - exam_credit_flag
+            - -exam_credit_flag
+        explode: false
       tags:
       - course_terms
       security:
@@ -693,35 +729,6 @@ paths:
                 $ref: '#/components/schemas/PaginatedCourseTermList'
           description: ''
   /v1/course_terms/{id}/:
-    delete:
-      operationId: v1_course_terms_destroy
-      description: |-
-        A specific course term (year+semester) instance.
-        e.g. 20183COMSW1002
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - course_terms
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
     patch:
       operationId: v1_course_terms_partial_update
       description: |-
@@ -767,6 +774,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/CourseTermResponse'
           description: ''
+    delete:
+      operationId: v1_course_terms_destroy
+      description: |-
+        A specific course term (year+semester) instance.
+        e.g. 20183COMSW1002
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - course_terms
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     get:
       operationId: v1_course_terms_retrieve
       description: |-
@@ -918,6 +954,18 @@ paths:
         description: Number of results to return per page.
         schema:
           type: integer
+      - name: sort
+        required: false
+        in: query
+        description: '[list of fields to sort by](https://jsonapi.org/format/#fetching-sorting)'
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - name
+            - -name
+        explode: false
       tags:
       - people
       security:
@@ -939,33 +987,6 @@ paths:
                 $ref: '#/components/schemas/PaginatedPersonList'
           description: ''
   /v1/people/{id}/:
-    delete:
-      operationId: v1_people_destroy
-      description: A person.
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - people
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
     patch:
       operationId: v1_people_partial_update
       description: A person.
@@ -1009,6 +1030,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/PersonResponse'
           description: ''
+    delete:
+      operationId: v1_people_destroy
+      description: A person.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - people
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     get:
       operationId: v1_people_retrieve
       description: A person.
@@ -1251,33 +1299,6 @@ paths:
                 $ref: '#/components/schemas/PaginatedInstructorList'
           description: ''
   /v1/instructors/{id}/:
-    delete:
-      operationId: v1_instructors_destroy
-      description: An instructor.
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - instructors
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
     patch:
       operationId: v1_instructors_partial_update
       description: An instructor.
@@ -1321,6 +1342,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/InstructorResponse'
           description: ''
+    delete:
+      operationId: v1_instructors_destroy
+      description: An instructor.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - instructors
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     get:
       operationId: v1_instructors_retrieve
       description: An instructor.
@@ -1527,33 +1575,6 @@ paths:
                 $ref: '#/components/schemas/PaginatedGradeList'
           description: ''
   /v1/grades/{id}/:
-    delete:
-      operationId: v1_grades_destroy
-      description: A grade for a CourseTerm instance
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-          description: globally unique id (UUID4)
-        required: true
-      tags:
-      - grades
-      security:
-      - oauth2:
-        - auth-columbia
-        - demo-djt-sla-bronze
-        - openid
-        - https://api.columbia.edu/scope/group
-        - delete
-      - oauth2:
-        - auth-none
-        - demo-djt-sla-bronze
-        - delete
-      responses:
-        '204':
-          description: No response body
     patch:
       operationId: v1_grades_partial_update
       description: A grade for a CourseTerm instance
@@ -1597,6 +1618,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/GradeResponse'
           description: ''
+    delete:
+      operationId: v1_grades_destroy
+      description: A grade for a CourseTerm instance
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+          description: globally unique id (UUID4)
+        required: true
+      tags:
+      - grades
+      security:
+      - oauth2:
+        - auth-columbia
+        - demo-djt-sla-bronze
+        - openid
+        - https://api.columbia.edu/scope/group
+        - delete
+      - oauth2:
+        - auth-none
+        - demo-djt-sla-bronze
+        - delete
+      responses:
+        '204':
+          description: No response body
     get:
       operationId: v1_grades_retrieve
       description: A grade for a CourseTerm instance

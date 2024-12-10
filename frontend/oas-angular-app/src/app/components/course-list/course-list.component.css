@@ -1,0 +1,28 @@
+.mat-column-identifier {
+  max-width: 70px; /* Limit identifier column width */
+  white-space: nowrap; /* Prevent wrapping of text */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflowing content */
+  font-family: 'Courier New', Courier, monospace; /* Use a fixed-width font */
+  font-size: 14px; /* Adjust font size as needed */}
+
+.mat-column-name {
+  max-width: 200px; /* Limit name column width */
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-description {
+  max-width: 200px; /* Limit description column width */
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-terms {
+  max-width: 200px; /* Limit terms column width */
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

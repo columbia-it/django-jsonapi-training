@@ -201,6 +201,15 @@ class CourseViewSet(CourseBaseViewSet):
         "course_identifier",
         "course_number",
     )
+    #: Constrain sorting to only these fields:
+    ordering_fields = [
+        "course_name",
+        "course_identifier",
+        "course_number",
+        "subject_area_code",
+        "school_bulletin_prefix_code",
+    ]
+
 
 
 class CourseTermViewSet(CourseBaseViewSet):
@@ -217,6 +226,11 @@ class CourseTermViewSet(CourseBaseViewSet):
     }
     #: Keyword searches are just this one field.
     search_fields = ("term_identifier",)
+    ordering_fields = [
+        "term_identifier",
+        "audit_permitted_code",
+        "exam_credit_flag",
+    ]
 
 
 class PersonViewSet(CourseBaseViewSet):
@@ -225,7 +239,7 @@ class PersonViewSet(CourseBaseViewSet):
     serializer_class = PersonSerializer
     filterset_fields = {}
     search_fields = ("name", "instructor__course_terms__course__course_name")
-
+    ordering_fields = ["name"]
     class Meta:
         """
         In addition to specific filters defined above, also generate some automatic filters.
@@ -296,7 +310,11 @@ class InstructorViewSet(CourseBaseViewSet):
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
     filterset_class = InstructorFilterSet
-    search_fields = ("person__name", "course_terms__course__course_name")
+    search_fields = (
+        "person__name",
+        "course_terms__course__course_name",
+        "course_terms__course__course_identifier"
+    )
 
 
 class GradeViewSet(CourseBaseViewSet):

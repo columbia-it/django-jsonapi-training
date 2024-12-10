@@ -1,5 +1,5 @@
 __title__ = 'myapp'
-__version__ = '1.4.0'
+__version__ = '1.5.0'
 __author__ = 'Alan Crosswell'
 __email__ = 'alan@columbia.edu'
 __license__ = 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License'

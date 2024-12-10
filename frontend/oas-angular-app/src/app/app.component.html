@@ -1,0 +1,55 @@
+<mat-toolbar color="primary">
+  <span class="app-title">OAS JSONAPI Demo</span>
+  <span class="spacer"></span>
+
+  <!-- Display User Name -->
+  <span
+    *ngIf="isAuthenticated && userData?.name"
+    class="user-name"
+  >
+    {{ userData.name }}
+  </span>
+
+  <!-- User Icon -->
+  <button
+    mat-icon-button
+    *ngIf="isAuthenticated"
+    [matMenuTriggerFor]="userMenu"
+    aria-label="User Account"
+  >
+    <mat-icon>account_circle</mat-icon>
+  </button>
+
+  <!-- Login Button -->
+  <button
+    mat-icon-button
+    *ngIf="!isAuthenticated"
+    (click)="login()"
+    aria-label="Login"
+  >
+    <mat-icon>login</mat-icon>
+  </button>
+</mat-toolbar>
+
+<!-- User Menu -->
+<mat-menu #userMenu="matMenu">
+  <button mat-menu-item (click)="profile()">
+    <mat-icon>person</mat-icon>
+    <span>Profile</span>
+  </button>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>exit_to_app</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>
+
+<app-navigation></app-navigation>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12 body-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+

@@ -60,8 +60,8 @@ watch:
 #   - admonition
 #   - codehilite
 #   - mkautodoc
-# extra_css:
-#   - css/custom.css
+extra_css:
+  - css/custom.css
 
 nav:
  - Home: 'index.md'
@@ -87,6 +87,7 @@ nav:
  - 'Deploying to Production': deploying.md
  - 'Using AWS API Gateway': aws_api_gw.md
  - 'A Command Line Client': cli_client.md
+ - 'A Browser Client': browser_client.md
  - 'Help Wanted': help.md
  - 'Code Reference':
      - 'Models': api_models.md

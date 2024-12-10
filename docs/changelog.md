@@ -3,6 +3,9 @@
 Since this project is primarily documentation for training purposes, this Changelog
 documents the changes to the docs. See the project CHANGELOG for changes to the demo app.
 
+## 2024-12-10
+- Add [demonstration browser-based single-page app](browser_client.md)
+
 ## 2024-09-13
 - Switch to using drf-spectacular and drf-spectacular-json-api for OAS schema docs.
 

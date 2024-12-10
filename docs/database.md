@@ -6,7 +6,7 @@ you'll want to use a
 
 !!! Note
     We've deprecated use of Microsoft SQL Server due to lack of support for the django database backend library.
-    You should use MySQL, including the AWS Aurora Serverless MySQL flavor, or Postscrypt, if you prefer.
+    You should use MySQL, including the AWS Aurora Serverless MySQL flavor, or Postgresql, if you prefer.
 
 ## Running a local database server
 
