@@ -34,6 +34,9 @@ jobs:
         pip install --upgrade tox tox-gh-actions
 
     - name: Test with tox
+      uses: pyupio/safety-action@v1
+      with:
+        api-key: ${{ secrets.SAFETY_API_KEY }}
       run: tox -vv
 
     - name: Upload coverage
