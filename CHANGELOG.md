@@ -17,6 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 -->
 
+## [1.5.0] - 2024-12-10
+
+### Added
+- Add Browser-based SPA client
+
+### Changes
+- Minor changes to Views, Settings and OAuth2 client to support automatic Angular class and service generation
+  for the SPA client.
+
 ## [1.4.0] - 2024-09-11
 
 ### Changed
