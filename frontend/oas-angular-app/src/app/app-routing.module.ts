@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
-import { CallbackComponent } from './callback/callback.component';
-import { ForbiddenComponent } from './forbidden/forbidden.component';
-import { HomeComponent } from './home/home.component';
-import { ProtectedComponent } from './protected/protected.component';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { CallbackComponent } from './components/callback/callback.component';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+import { HomeComponent } from './components/home/home.component';
+import { ProtectedComponent } from './components/protected/protected.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { CourseListComponent } from './components/course-list/course-list.component';
 import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 import { InstructorListComponent } from './components/instructor-list/instructor-list.component';
