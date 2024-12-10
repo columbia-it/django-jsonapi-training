@@ -1,3 +1,4 @@
+setuptools >= 75.6
 # requirements for our app:
 -r requirements-django.txt
 # optional mysql requirements:

@@ -211,7 +211,6 @@ class CourseViewSet(CourseBaseViewSet):
     ]
 
 
-
 class CourseTermViewSet(CourseBaseViewSet):
     __doc__ = CourseTerm.__doc__
     queryset = CourseTerm.objects.all()
@@ -240,6 +239,7 @@ class PersonViewSet(CourseBaseViewSet):
     filterset_fields = {}
     search_fields = ("name", "instructor__course_terms__course__course_name")
     ordering_fields = ["name"]
+
     class Meta:
         """
         In addition to specific filters defined above, also generate some automatic filters.
