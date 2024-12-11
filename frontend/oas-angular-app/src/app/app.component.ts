@@ -25,8 +25,6 @@ export class AppComponent implements OnInit {
       ({ isAuthenticated, userData }) => {
         this.isAuthenticated = isAuthenticated;
         this.userData = userData;
-        console.log('Authenticated:', isAuthenticated);
-        console.log('User Data:', userData);
       }
     );
   }

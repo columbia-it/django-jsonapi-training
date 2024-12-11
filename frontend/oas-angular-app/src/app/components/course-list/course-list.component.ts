@@ -35,7 +35,6 @@ export class CourseListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Ensure paginator is initialized before synchronization
     if (this.paginator) {
-      console.log('course Paginator initialized');
       this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
       this.paginator.pageSize = this.pageSize;
     } else {
@@ -43,7 +42,6 @@ export class CourseListComponent implements OnInit, AfterViewInit {
     }
     // restore scroll position
     if (this.tableContainer) {
-      console.log('course has tableContainer');
       this.tableContainer.nativeElement.scrollTop = this.scrollTop || 0; // Restore scroll position
     } else {
       console.error('course no tableContainer');
@@ -73,7 +71,6 @@ export class CourseListComponent implements OnInit, AfterViewInit {
 
       // Update paginator after courses are loaded
         if (this.paginator) {
-          console.log('Synchronizing paginator');
           this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
           this.paginator.pageSize = this.pageSize;
         } else {

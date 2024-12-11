@@ -23,7 +23,6 @@ constructor(
 ngOnInit() {
     const instructorId = this.route.snapshot.paramMap.get('id');
     this.origin = this.route.snapshot.queryParamMap.get('origin');
-    console.log('instructor-detail init origin', this.route.snapshot.queryParams);
 
     if (instructorId) {
       this.instructorsService.instructorsRetrieve({
@@ -32,7 +31,6 @@ ngOnInit() {
       }).subscribe({
         next: (instructor) => {
           this.instructor = instructor;
-          console.log('instructor:', this.instructor);
           this.loadCourseTerms();
         },
         error: (error) => console.error('Error:', error)
@@ -40,7 +38,6 @@ ngOnInit() {
     }
   }
   goBack() {
-    console.log('goBack origin:', this.origin);
     this.router.navigate([this.origin ? this.origin : '/home']);
   }
 
@@ -63,7 +60,6 @@ ngOnInit() {
         error: (error) => console.error(`Error fetching course_term ${id}:`, error)
       });
     })
-    console.log(this.courseTerms);
   }
 
 }

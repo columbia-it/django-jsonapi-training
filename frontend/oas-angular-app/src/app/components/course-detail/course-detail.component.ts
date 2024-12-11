@@ -22,7 +22,6 @@ export class CourseDetailComponent implements OnInit {
   ngOnInit() {
     const courseId = this.route.snapshot.paramMap.get('id');
     this.origin = this.route.snapshot.queryParamMap.get('origin');
-    console.log('course-detail init origin', this.route.snapshot.queryParams);
 
     if (courseId) {
       this.coursesService.coursesRetrieve({
@@ -31,7 +30,6 @@ export class CourseDetailComponent implements OnInit {
       }).subscribe({
         next: (course) => {
           this.course = course;
-          console.log(this.course)
           this.loadInstructors();
         },
         error: (error) => console.error('Error:', error)
@@ -40,7 +38,6 @@ export class CourseDetailComponent implements OnInit {
   }
 
   goBack() {
-    console.log('goBack origin:', this.origin);
     this.router.navigate([this.origin ? this.origin : '/home']);
   }
   loadInstructors() {
@@ -62,6 +59,5 @@ export class CourseDetailComponent implements OnInit {
         error: (error) => console.error(`Error fetching instructor ${id}:`, error)
       });
     })
-    console.log(this.instructors);
   }
 }

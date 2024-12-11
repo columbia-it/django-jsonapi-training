@@ -36,13 +36,11 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
     }
 
     this.loadInstructors();
-    //this.loadIPeople();
   }
 
   ngAfterViewInit() {
     // Ensure paginator is initialized before synchronization
     if (this.paginator) {
-      console.log('instructor Paginator initialized');
       this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
       this.paginator.pageSize = this.pageSize;
     } else {
@@ -50,7 +48,6 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
     }
     // restore scroll position
     if (this.tableContainer) {
-      console.log('instructor has tableContainer');
       this.tableContainer.nativeElement.scrollTop = this.scrollTop || 0; // Restore scroll position
     } else {
       console.error('instructor no tableContainer');
@@ -67,7 +64,6 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
     }).subscribe({
       next: (instructors) => {
         this.instructors = instructors;
-        console.log(this.instructors);
         // precompute for each instructor: person and course_terms
         if (this.instructors?.data && this.instructors?.included) {
           this.instructors.data.forEach((instructor: any) => {
@@ -79,15 +75,10 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
             this.computedPeople[instructor.id] = this.instructors.included.filter((included: any) =>
               personId.includes(included.id)
             );
-            console.log('termIds for', instructor.id, termIds);
-            console.log('personIds for', instructor.id, personId);
           });
-          console.log('computedTerms:', this.computedTerms);
-          console.log('computedPeople:', this.computedPeople);
         }
         // Update paginator after instructors are loaded
         if (this.paginator) {
-          console.log('Synchronizing paginator');
           this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
           this.paginator.pageSize = this.pageSize;
         } else {
@@ -100,7 +91,6 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
   onSearchFilterChange() {
     this.pageNumber = 1; // Reset to first page on new search
     this.loadInstructors();
-    //this.loadIPeople();
   }
   clearSearch() {
     this.searchFilter = ''; // Reset the search filter
@@ -113,7 +103,6 @@ export class InstructorListComponent implements OnInit, AfterViewInit {
     this.pageSize = event.pageSize;
     this.pageNumber = event.pageIndex + 1; // pageIndex is 0-based, so add 1
     this.loadInstructors();
-    //this.loadIPeople();
   }
 
   getTermsForInstructor(instructor: any): any[] {

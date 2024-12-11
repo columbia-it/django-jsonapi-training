@@ -50,12 +50,7 @@ export function apiConfigFactory(): Configuration {
       basePath: "http://localhost:8000",
       credentials: {'oauth2': token}
     });
-    console.log('token:' + token);
-    console.log('conf:');
-    console.log(conf);
   });
-  console.log('conf outer:');
-  console.log(conf);
   return conf;
 }
 @NgModule({

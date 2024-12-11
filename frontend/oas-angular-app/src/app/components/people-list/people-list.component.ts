@@ -22,8 +22,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
 
   constructor(
     private peopleService: PeopleService,
-    private instructorsService: InstructorsService,
-    private router: Router
   ) {}
 
     ngOnInit() {
@@ -41,7 +39,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Ensure paginator is initialized before synchronization
     if (this.paginator) {
-      console.log('people Paginator initialized');
       this.paginator.pageIndex = this.pageNumber - 1; // 1-based to 0-based
       this.paginator.pageSize = this.pageSize;
     } else {
@@ -49,7 +46,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     }
     // restore scroll position
     if (this.tableContainer) {
-      console.log('people has tableContainer');
       this.tableContainer.nativeElement.scrollTop = this.scrollTop || 0; // Restore scroll position
     } else {
       console.error('people no tableContainer');
@@ -66,7 +62,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     }).subscribe({
       next: (people) => {
         this.people = people;
-        console.log(this.people);
         // Update paginator after people are loaded
         if (this.paginator) {
           console.log('Synchronizing paginator');
@@ -78,17 +73,11 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
       },
       error: (err) => console.error('Error:', err)
     });
-    // search instructors for matching person.id
-    for (let person of this.people.data) {
-      console.log('person:', person);
-    }
-
   }
 
   onSearchFilterChange() {
     this.pageNumber = 1; // Reset to first page on new search
     this.loadPeople();
-    //this.loadIPeople();
   }
   clearSearch() {
     this.searchFilter = ''; // Reset the search filter
@@ -101,7 +90,6 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     this.pageSize = event.pageSize;
     this.pageNumber = event.pageIndex + 1; // pageIndex is 0-based, so add 1
     this.loadPeople();
-    //this.loadIPeople();
   }
 
   onClick(id: string) {
