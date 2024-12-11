@@ -40,6 +40,7 @@ import { InstructorListComponent } from './components/instructor-list/instructor
 import { PeopleListComponent } from './components/people-list/people-list.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmLogoutDialogComponent } from './components/confirm-logout-dialog/confirm-logout-dialog.component';
+import { InstructorDetailComponent } from './components/instructor-detail/instructor-detail.component';
 
 export function apiConfigFactory(): Configuration {
   const oidcSecurityService = inject(OidcSecurityService);
@@ -70,7 +71,8 @@ export function apiConfigFactory(): Configuration {
     ProtectedComponent,
     InstructorListComponent,
     PeopleListComponent,
-    ConfirmLogoutDialogComponent
+    ConfirmLogoutDialogComponent,
+    InstructorDetailComponent
   ],
   imports: [
     CommonModule,

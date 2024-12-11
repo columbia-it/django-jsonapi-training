@@ -31,9 +31,11 @@
     <ng-container matColumnDef="name" class="mat-column-name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let instructor">
-        <div *ngFor="let person of getPeopleForInstructor(instructor)">
-          {{ person.attributes.name }}
-        </div>
+        <a (click)="onCourseClick(instructor.id)" [routerLink]="['/instructors', instructor.id]" [queryParams]="{ origin: '/instructors' }">
+          <div *ngFor="let person of getPeopleForInstructor(instructor)">
+            {{ person.attributes.name }}
+          </div>
+        </a>
       </td>
     </ng-container>
     <ng-container matColumnDef="terms" class="mat-column-terms">

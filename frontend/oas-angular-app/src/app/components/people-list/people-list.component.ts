@@ -104,4 +104,13 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
     //this.loadIPeople();
   }
 
+  onClick(id: string) {
+    sessionStorage.setItem(
+      'peopleListState',
+      JSON.stringify({
+        pageNumber: this.paginator?.pageIndex + 1,
+        pageSize: this.paginator?.pageSize,
+        scrollTop: this.tableContainer?.nativeElement.scrollTop
+      }));
+  }
 }
