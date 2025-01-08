@@ -5,7 +5,7 @@
 #git+https://github.com/n2ygk/mkdocs-techdocs-core@issue/26/pinned-reqs
 #Markdown<3.2
 pygraphviz==1.10
-Jinja2==3.1.4
+Jinja2==3.1.5
 mkdocs==1.6.0
 mkdocs-autorefs==1.0.1
 mkdocs-get-deps==0.2.0
