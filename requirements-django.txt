@@ -1,5 +1,5 @@
 # requirements for our django app
-Django==5.1.4
+Django==5.1.5
 django-debug-toolbar==4.4.2
 django-extensions==3.2.3
 django-filter==24.2
