@@ -5,9 +5,10 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    standalone: false
 })
 export class AppComponent implements OnInit {
   isAuthenticated: boolean = false;

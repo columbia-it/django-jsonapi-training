@@ -3,9 +3,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { InstructorsService } from '../../core/api/v1';
 @Component({
-  selector: 'app-instructor-list',
-  templateUrl: './instructor-list.component.html',
-  styleUrl: './instructor-list.component.css'
+    selector: 'app-instructor-list',
+    templateUrl: './instructor-list.component.html',
+    styleUrl: './instructor-list.component.css',
+    standalone: false
 })
 export class InstructorListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;

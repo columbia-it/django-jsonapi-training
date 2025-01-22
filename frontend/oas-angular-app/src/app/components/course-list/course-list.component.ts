@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { CoursesService } from '../../core/api/v1';
 
 @Component({
-  selector: 'app-course-list',
-  templateUrl: './course-list.component.html',
-  styleUrl: './course-list.component.css'
+    selector: 'app-course-list',
+    templateUrl: './course-list.component.html',
+    styleUrl: './course-list.component.css',
+    standalone: false
 })
 export class CourseListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
