@@ -3,9 +3,10 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 
 @Component({
-  selector: 'app-forbidden',
-  templateUrl: './forbidden.component.html',
-  styleUrl: './forbidden.component.css'
+    selector: 'app-forbidden',
+    templateUrl: './forbidden.component.html',
+    styleUrl: './forbidden.component.css',
+    standalone: false
 })
 export class ForbiddenComponent {
   public isAuthenticated$ = inject(OidcSecurityService).isAuthenticated$;

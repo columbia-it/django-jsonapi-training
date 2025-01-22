@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { PeopleService, InstructorsService } from '../../core/api/v1';
 
 @Component({
-  selector: 'app-people-list',
-  templateUrl: './people-list.component.html',
-  styleUrl: './people-list.component.css'
+    selector: 'app-people-list',
+    templateUrl: './people-list.component.html',
+    styleUrl: './people-list.component.css',
+    standalone: false
 })
 export class PeopleListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;

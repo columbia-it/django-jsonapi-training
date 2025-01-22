@@ -3,9 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CourseTermsService, InstructorsService } from '../../core/api/v1';
 // this is pretty duplicative of InstructorListComponent.
 @Component({
-  selector: 'app-instructor-detail',
-  templateUrl: './instructor-detail.component.html',
-  styleUrl: './instructor-detail.component.css'
+    selector: 'app-instructor-detail',
+    templateUrl: './instructor-detail.component.html',
+    styleUrl: './instructor-detail.component.css',
+    standalone: false
 })
 export class InstructorDetailComponent implements OnInit {
   instructor: any;
