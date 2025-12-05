@@ -27,6 +27,8 @@ access the API.
 
 ![Swagger UI](./media/swagger-ui.png "screenshot of Swagger UI")
 
+TODO: Update to [Swagger Editor 5.x](https://github.com/swagger-api/swagger-editor)
+
 ### View the OAS schema via The Redoc UI
 
 [redoc](https://redocly.com/redoc) provides a nice view of the API as well, although it doesn't
