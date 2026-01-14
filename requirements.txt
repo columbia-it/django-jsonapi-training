@@ -3,4 +3,7 @@ setuptools >= 75.6
 -r requirements-django.txt
 # optional mysql requirements:
 #-r requirements-mysql.txt
+# option postgresql requirements:
+#-r requirements-pgsql.txt
+
 

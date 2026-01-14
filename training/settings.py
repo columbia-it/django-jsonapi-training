@@ -133,7 +133,7 @@ elif os.environ.get('PGSQL_HOST', None):
             "HOST": os.environ['PGSQL_HOST'],
             "PORT": os.environ.get('PGSQL_PORT','5432'),
         }
-}
+    }
 
 # otherwise, using local sqlite3:
 else:
