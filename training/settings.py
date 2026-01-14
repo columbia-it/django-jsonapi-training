@@ -123,6 +123,18 @@ if os.environ.get('MYSQL_HOST', None):
             }
         }
     }
+elif os.environ.get('PGSQL_HOST', None):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get('PGSQL_DB'),
+            "USER": os.environ.get('PGSQL_USER'),
+            "PASSWORD": os.environ.get('PGSQL_PASS',''),
+            "HOST": os.environ['PGSQL_HOST'],
+            "PORT": os.environ.get('PGSQL_PORT','5432'),
+        }
+}
+
 # otherwise, using local sqlite3:
 else:
     DATABASES = {
