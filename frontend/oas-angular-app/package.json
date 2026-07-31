@@ -29,7 +29,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.2.2",
+    "@angular-devkit/build-angular": "^22.1.2",
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^19.1.2",
     "@openapitools/openapi-generator-cli": "^2.31.1",
