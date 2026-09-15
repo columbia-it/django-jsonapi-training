@@ -10,34 +10,171 @@
         id="search"
         name="search"
         [(ngModel)]="search"
-        placeholder="Search {{ resource }}"
+        placeholder="Search {{ title().toLowerCase() }}"
       /><button type="submit">Search</button>
+      @if (search) {
+        <button type="button" class="clear" (click)="clearSearch()">Clear</button>
+      }
     </div>
   </form>
 </div>
+
 @if (error()) {
   <p class="error" role="alert">{{ error() }}</p>
 }
 @if (loading()) {
   <p>Loading…</p>
 } @else if (!items().length) {
-  <p>No {{ resource }} found.</p>
+  <p>No {{ title().toLowerCase() }} found.</p>
 } @else {
-  <ul class="resource-list">
-    @for (item of items(); track item.id) {
-      <li>
-        <a [routerLink]="['/', resource, item.id]"
-          ><strong>{{ primary(item) }}</strong
-          ><span>{{ secondary(item) }}</span></a
-        >
-      </li>
+  <div class="table-scroll">
+    @if (resource === 'courses') {
+      <table>
+        <thead>
+          <tr>
+            <th>Course ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Terms offered</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (course of items(); track course.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/courses', course.id]"
+                  ><strong>{{ primary(course) }}</strong></a
+                >
+              </td>
+              <td>{{ secondary(course) }}</td>
+              <td>{{ description(course) }}</td>
+              <td>
+                <ul class="compact">
+                  @for (term of termsFor(course); track term.id) {
+                    <li>
+                      <a [routerLink]="['/course-terms', term.id]">{{ termLabel(term) }}</a>
+                    </li>
+                  }
+                </ul>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else if (resource === 'instructors') {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Classes</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (instructor of items(); track instructor.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/instructors', instructor.id]"
+                  ><strong>{{ personName(instructor) }}</strong></a
+                >
+              </td>
+              <td>
+                <ul class="compact">
+                  @for (term of termsFor(instructor); track term.id) {
+                    <li>
+                      <a [routerLink]="['/course-terms', term.id]">{{ termLabel(term) }}</a>
+                      @if (relationshipId(term, 'course'); as courseId) {
+                        : <a [routerLink]="['/courses', courseId]">{{ courseCode(term) }}</a>
+                      }
+                    </li>
+                  }
+                </ul>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else if (resource === 'people') {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Instructor</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (person of items(); track person.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/people', person.id]"
+                  ><strong>{{ primary(person) }}</strong></a
+                >
+              </td>
+              <td>
+                @if (relationshipId(person, 'instructor'); as instructorId) {
+                  <a [routerLink]="['/instructors', instructorId]">Yes</a>
+                } @else {
+                  No
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th>Course</th>
+            <th>Instructors</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (term of items(); track term.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/course-terms', term.id]"
+                  ><strong>{{ primary(term) }}</strong></a
+                >
+              </td>
+              <td>
+                @if (relationshipId(term, 'course'); as courseId) {
+                  <a [routerLink]="['/courses', courseId]">{{ courseCode(term) }}</a>
+                  {{ courseName(term) }}
+                }
+              </td>
+              <td>
+                <ul class="compact">
+                  @for (instructor of related(term, 'instructors'); track instructor.id) {
+                    <li>
+                      <a [routerLink]="['/instructors', instructor.id]">{{
+                        personName(instructor)
+                      }}</a>
+                    </li>
+                  }
+                </ul>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     }
-  </ul>
+  </div>
+
   @if (pagination(); as p) {
     <nav class="pagination" aria-label="Results pages">
       <button class="secondary" [disabled]="page <= 1" (click)="load(page - 1)">Previous</button
       ><span>Page {{ p.page }} of {{ p.pages }}</span
       ><button class="secondary" [disabled]="page >= p.pages" (click)="load(page + 1)">Next</button>
+      <label
+        >Rows
+        <select name="pageSize" [(ngModel)]="pageSize" (ngModelChange)="changePageSize()">
+          <option [ngValue]="5">5</option>
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="25">25</option>
+          <option [ngValue]="50">50</option>
+        </select>
+      </label>
     </nav>
   }
 }

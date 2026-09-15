@@ -2,12 +2,16 @@
 
 The `frontend/oas-angular-app` project is a small Angular browser client for this
 Django REST Framework JSON:API service. It demonstrates authenticated collection
-and detail views for courses, instructors, and people.
+and relationship-aware collection and detail views for courses, course terms,
+instructors, and people.
 
 The implementation follows the useful separation in the CUIT `sis-frontend`
 example—resource models, a datastore-like service, authentication, and view
 components—without copying its Angular 11 toolchain or the unmaintained
 `angular2-jsonapi` dependency.
+
+The latest code was upgraded using Codex, based on examples from prior work here and
+in the Columbia Vergil project.
 
 ## Architecture
 

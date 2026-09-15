@@ -1,4 +1,4 @@
-<a [routerLink]="['/', resource]">← Back to {{ resource }}</a>
+<a [routerLink]="['/', collectionPath()]">← Back to {{ resource }}</a>
 @if (loading()) {
   <p>Loading…</p>
 } @else if (error()) {
@@ -14,14 +14,45 @@
       </div>
     }
   </dl>
-  @if (doc.included?.length) {
+
+  @for (group of relatedGroups(doc.data); track group.name) {
     <section>
-      <h2>Related resources</h2>
+      <h2>{{ label(group.name) }}</h2>
       <ul>
-        @for (item of doc.included; track item.type + item.id) {
-          <li>
-            <strong>{{ heading(item) }}</strong
-            ><span>{{ item.type }}</span>
+        @for (item of group.resources; track item.type + item.id) {
+          <li class="related-item">
+            <div class="related-heading">
+              @if (routeFor(item); as link) {
+                <a [routerLink]="link"
+                  ><strong>{{ heading(item) }}</strong></a
+                >
+              } @else {
+                <strong>{{ heading(item) }}</strong>
+              }
+              <span>{{ item.type }}</span>
+            </div>
+            @if (summary(item)) {
+              <p>{{ summary(item) }}</p>
+            }
+            @for (nested of relatedGroups(item); track nested.name) {
+              <div class="nested">
+                <span>{{ label(nested.name) }}:</span>
+                @for (
+                  related of nested.resources;
+                  track related.type + related.id;
+                  let last = $last
+                ) {
+                  @if (routeFor(related); as link) {
+                    <a [routerLink]="link">{{ heading(related) }}</a>
+                  } @else {
+                    {{ heading(related) }}
+                  }
+                  @if (!last) {
+                    ,
+                  }
+                }
+              </div>
+            }
           </li>
         }
       </ul>

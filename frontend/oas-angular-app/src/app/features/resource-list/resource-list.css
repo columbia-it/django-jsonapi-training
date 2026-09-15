@@ -26,30 +26,43 @@ form div {
 form input {
   min-width: 18rem;
 }
-.resource-list {
+form .clear {
+  background: white;
+  border-color: #9fb3c8;
+  color: #075985;
+  margin-left: 0.35rem;
+}
+.table-scroll {
+  max-height: 34rem;
+  overflow: auto;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th {
+  background: #f0f4f8;
+  color: #334e68;
+  position: sticky;
+  text-align: left;
+  top: 0;
+}
+th,
+td {
+  border-bottom: 1px solid #d9e2ec;
+  padding: 0.75rem;
+  vertical-align: top;
+}
+tbody tr:hover {
+  background: #f8fafc;
+}
+.compact {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.resource-list li {
-  border-top: 1px solid #d9e2ec;
-}
-.resource-list li:last-child {
-  border-bottom: 1px solid #d9e2ec;
-}
-.resource-list a {
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  padding: 1rem 0.25rem;
-  text-decoration: none;
-}
-.resource-list a:hover {
-  background: #f0f4f8;
-}
-.resource-list span {
-  color: #486581;
-  text-align: right;
+.compact li + li {
+  margin-top: 0.3rem;
 }
 .pagination {
   align-items: center;
@@ -57,6 +70,15 @@ form input {
   gap: 1rem;
   justify-content: center;
   margin-top: 1.5rem;
+}
+.pagination label {
+  align-items: center;
+  display: flex;
+  gap: 0.4rem;
+}
+.pagination select {
+  font: inherit;
+  padding: 0.35rem;
 }
 .error {
   background: #fff5f5;

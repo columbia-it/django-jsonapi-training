@@ -40,6 +40,27 @@ li {
 li span {
   color: #627d98;
 }
+.related-item {
+  display: block;
+}
+.related-heading {
+  display: flex;
+  justify-content: space-between;
+}
+.related-item p {
+  color: #486581;
+  margin: 0.4rem 0;
+}
+.nested {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+.nested > span {
+  font-weight: 700;
+  text-transform: capitalize;
+}
 .error {
   background: #fff5f5;
   border-left: 4px solid #c53030;

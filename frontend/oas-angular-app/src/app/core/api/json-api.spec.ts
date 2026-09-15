@@ -28,6 +28,7 @@ describe('JsonApiClient', () => {
         page: 2,
         pageSize: 20,
         ordering: 'course_identifier',
+        include: 'course_terms',
       })
       .subscribe();
     const request = http.expectOne((request) => request.url === 'http://example.test/v1/courses/');
@@ -35,6 +36,7 @@ describe('JsonApiClient', () => {
     expect(request.request.params.get('page[number]')).toBe('2');
     expect(request.request.params.get('page[size]')).toBe('20');
     expect(request.request.params.get('sort')).toBe('course_identifier');
+    expect(request.request.params.get('include')).toBe('course_terms');
     request.flush({ data: [] });
   });
 

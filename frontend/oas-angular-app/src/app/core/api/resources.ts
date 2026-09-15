@@ -16,9 +16,11 @@ export class ResourceStore {
     const include =
       resource === 'courses'
         ? 'course_terms,course_terms.instructors,course_terms.instructors.person'
-        : resource === 'instructors'
-          ? 'person,course_terms,course_terms.course'
-          : 'instructor,instructor.course_terms,instructor.course_terms.course';
+        : resource === 'course_terms'
+          ? 'course,instructors,instructors.person'
+          : resource === 'instructors'
+            ? 'person,course_terms,course_terms.course'
+            : 'instructor,instructor.course_terms,instructor.course_terms.course';
     return this.api.item<Record<string, unknown>>(resource, id, include);
   }
 }

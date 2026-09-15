@@ -18,9 +18,15 @@ export interface PersonAttributes extends CommonAttributes {
   name: string;
 }
 export interface InstructorAttributes extends CommonAttributes {}
-export type ResourceName = 'courses' | 'instructors' | 'people';
+export interface CourseTermAttributes extends CommonAttributes {
+  term_identifier: string;
+  audit_permitted_code: number;
+  exam_credit_flag: boolean;
+}
+export type ResourceName = 'courses' | 'course_terms' | 'instructors' | 'people';
 export interface ResourceAttributesMap {
   courses: CourseAttributes;
+  course_terms: CourseTermAttributes;
   instructors: InstructorAttributes;
   people: PersonAttributes;
 }

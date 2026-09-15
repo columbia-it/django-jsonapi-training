@@ -21,6 +21,20 @@ export const routes: Routes = [
     title: 'Course',
   },
   {
+    path: 'course-terms',
+    component: ResourceList,
+    canActivate: [autoLoginPartialRoutesGuard],
+    data: { resource: 'course_terms' },
+    title: 'Course terms',
+  },
+  {
+    path: 'course-terms/:id',
+    component: ResourceDetail,
+    canActivate: [autoLoginPartialRoutesGuard],
+    data: { resource: 'course_terms' },
+    title: 'Course term',
+  },
+  {
     path: 'instructors',
     component: ResourceList,
     canActivate: [autoLoginPartialRoutesGuard],
