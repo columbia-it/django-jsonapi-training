@@ -1,0 +1,14 @@
+<header class="site-header">
+  <a class="brand" routerLink="/">Django JSON:API Training</a>
+  <nav aria-label="Primary navigation">
+    <a routerLink="/courses" routerLinkActive="active">Courses</a>
+    <a routerLink="/instructors" routerLinkActive="active">Instructors</a>
+    <a routerLink="/people" routerLinkActive="active">People</a>
+  </nav>
+  @if (authenticated()) {
+    <button type="button" class="secondary" (click)="logout()">Sign out</button>
+  } @else {
+    <button type="button" (click)="login()">Sign in</button>
+  }
+</header>
+<main><router-outlet /></main>

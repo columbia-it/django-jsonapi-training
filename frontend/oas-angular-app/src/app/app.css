@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+.site-header {
+  align-items: center;
+  background: #102a43;
+  color: white;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.9rem max(1rem, calc((100vw - 72rem) / 2));
+}
+.brand {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-right: auto;
+  text-decoration: none;
+}
+nav {
+  display: flex;
+  gap: 1rem;
+}
+nav a {
+  color: #d9e2ec;
+  text-decoration: none;
+}
+nav a.active,
+nav a:hover {
+  color: white;
+  text-decoration: underline;
+}
+main {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 2rem 1rem;
+}
+@media (max-width: 48rem) {
+  .site-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  nav {
+    order: 3;
+    width: 100%;
+  }
+}

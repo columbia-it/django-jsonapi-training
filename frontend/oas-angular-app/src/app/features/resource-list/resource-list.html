@@ -1,0 +1,43 @@
+<div class="heading">
+  <div>
+    <p class="eyebrow">JSON:API collection</p>
+    <h1>{{ title() }}</h1>
+  </div>
+  <form (ngSubmit)="submit()">
+    <label for="search">Search</label>
+    <div>
+      <input
+        id="search"
+        name="search"
+        [(ngModel)]="search"
+        placeholder="Search {{ resource }}"
+      /><button type="submit">Search</button>
+    </div>
+  </form>
+</div>
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (!items().length) {
+  <p>No {{ resource }} found.</p>
+} @else {
+  <ul class="resource-list">
+    @for (item of items(); track item.id) {
+      <li>
+        <a [routerLink]="['/', resource, item.id]"
+          ><strong>{{ primary(item) }}</strong
+          ><span>{{ secondary(item) }}</span></a
+        >
+      </li>
+    }
+  </ul>
+  @if (pagination(); as p) {
+    <nav class="pagination" aria-label="Results pages">
+      <button class="secondary" [disabled]="page <= 1" (click)="load(page - 1)">Previous</button
+      ><span>Page {{ p.page }} of {{ p.pages }}</span
+      ><button class="secondary" [disabled]="page >= p.pages" (click)="load(page + 1)">Next</button>
+    </nav>
+  }
+}

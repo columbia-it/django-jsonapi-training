@@ -1,0 +1,30 @@
+<a [routerLink]="['/', resource]">← Back to {{ resource }}</a>
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+} @else if (document(); as doc) {
+  <p class="eyebrow">{{ doc.data.type }}</p>
+  <h1>{{ heading(doc.data) }}</h1>
+  <dl>
+    @for (attribute of doc.data.attributes | keyvalue; track attribute.key) {
+      <div>
+        <dt>{{ label(attribute.key) }}</dt>
+        <dd>{{ visible(attribute.value) }}</dd>
+      </div>
+    }
+  </dl>
+  @if (doc.included?.length) {
+    <section>
+      <h2>Related resources</h2>
+      <ul>
+        @for (item of doc.included; track item.type + item.id) {
+          <li>
+            <strong>{{ heading(item) }}</strong
+            ><span>{{ item.type }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+}
