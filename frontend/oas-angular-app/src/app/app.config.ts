@@ -19,7 +19,9 @@ export const appConfig: ApplicationConfig = {
     provideAuth(
       {
         config: {
-          authority: `${backend}/o/.well-known/openid-configuration/`,
+          // This must match the discovery document's `issuer` exactly. The
+          // client derives the /.well-known/openid-configuration URL from it.
+          authority: `${backend}/o`,
           redirectUrl: window.location.origin,
           postLogoutRedirectUri: window.location.origin,
           clientId: 'demo_djt_web_client',

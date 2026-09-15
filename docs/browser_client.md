@@ -39,6 +39,10 @@ The development server listens at `http://localhost:4200`. Run the Django servic
 at `http://localhost:8000`; the API and OIDC URLs are configured in
 `src/app/app.config.ts`.
 
+The configured OIDC `authority` is `http://localhost:8000/o`, which must exactly
+match the `issuer` in the provider's discovery document. The OIDC client derives
+the `/.well-known/openid-configuration/` discovery URL from that authority.
+
 The OAuth application must be a public client named `demo_djt_web_client`, use
 authorization code flow, and allow `http://localhost:4200` as a redirect and
 post-logout redirect URI. A browser client must not have or ship a client secret.
