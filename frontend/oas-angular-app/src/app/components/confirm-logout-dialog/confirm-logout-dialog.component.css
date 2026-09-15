@@ -1,8 +1,0 @@
-/* confirm-logout-dialog.component.css */
-mat-dialog-content {
-  font-size: 16px;
-}
-
-mat-dialog-actions {
-  justify-content: flex-end;
-}
