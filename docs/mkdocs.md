@@ -36,16 +36,10 @@ with the [autodoc](https://www.sphinx-doc.org/en/master/usage/extensions/autodoc
 
 ## Converting this project to MkDocs
 
-```text
-# bring in requirements for my app (excepting the optional database):
--r../requirements-django.txt
-# stuff needed for mkdocs documentation:
-Markdown==3.2.2
-mkdocs-techdocs-core==0.0.13
-mkdocs-macros-plugin==0.4.20
-mkdocstrings==0.13.6
-mkdocs==1.1.2
-```
+The documentation dependencies are maintained in
+[`docs/requirements-mkdocs.txt`]({{view_uri}}/docs/requirements-mkdocs.txt).
+TechDocs Core owns the compatible versions of Material for MkDocs and the
+other plugins that it bundles.
 
 * Use backstage.io's techdocs-core plugin which brings in several others.
 
@@ -58,15 +52,18 @@ mkdocs==1.1.2
  
 * Mkdocstrings for automated API documentation.
 
-* In `mkdocs.yml` add the document hierarchy that is in `docs/index.rst`.
+* Define the Markdown document hierarchy in the `nav` section of `mkdocs.yml`.
 
 ## Viewing MkDocs-generated content locally
 
-This is easily accomplished:
+Run:
 
-```
+```shell
 tox -e livedocs  # and open http://localhost:9000
 ```
+
+The `livedocs` environment regenerates the current Django model UML diagram
+before starting the development server.
 
 !!! Note
     The default port for `mkdocs serve` is 8000 which is also what we use for our django app.
@@ -75,7 +72,7 @@ tox -e livedocs  # and open http://localhost:9000
 
 [Readthedocs](https://readthedocs.io) easily supports both Sphinx and MkDocs through
 a configuration file. Changing this project over required adding
-[`.readthedocs.yaml`]({{view_uri}}/.readthedocs.yaml):
+[`.readthedocs.yml`]({{view_uri}}/.readthedocs.yml):
 
 ```yaml
 # .readthedocs.yml
@@ -90,7 +87,7 @@ version: 2
 #   configuration: docs/conf.py
 
 build:
-  os: ubuntu-22.04
+  os: ubuntu-24.04
   tools:
     python: "3.12"
 
@@ -103,4 +100,3 @@ python:
   install:
     - requirements: docs/requirements-mkdocs.txt
 ```
-

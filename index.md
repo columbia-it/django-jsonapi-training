@@ -5,8 +5,7 @@ You can find the documentation online here:
 
 Or, to locally view it in a browser:
 ```bash
-tox -e mkdocs
-mkdocs serve  # or open ./site/index.html
+tox -e livedocs  # and open http://localhost:9000
 ```
 
 Otherwise, you can just view these documentation source files:
@@ -42,4 +41,3 @@ Otherwise, you can just view these documentation source files:
      - ['Serializers'](docs/api_serializers.md)
      - ['Schemas'](docs/api_schemas.md)
      - ['Tests'](docs/tests.md)
-
