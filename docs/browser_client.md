@@ -13,6 +13,10 @@ components—without copying its Angular 11 toolchain or the unmaintained
 The latest code was upgraded using Codex, based on examples from prior work here and
 in the Columbia Vergil project.
 
+![Courses](./media/browser1.png "sample browser courses page")
+
+![Instructors](./media/browser2.png "sample browser instructors page")
+
 ## Architecture
 
 The client uses:
